@@ -17,7 +17,7 @@ class Edge{
     concurrency_rate : float
 }
 
-class User{
+class WorkGroup{
     fetch_projects()
 }
 
@@ -26,10 +26,16 @@ class Project{
     add_file(path)
 }
 
-Project *-- "1" Graph : graph
+class Table{
+    name : String
+    request()
+}
+
+Project *-- "*" Graph : graph
+Project *-- "*" Table : Tables
 Graph *-- "*" Vertex : vertices
 Graph *-- "*" Edge : edges
-User *-- "*" Project : projects
+WorkGroup *-- "*" Project : projects
 
 @enduml
 ```
