@@ -1,0 +1,5 @@
+#!/bin/bash
+
+pydoc -w logpickr_sdk
+pydoc -w logpickr_sdk.graph
+pydoc -w logpickr_sdk.workgroup
