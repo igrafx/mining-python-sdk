@@ -1,5 +1,3 @@
-from logpickr_sdk.project import Project
-
 class Graph:
     """A graph from a Logpickr project
     """
@@ -14,6 +12,7 @@ class Vertex:
 
     def __init__(self, parent):
         self.parent = parent
+
 
 class Edge:
     """Edge between two vertices of a Logpickr graph
