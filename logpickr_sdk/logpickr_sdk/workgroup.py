@@ -35,7 +35,7 @@ class Project:
         self.id = id
         self._graph = None
         self._graph_instances = []
-        self._tables
+        self._tables = []
 
     @property
     def graph(self):
@@ -55,6 +55,7 @@ class Project:
     def add_file(self, path):
         """Adds a file to the projects
         @:param: path, string path to the file"""
+        return True
 
 
 class Datasource:
