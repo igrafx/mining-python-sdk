@@ -60,8 +60,11 @@ class Project:
 class Datasource:
     """An SQL table that can be sent requests by the user"""
 
-    def __init__(self, name):
+    def __init__(self, name, type, host, port):
         self.name = name
+        self.type = type
+        self.host = host
+        self.port = port
 
     def request(self,commande):
         """Placeholder method header, ends an SQL request to the table
