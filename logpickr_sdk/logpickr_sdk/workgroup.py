@@ -8,12 +8,13 @@ class Workgroup:
         self.id = id
         self.key = key
         self._projects = []
-        self.token = ""
+        self.token = self.login()
 
     @property
     def projects(self):
         """Performs a REST request for projects, then gets project data for any projects that don't already exist
         in _projects"""
+        return []
 
     @property
     def tables(self):
@@ -22,6 +23,8 @@ class Workgroup:
 
     def login(self):
         """Logs in to the Logpickr API and retrieves a token to use for later requests"""
+        raise Exception("Invalid credentials")
+        return ""
 
 
 class Project:
@@ -37,10 +40,12 @@ class Project:
     @property
     def graph(self):
         """Performs a REST for the project model graph if it hasn't already been retrieved"""
+        return None
 
     @property
     def graph_instances(self):
         """Performs a REST for the graph instances contained in the project"""
+        return None
 
     @property
     def datasources(self):
