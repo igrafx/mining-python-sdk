@@ -18,6 +18,7 @@ class Workgroup:
     @property
     def tables(self):
         """Requests and returns the list of tables associated with the workgroup"""
+        return []
 
     def login(self):
         """Logs in to the Logpickr API and retrieves a token to use for later requests"""
@@ -42,15 +43,16 @@ class Project:
         """Performs a REST for the graph instances contained in the project"""
 
     @property
-    def tables(self):
+    def datasources(self):
         """Requests and returns the list of tables associated with the project"""
+        return []
 
     def add_file(self, path):
         """Adds a file to the projects
         @:param: path, string path to the file"""
 
 
-class Table:
+class Datasource:
     """An SQL table that can be sent requests by the user"""
 
     def __init__(self, name):
@@ -59,3 +61,4 @@ class Table:
     def request(self,commande):
         """Placeholder method header, ends an SQL request to the table
         @:param: command, the request to send"""
+        return None
