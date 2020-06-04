@@ -5,8 +5,8 @@ class Graph:
     """A graph from a Logpickr project
     """
 
-    def __init__(self, id: str, vertices: list, edges: list):
-        self.project_id = id
+    def __init__(self, project_id: str, vertices: list, edges: list):
+        self.project_id = project_id
         self.vertices = vertices
         self.edges = edges
 
@@ -30,8 +30,8 @@ class Graph:
 
 class GraphInstance(Graph):
 
-    def __init__(self, id: str, vertices: list, edges: list, rework_total: int, concurrency_rate: float):
-        super().__init__(id, vertices, edges)
+    def __init__(self, project_id: str, vertices: list, edges: list, rework_total: int, concurrency_rate: float):
+        super().__init__(project_id, vertices, edges)
         self.rework_total = rework_total
         self.concurrency_rate = concurrency_rate
 
@@ -40,15 +40,15 @@ class Vertex:
     """Vertex of a Logpicker Graph
     """
 
-    def __init__(self, id: str, name: str):
-        self.id = id
+    def __init__(self, vid: str, name: str):
+        self.id = vid
         self.name = name
 
 
 class VertexInstance(Vertex):
 
-    def __init__(self, id: str, name: str, event_instance: int, concurrent_vertices: list):
-        super().__init__(id, name)
+    def __init__(self, vid: str, name: str, event_instance: int, concurrent_vertices: list):
+        super().__init__(vid, name)
         self.event_instance = event_instance
         self.concurrent_vertices = concurrent_vertices
 
@@ -57,14 +57,14 @@ class Edge:
     """Edge between two vertices of a Logpickr graph
     """
 
-    def __init__(self, id: str, source: Vertex, destination: Vertex):
-        self.id = id
+    def __init__(self, eid: str, source: Vertex, destination: Vertex):
+        self.id = eid
         self.source = source
         self.destination = destination
 
 
 class EdgeInstance(Edge):
 
-    def __init__(self, id: str, source: VertexInstance, destination: VertexInstance, concurrent_edges: list):
-        super().__init__(id, source, destination)
+    def __init__(self, eid: str, source: VertexInstance, destination: VertexInstance, concurrent_edges: list):
+        super().__init__(eid, source, destination)
         self.concurrent_edges = concurrent_edges
