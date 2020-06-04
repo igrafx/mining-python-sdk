@@ -4,9 +4,12 @@ from random import randint, choice
 
 ID = "fb6eeb8f-574c-469b-8eef-276ed6cfa823"
 SECRET = "c0927608-47cf-465f-a683-6ec2bae48e1d"
-w = Workgroup(ID, SECRET)
-project = Project(w.projects[0])  # Creates a project with the first possible ID
 
+try:
+    w = Workgroup(ID, SECRET)
+    project = Project(w.projects[0])  # Creates a project with the first possible ID
+except Exception as e:
+    project = Project(0)
 
 class TestGraph:
     def test_graph_creation(self):
@@ -21,6 +24,12 @@ class TestGraph:
         g = project.graph_instances[0]
         assert g.rework_total >= 0
         assert g.concurrency_rate >= 0
+
+    def test_from_json(self):
+        text = open("graph.json").readline().strip("\n")
+        g = Graph.from_json(0, text)
+        assert len(g.vertices) == 6
+        assert len(g.edges) == 10
 
 
 class TestVertex:
