@@ -79,7 +79,13 @@ class Project:
     @property
     def graph(self):
         """Performs a REST for the project model graph if it hasn't already been retrieved"""
-        return None
+        try:
+            response = req.get(f"{API_URL}/project/{self.id}/graph",headers={"X-Logpickr-API-Token": self.owner.token})
+            response.raise_for_status()
+            self._graph = Graph.from_json(self.id, response.text)
+        except req.HTTPError as error:
+            print(f"HTTP Error occurred: {error}")
+        return self._graph
 
     @property
     def graph_instances(self):
