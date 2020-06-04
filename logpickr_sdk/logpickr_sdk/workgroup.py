@@ -42,6 +42,7 @@ class Workgroup:
             return response.json()["access_token"]
 
         except req.exceptions.HTTPError as err:
+            # TODO: handle different errors differently (good words buddy)
             print(f"HTTP Error occured: {err}")
 
         return ""
@@ -80,7 +81,7 @@ class Project:
 
 class Datasource:
     """An SQL table that can be sent requests by the user"""
-
+    # TODO: just about all of this man, let's hope I don't utterly fuck up because I have no idea how any of this works
     def __init__(self, name, type, host, port):
         self.name = name
         self.type = type
