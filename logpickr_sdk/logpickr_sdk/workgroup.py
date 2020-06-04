@@ -8,7 +8,7 @@ AUTH_URL = "http://localhost:28080"
 class Workgroup:
     """A Logpickr workgroup, which is used to log in and access projects"""
 
-    def __init__(self, client_id, key):
+    def __init__(self, client_id: str, key: str):
         self.id = client_id
         self.key = key
         self._projects = []
@@ -69,7 +69,7 @@ class Project:
     """A Logpickr project
     """
 
-    def __init__(self, id, owner):
+    def __init__(self, id: str, owner: Workgroup):
         self.id = id
         self.owner = owner
         self._graph = None
@@ -107,8 +107,9 @@ class Project:
 
 class Datasource:
     """An SQL table that can be sent requests by the user"""
+
     # TODO: just about all of this man, let's hope I don't utterly fuck up because I have no idea how any of this works
-    def __init__(self, name, type, host, port):
+    def __init__(self, name: str, type: str, host: str, port: str):
         self.name = name
         self.type = type
         self.host = host
