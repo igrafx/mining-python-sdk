@@ -51,8 +51,9 @@ class Project:
     """A Logpickr project
     """
 
-    def __init__(self, id):
+    def __init__(self, id, owner):
         self.id = id
+        self.owner = owner
         self._graph = None
         self._graph_instances = []
         self._tables = []

@@ -34,11 +34,12 @@ PROJECT_ID = 16
 class TestProject():
 
     def test_create_project(self):
-        p = Project(PROJECT_ID)
+        p = Project(PROJECT_ID, Workgroup(ID, SECRET))
         assert p.id == PROJECT_ID
         assert p._graph is None
         assert len(p._graph_instances) == 0
         assert len(p._tables) == 0
+        assert p.owner is not None
 
     def test_graph(self):
         p = Project(PROJECT_ID)
