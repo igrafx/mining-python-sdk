@@ -67,7 +67,7 @@ class Datasource:
         self.host = host
         self.port = port
 
-    def request(self,commande):
+    def request(self, commande):
         """Placeholder method header, ends an SQL request to the table
         @:param: command, the request to send"""
         return None
