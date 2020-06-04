@@ -12,18 +12,35 @@ class Workgroup:
         self.id = client_id
         self.key = key
         self._projects = []
+        self._datasources = []
         self.token = self.login()
 
     @property
     def projects(self):
         """Performs a REST request for projects, then gets project data for any projects that don't already exist
         in _projects"""
-        return []
+        try:
+            response = req.get(f"{API_URL}/projects", headers={"X-Logpickr-API-Token": self.token})
+            response.raise_for_status()
+            self._projects = [Project(x, self) for x in response.json()]
+
+        except req.HTTPError as error:
+            print(f"HTTP Error occurred: {error}")
+
+        return self._projects
 
     @property
-    def tables(self):
-        """Requests and returns the list of tables associated with the workgroup"""
-        return []
+    def datasources(self):
+        """Requests and returns the list of datasources associated with the workgroup"""
+        try:
+            response = req.get(f"{API_URL}/datasources", headers={"X-Logpickr-API-Token": self.token})
+            response.raise_for_status()
+            self._datasources = [Datasource(x["name"], x["type"], x["host"], x["port"]) for x in response.json()]
+
+        except req.HTTPError as error:
+            print(f"HTTP Error occurred: {error}")
+
+        return self._datasources
 
     def login(self):
         """Logs in to the Logpickr API with the Workgroup's credentials and retrieves a token for later requests"""
@@ -41,9 +58,9 @@ class Workgroup:
             response.raise_for_status()
             return response.json()["access_token"]
 
-        except req.exceptions.HTTPError as err:
+        except req.exceptions.HTTPError as error:
             # TODO: handle different errors differently (good words buddy)
-            print(f"HTTP Error occured: {err}")
+            print(f"HTTP Error occured: {error}")
 
         return ""
 
@@ -57,7 +74,7 @@ class Project:
         self.owner = owner
         self._graph = None
         self._graph_instances = []
-        self._tables = []
+        self._datasources = []
 
     @property
     def graph(self):
@@ -72,7 +89,15 @@ class Project:
     @property
     def datasources(self):
         """Requests and returns the list of tables associated with the project"""
-        return []
+        try:
+            response = req.get(f"{API_URL}/datasources", headers={"X-Logpickr-API-Token": self.owner.token})
+            response.raise_for_status()
+            self._datasources = [Datasource(x["name"], x["type"], x["host"], x["port"]) for x in response.json()]
+
+        except req.HTTPError as error:
+            print(f"HTTP Error occurred: {error}")
+
+        return self._datasources
 
     def add_file(self, path):
         """Adds a file to the projects
