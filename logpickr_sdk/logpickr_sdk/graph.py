@@ -5,7 +5,7 @@ class Graph:
     """A graph from a Logpickr project
     """
 
-    def __init__(self, id, vertices, edges):
+    def __init__(self, id: str, vertices: list, edges: list):
         self.project_id = id
         self.vertices = vertices
         self.edges = edges
@@ -30,7 +30,7 @@ class Graph:
 
 class GraphInstance(Graph):
 
-    def __init__(self, id, vertices, edges, rework_total, concurrency_rate):
+    def __init__(self, id: str, vertices: list, edges: list, rework_total: int, concurrency_rate: float):
         super().__init__(id, vertices, edges)
         self.rework_total = rework_total
         self.concurrency_rate = concurrency_rate
@@ -40,14 +40,14 @@ class Vertex:
     """Vertex of a Logpicker Graph
     """
 
-    def __init__(self, id, name):
+    def __init__(self, id: str, name: str):
         self.id = id
         self.name = name
 
 
 class VertexInstance(Vertex):
 
-    def __init__(self, id, name, event_instance, concurrent_vertices):
+    def __init__(self, id: str, name: str, event_instance: int, concurrent_vertices: list):
         super().__init__(id, name)
         self.event_instance = event_instance
         self.concurrent_vertices = concurrent_vertices
@@ -57,7 +57,7 @@ class Edge:
     """Edge between two vertices of a Logpickr graph
     """
 
-    def __init__(self, id, source, destination):
+    def __init__(self, id: str, source: Vertex, destination: Vertex):
         self.id = id
         self.source = source
         self.destination = destination
@@ -65,6 +65,6 @@ class Edge:
 
 class EdgeInstance(Edge):
 
-    def __init__(self, id, source, destination, concurrent_edges=None):
+    def __init__(self, id: str, source: VertexInstance, destination: VertexInstance, concurrent_edges: list):
         super().__init__(id, source, destination)
         self.concurrent_edges = concurrent_edges
