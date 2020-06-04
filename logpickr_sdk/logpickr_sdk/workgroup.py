@@ -8,8 +8,8 @@ AUTH_URL = "http://localhost:28080"
 class Workgroup:
     """A Logpickr workgroup, which is used to log in and access projects"""
 
-    def __init__(self, id, key):
-        self.id = id
+    def __init__(self, client_id, key):
+        self.id = client_id
         self.key = key
         self._projects = []
         self.token = self.login()
@@ -27,6 +27,7 @@ class Workgroup:
 
     def login(self):
         """Logs in to the Logpickr API with the Workgroup's credentials and retrieves a token for later requests"""
+
         login_url = f"{AUTH_URL}/auth/realms/master/protocol/openid-connect/token"
         login_data = {
             "grant_type": "urn:ietf:params:oauth:grant-type:uma-ticket",
