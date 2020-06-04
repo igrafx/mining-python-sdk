@@ -1,4 +1,8 @@
 from logpickr_sdk.graph import Graph
+import requests as req
+
+API_URL = "http://localhost:8080/pub"
+AUTH_URL = "http://localhost:28080"
 
 
 class Workgroup:
@@ -22,8 +26,23 @@ class Workgroup:
         return []
 
     def login(self):
-        """Logs in to the Logpickr API and retrieves a token to use for later requests"""
-        raise Exception("Invalid credentials")
+        """Logs in to the Logpickr API with the Workgroup's credentials and retrieves a token for later requests"""
+        login_url = f"{AUTH_URL}/auth/realms/master/protocol/openid-connect/token"
+        login_data = {
+            "grant_type": "urn:ietf:params:oauth:grant-type:uma-ticket",
+            "audience": self.id,
+            "client_id": self.id,
+            "client_secret": self.key
+        }
+
+        try:
+            response = req.post(login_url, login_data)
+            response.raise_for_status()
+            return response.json()["access_token"]
+
+        except req.exceptions.HTTPError as err:
+            print(f"HTTP Error occured: {err}")
+
         return ""
 
 

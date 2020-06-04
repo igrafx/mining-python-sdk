@@ -1,5 +1,6 @@
 import pytest
 from logpickr_sdk.workgroup import Workgroup, Project, Datasource
+import requests as req
 
 ID = "fb6eeb8f-574c-469b-8eef-276ed6cfa823"
 SECRET = "c0927608-47cf-465f-a683-6ec2bae48e1d"
@@ -15,8 +16,8 @@ class TestWorkgroup:
         assert w._projects == []
 
     def test_wrong_login(self):
-        with pytest.raises(Exception):
-            w = Workgroup("a", "b")  # Should very much fail and throw an invalid credentials exception
+        w = Workgroup("a", "b")
+        assert w.token == ""
 
     def test_projects(self):
         w = Workgroup(ID, SECRET)
