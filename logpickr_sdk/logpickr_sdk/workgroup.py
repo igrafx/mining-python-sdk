@@ -33,9 +33,10 @@ class Workgroup:
     def datasources(self):
         """Requests and returns the list of datasources associated with the workgroup"""
         try:
-            response = req.get(f"{API_URL}/datasources", headers={"X-Logpickr-API-Token": self.token})
-            response.raise_for_status()
-            self._datasources = [Datasource(x["name"], x["type"], x["host"], x["port"]) for x in response.json()]
+            tmp = []
+            for p in self.projects:
+                tmp += p.datasources
+            self._datasources = tmp
 
         except req.HTTPError as error:
             print(f"HTTP Error occurred: {error}")
@@ -80,7 +81,7 @@ class Project:
     def graph(self):
         """Performs a REST for the project model graph if it hasn't already been retrieved"""
         try:
-            response = req.get(f"{API_URL}/project/{self.id}/graph",headers={"X-Logpickr-API-Token": self.owner.token})
+            response = req.get(f"{API_URL}/project/{self.id}/graph", headers={"X-Logpickr-API-Token": self.owner.token})
             response.raise_for_status()
             self._graph = Graph.from_json(self.id, response.text)
         except req.HTTPError as error:
@@ -96,7 +97,8 @@ class Project:
     def datasources(self):
         """Requests and returns the list of tables associated with the project"""
         try:
-            response = req.get(f"{API_URL}/datasources", headers={"X-Logpickr-API-Token": self.owner.token})
+            response = req.get(f"{API_URL}/datasources", params={"id": f"{self.id}"},
+                               headers={"X-Logpickr-API-Token": self.owner.token})
             response.raise_for_status()
             self._datasources = [Datasource(x["name"], x["type"], x["host"], x["port"]) for x in response.json()]
 
