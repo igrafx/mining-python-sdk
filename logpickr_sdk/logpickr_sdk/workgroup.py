@@ -110,6 +110,26 @@ class Project:
     def add_file(self, path):
         """Adds a file to the projects
         @:param: path, string path to the file"""
+        try:
+            file = open(path)
+            headerdict = {"X-Logpickr-API-Token": self.owner.token, "accept": "application/json",
+                          "Content-Type": "form-data; boundary=--aniania--"}
+
+            response = req.post(f"{API_URL}/project/{self.id}/file",
+                                params={"teamId": self.owner.id,
+                                        #"Content-Disposition": 'form-data; name="file"; filename="testdata.csv"',
+                                        "Content-Type": "text/csv"},
+                                files={'file': open(path, 'rb')},
+                                headers={"X-Logpickr-API-Token": self.owner.token,
+                                         "Content-Type": "multipart/form-data; boundary=--------dffjbyfdy456786",
+                                         "Accept": "application/json,text/plain,*/*"}
+                                )
+            print(response.request)
+            response.raise_for_status()
+        except req.HTTPError as error:
+            print(f"Http error occured: {error}")
+            print(response.headers)
+            print(response.text)
         return True
 
 
