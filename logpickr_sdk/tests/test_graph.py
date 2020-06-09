@@ -7,9 +7,9 @@ SECRET = "72deb3cf-502d-4d8e-ab69-513d3c2694fa"
 
 try:
     w = Workgroup(ID, SECRET)
-    project = Project(w.projects[0])  # Creates a project with the first possible ID
+    project = Project(w.projects[0],w)  # Creates a project with the first possible ID
 except Exception as e:
-    project = Project(0)
+    project = Project(0, None)
 
 class TestGraph:
     def test_graph_creation(self):
@@ -46,13 +46,11 @@ class TestVertex:
         v = self.random_vertex()
         assert v.id is not None
         assert v.name != ""
-        assert v.event_instance == -1  # vertex non instancié
-        assert v.concurrent_vertices is None
         assert v.parent == project.graph
 
     def test_vertex_instance(self):
         v = self.random_vertex_instance()
-        assert v.event_instance != -1
+        assert v.event_instance is not None
         assert v.concurrent_vertices is not None
 
 
@@ -74,7 +72,6 @@ class TestEdge:
         assert type(e.source) == Vertex
         assert e.destination is not None
         assert type(e.destination) == Vertex
-        assert e.concurrent_edges is None
 
     def test_edge_instance(self):
         e = self.random_edge_instance()

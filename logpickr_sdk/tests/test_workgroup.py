@@ -25,7 +25,7 @@ class TestWorkgroup:
 
     def test_tables(self):
         w = Workgroup(ID, SECRET)
-        assert len(w.tables) > 0  # Since there should be projects in the workgroup
+        assert len(w.datasources) > 0  # Since there should be projects in the workgroup
 
 
 PROJECT_ID = 16
@@ -33,28 +33,30 @@ PROJECT_ID = 16
 
 class TestProject():
 
+    wg = Workgroup(ID, SECRET)
+
     def test_create_project(self):
-        p = Project(PROJECT_ID, Workgroup(ID, SECRET))
+        p = Project(PROJECT_ID, TestProject.wg)
         assert p.id == PROJECT_ID
         assert p._graph is None
         assert len(p._graph_instances) == 0
-        assert len(p._tables) == 0
+        assert len(p._datasources) == 0
         assert p.owner is not None
 
     def test_graph(self):
-        p = Project(PROJECT_ID)
+        p = Project(PROJECT_ID, TestProject.wg)
         assert p.graph is not None
 
     def test_graph_instances(self):
-        p = Project(PROJECT_ID)
+        p = Project(PROJECT_ID, TestProject.wg)
         assert len(p.graph_instances) > 0
 
     def test_datasources(self):
-        p = Project(PROJECT_ID)
+        p = Project(PROJECT_ID, TestProject.wg)
         assert len(p.datasources) > 0
 
     def test_add_file(self):
-        p = Project(PROJECT_ID)
+        p = Project(PROJECT_ID, TestProject.wg)
         assert p.add_file("testdata.csv")
 
 
