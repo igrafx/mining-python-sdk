@@ -3,7 +3,7 @@ from logpickr_sdk.workgroup import Workgroup, Project, Datasource
 import requests as req
 
 ID = "fb6eeb8f-574c-469b-8eef-276ed6cfa823"
-SECRET = "c0927608-47cf-465f-a683-6ec2bae48e1d"
+SECRET = "72deb3cf-502d-4d8e-ab69-513d3c2694fa"
 
 
 class TestWorkgroup:

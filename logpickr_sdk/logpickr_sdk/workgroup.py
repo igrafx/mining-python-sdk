@@ -46,7 +46,7 @@ class Workgroup:
     def login(self):
         """Logs in to the Logpickr API with the Workgroup's credentials and retrieves a token for later requests"""
 
-        login_url = f"{AUTH_URL}/auth/realms/master/protocol/openid-connect/token"
+        login_url = f"{AUTH_URL}/auth/realms/logpickr/protocol/openid-connect/token"    # Note to self: ask if this will always be the same login url structure
         login_data = {
             "grant_type": "urn:ietf:params:oauth:grant-type:uma-ticket",
             "audience": self.id,
@@ -110,6 +110,24 @@ class Project:
     def add_file(self, path):
         """Adds a file to the projects
         @:param: path, string path to the file"""
+        try:
+            file = open(path)
+            headerdict = {"X-Logpickr-API-Token": self.owner.token, "accept": "application/json",
+                          "Content-Type": "form-data; boundary=--aniania--"}
+
+            response = req.post(f"{API_URL}/project/{self.id}/file?teamId={self.owner.id}",
+                                files={'file': (path.split("/")[-1], open(path, 'rb'), "text/csv")},
+                                headers={"X-Logpickr-API-Token": self.owner.token,
+                                         "accept": "application/json, text/plain, */*"}
+                                )
+            print(response.request.method)
+            print(response.request.url)
+            print(response.request.headers)
+            print(response.request.body.decode("utf-8"))
+            response.raise_for_status()
+        except req.HTTPError as error:
+            print(f"Http error occured: {error}")
+            print(response.text)
         return True
 
 
