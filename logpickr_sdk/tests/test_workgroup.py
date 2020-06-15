@@ -75,3 +75,6 @@ class TestDatasource:
         assert ds.type == TYPE
         assert ds.host == HOST
         assert ds.port == PORT
+
+        # TODO: add some tests to make sure you can't do forbidden things like create tables, add columns, edit values
+        # Basically make sure you're in read-only mode

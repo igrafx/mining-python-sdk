@@ -120,10 +120,10 @@ class Project:
                                 headers={"X-Logpickr-API-Token": self.owner.token,
                                          "accept": "application/json, text/plain, */*"}
                                 )
-            print(response.request.method)
-            print(response.request.url)
-            print(response.request.headers)
-            print(response.request.body.decode("utf-8"))
+            # print(response.request.method)
+            # print(response.request.url)
+            # print(response.request.headers)
+            # print(response.request.body.decode("utf-8"))
             response.raise_for_status()
         except req.HTTPError as error:
             print(f"Http error occured: {error}")
