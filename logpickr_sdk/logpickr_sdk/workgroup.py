@@ -1,5 +1,6 @@
 from logpickr_sdk.graph import Graph
 import requests as req
+import pydruid.db
 
 API_URL = "http://localhost:8080/pub"
 AUTH_URL = "http://localhost:28080"
@@ -46,7 +47,7 @@ class Workgroup:
     def login(self):
         """Logs in to the Logpickr API with the Workgroup's credentials and retrieves a token for later requests"""
 
-        login_url = f"{AUTH_URL}/auth/realms/logpickr/protocol/openid-connect/token"    # Note to self: ask if this will always be the same login url structure
+        login_url = f"{AUTH_URL}/auth/realms/logpickr/protocol/openid-connect/token"  # Note to self: ask if this will always be the same login url structure
         login_data = {
             "grant_type": "urn:ietf:params:oauth:grant-type:uma-ticket",
             "audience": self.id,
@@ -100,7 +101,7 @@ class Project:
             response = req.get(f"{API_URL}/datasources", params={"id": f"{self.id}"},
                                headers={"X-Logpickr-API-Token": self.owner.token})
             response.raise_for_status()
-            self._datasources = [Datasource(x["name"], x["type"], x["host"], x["port"]) for x in response.json()]
+            self._datasources = [Datasource(x["name"], x["type"], x["host"], x["port"], self) for x in response.json()]
 
         except req.HTTPError as error:
             print(f"HTTP Error occurred: {error}")
@@ -135,13 +136,30 @@ class Datasource:
     """An SQL table that can be sent requests by the user"""
 
     # TODO: just about all of this man, let's hope I don't utterly fuck up because I have no idea how any of this works
-    def __init__(self, name: str, type: str, host: str, port: str):
+    def __init__(self, name: str, dstype: str, host: str, port: str, project: Project):
         self.name = name
-        self.type = type
+        self.type = dstype
         self.host = host
         self.port = port
+        self.project = project
+        self._connection = None
+        self._cursor = None
 
-    def request(self, commande):
-        """Placeholder method header, ends an SQL request to the table
+    def request(self, command):
+        """Placeholder method header, sends an SQL request to the table
         @:param: command, the request to send"""
-        return None
+        self.cursor.execute(command)
+        return self.cursor.fetchall()
+
+    @property
+    def connection(self):
+        if self._connection is None:
+            self._connection = pydruid.db.connect("localhost", self.port, path="/druid/v2/sql",
+                                                  user=self.project.owner.id, password=self.project.owner.key)
+        return self._connection
+
+    @property
+    def cursor(self):
+        if self._cursor is None:
+            self._cursor = self.connection.cursor()
+        return self._cursor
