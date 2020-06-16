@@ -135,7 +135,6 @@ class Project:
 class Datasource:
     """An SQL table that can be sent requests by the user"""
 
-    # TODO: just about all of this man, let's hope I don't utterly fuck up because I have no idea how any of this works
     def __init__(self, name: str, dstype: str, host: str, port: str, project: Project):
         self.name = name
         self.type = dstype
@@ -144,12 +143,20 @@ class Datasource:
         self.project = project
         self._connection = None
         self._cursor = None
+        self._columns = None
 
     def request(self, command):
         """Placeholder method header, sends an SQL request to the table
         @:param: command, the request to send"""
         self.cursor.execute(command)
         return self.cursor.fetchall()
+
+    @property
+    def columns(self):
+        if self._columns is None:
+            cols = self.request(f"SELECT COLUMN_NAME, ORDINAL_POSITION, DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '{self.name}' ORDER BY 2")
+            self._columns = [x[0] for x in cols]
+        return self._columns
 
     @property
     def connection(self):
