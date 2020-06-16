@@ -114,19 +114,11 @@ class Project:
         """Adds a file to the projects
         @:param: path, string path to the file"""
         try:
-            file = open(path)
-            headerdict = {"X-Logpickr-API-Token": self.owner.token, "accept": "application/json",
-                          "Content-Type": "form-data; boundary=--aniania--"}
-
             response = req.post(f"{API_URL}/project/{self.id}/file?teamId={self.owner.id}",
                                 files={'file': (path.split("/")[-1], open(path, 'rb'), "text/csv")},
                                 headers={"X-Logpickr-API-Token": self.owner.token,
                                          "accept": "application/json, text/plain, */*"}
                                 )
-            # print(response.request.method)
-            # print(response.request.url)
-            # print(response.request.headers)
-            # print(response.request.body.decode("utf-8"))
             response.raise_for_status()
         except req.HTTPError as error:
             print(f"Http error occured: {error}")
@@ -156,7 +148,8 @@ class Datasource:
     @property
     def columns(self):
         if self._columns is None:
-            cols = self.request(f"SELECT COLUMN_NAME, ORDINAL_POSITION, DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '{self.name}' ORDER BY 2")
+            cols = self.request(
+                f"SELECT COLUMN_NAME, ORDINAL_POSITION, DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '{self.name}' ORDER BY 2")
             self._columns = [x[0] for x in cols]
         return self._columns
 
