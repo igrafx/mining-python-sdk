@@ -23,7 +23,9 @@ class Workgroup:
         try:
             response = req.get(f"{API_URL}/projects", headers={"X-Logpickr-API-Token": self.token})
             response.raise_for_status()
-            self._projects = [Project(x, self) for x in response.json()]
+            for pid in response.json():
+                if len([pro for pro in self._projects if pro.id == pid]) == 0:  # If there are no projects with that ID
+                    self._projects.append(Project(pid, self))
 
         except req.HTTPError as error:
             print(f"HTTP Error occurred: {error}")
