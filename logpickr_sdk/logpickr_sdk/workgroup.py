@@ -1,4 +1,4 @@
-from logpickr_sdk.graph import Graph
+from logpickr_sdk.graph import Graph, GraphInstance
 import requests as req
 import pydruid.db
 
@@ -79,6 +79,7 @@ class Project:
         self._graph = None
         self._graph_instances = []
         self._datasources = []
+        self._process_keys = []
 
     @property
     def graph(self):
@@ -91,10 +92,19 @@ class Project:
             print(f"HTTP Error occurred: {error}")
         return self._graph
 
-    @property
-    def graph_instances(self):
+    def graph_instances(self, process_id):
         """Performs a REST for the graph instances contained in the project"""
-        return None
+        try:
+            response = req.get(f"{API_URL}/project/{self.id}/graphInstance",
+                               params={"processId": process_id},
+                               headers={"X-Logpickr-API-Token": self.owner.token})
+            response.raise_for_status()
+            graphs = response.json()
+            if len(graphs) > len(self._graph_instances):    # I.E if there are new graph instances
+                self._graph_instances = GraphInstance.from_json(self.id, str(graphs).replace("\'", "\""))
+        except req.HTTPError as error:
+            print(f"HTTP Error occured: {error}")
+        return self._graph_instances
 
     @property
     def datasources(self):
@@ -109,6 +119,16 @@ class Project:
             print(f"HTTP Error occurred: {error}")
 
         return self._datasources
+
+    @property
+    def process_keys(self):
+        """Queries the datasources to find the different process keys of the project"""
+        if len(self._process_keys) == 0:
+            ds = self.datasources[0]
+            rows = ds.request(f"SELECT DISTINCT processkey FROM \"{ds.name}\"")
+            self._process_keys = [pk[0] for pk in rows]
+
+        return self._process_keys
 
     def add_file(self, path):
         """Adds a file to the projects
