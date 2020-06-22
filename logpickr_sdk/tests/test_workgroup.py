@@ -80,3 +80,8 @@ class TestDatasource:
 
         # TODO: add some tests to make sure you can't do forbidden things like create tables, add columns, edit values
         # Basically make sure you're in read-only mode
+
+    def test_colums(self):
+        p = Project(PROJECT_ID, TestProject.wg)
+        ds = p.datasources[0]
+        assert ds.columns != []
