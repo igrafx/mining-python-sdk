@@ -63,8 +63,9 @@ class Workgroup:
             return response.json()["access_token"]
 
         except req.exceptions.HTTPError as error:
-            # TODO: handle different errors differently (good words buddy)
             print(f"HTTP Error occured: {error}")
+            if error.response.reason == 'Bad Request':
+                raise Exception("Invalid login credentials")
 
         return ""
 
@@ -73,8 +74,8 @@ class Project:
     """A Logpickr project
     """
 
-    def __init__(self, id: str, owner: Workgroup):
-        self.id = id
+    def __init__(self, pid: str, owner: Workgroup):
+        self.id = pid
         self.owner = owner
         self._graph = None
         self._graph_instances = []
@@ -92,19 +93,26 @@ class Project:
             print(f"HTTP Error occurred: {error}")
         return self._graph
 
-    def graph_instances(self, process_id):
-        """Performs a REST for the graph instances contained in the project"""
+    @property
+    def graph_instances(self):
+        if len(self._graph_instances) < len(self.process_keys): # IE if there are new graph instances available
+            self._graph_instances = []
+            for k in self.process_keys:
+                self._graph_instances.append(self.graph_instance_from_key(k))
+        return self._graph_instances
+
+    def graph_instance_from_key(self, process_id):
+        """Performs a REST for the graph instance assosciated with the process ID"""
         try:
             response = req.get(f"{API_URL}/project/{self.id}/graphInstance",
                                params={"processId": process_id},
                                headers={"X-Logpickr-API-Token": self.owner.token})
             response.raise_for_status()
-            graphs = response.json()
-            if len(graphs) > len(self._graph_instances):    # I.E if there are new graph instances
-                self._graph_instances = GraphInstance.from_json(self.id, str(graphs).replace("\'", "\""))
+            graph = response.json()
+            graph_instance = GraphInstance.from_json(self.id, str(graph).replace("\'", "\""))
         except req.HTTPError as error:
             print(f"HTTP Error occured: {error}")
-        return self._graph_instances
+        return graph_instance
 
     @property
     def datasources(self):

@@ -1,3 +1,4 @@
+import pytest
 from logpickr_sdk.workgroup import Workgroup, Project, Datasource
 from logpickr_sdk.graph import Graph, Vertex, Edge
 from random import randint, choice
@@ -7,23 +8,26 @@ SECRET = "72deb3cf-502d-4d8e-ab69-513d3c2694fa"
 
 try:
     w = Workgroup(ID, SECRET)
-    project = Project(w.projects[0], w)  # Creates a project with the first possible ID
+    project = Project(14, w)  # Creates a project with the first possible ID
 except Exception as e:
     project = Project("0", None)
 
 class TestGraph:
     def test_graph_creation(self):
         g = project.graph
-        assert g.parent_id == project.id
         assert len(g.vertices) > 0
         assert len(g.edges) > 0
-        assert g.rework_total == -1  # Since this is a graph, not a graph instance
-        assert g.concurrency_rate == -1
 
     def test_graph_instance(self):
-        g = project.graph_instances(project.process_keys[0])
-        assert g.rework_total >= 0
-        assert g.concurrency_rate >= 0
+        g = project.graph_instances[0]
+        assert g.rework_total is not None
+        assert g.concurrency_rate is not None
+
+    def test_graph_with_bad_edges(self):
+
+        jsonstring = open("graph_with_invalid_edges.json").readline()
+        with pytest.raises(Exception):
+            assert Graph.from_json(14, jsonstring)
 
     def test_from_json(self):
         text = open("graph.json").readline().strip("\n")
@@ -39,14 +43,13 @@ class TestVertex:
         return choice(g.vertices)
 
     def random_vertex_instance(self):
-        g = project.graph_instances(project.process_keys[0])
+        g = project.graph_instances[0]
         return choice(g.vertices)
 
     def test_created_vertex(self):
         v = self.random_vertex()
         assert v.id is not None
         assert v.name != ""
-        assert v.parent == project.graph
 
     def test_vertex_instance(self):
         v = self.random_vertex_instance()
@@ -61,13 +64,12 @@ class TestEdge:
         return choice(g.edges)
 
     def random_edge_instance(self):
-        g = project.graph_instances(project.process_keys[0])
+        g = project.graph_instances[0]
         return choice(g.edges)
 
     def test_created_edge(self):
         e = self.random_edge()
         assert e.id is not None
-        assert e.parent == project.graph
         assert e.source is not None
         assert type(e.source) == Vertex
         assert e.destination is not None
