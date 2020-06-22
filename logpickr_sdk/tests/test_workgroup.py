@@ -16,8 +16,8 @@ class TestWorkgroup:
         assert w._projects == []
 
     def test_wrong_login(self):
-        w = Workgroup("a", "b")
-        assert w.token == ""
+        with pytest.raises(Exception):
+            assert Workgroup("a", "b")
 
     def test_projects(self):
         w = Workgroup(ID, SECRET)
@@ -28,7 +28,7 @@ class TestWorkgroup:
         assert len(w.datasources) > 0  # Since there should be projects in the workgroup
 
 
-PROJECT_ID = 16
+PROJECT_ID = 14
 
 
 class TestProject():
@@ -70,11 +70,13 @@ PORT = ""
 class TestDatasource:
 
     def test_create_datasource(self):
-        ds = Datasource(NAME, TYPE, HOST, PORT)
+        p = Project(PROJECT_ID, TestProject.wg)
+        ds = Datasource(NAME, TYPE, HOST, PORT, p)
         assert ds.name == NAME
         assert ds.type == TYPE
         assert ds.host == HOST
         assert ds.port == PORT
+        assert ds.project == p
 
         # TODO: add some tests to make sure you can't do forbidden things like create tables, add columns, edit values
         # Basically make sure you're in read-only mode
