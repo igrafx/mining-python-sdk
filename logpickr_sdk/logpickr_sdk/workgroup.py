@@ -10,6 +10,7 @@ class Workgroup:
     """A Logpickr workgroup, which is used to log in and access projects"""
 
     def __init__(self, client_id: str, key: str):
+        """ Creates a Logpickr Workgroup and automatically logs in to the Logpickr API using the provided client id and secret key"""
         self.id = client_id
         self.key = key
         self._projects = []
@@ -18,8 +19,7 @@ class Workgroup:
 
     @property
     def projects(self):
-        """Performs a REST request for projects, then gets project data for any projects that don't already exist
-        in _projects"""
+        """Performs a REST request for projects, then gets project data for any projects that don't already exist in the Workgroup"""
         try:
             response = req.get(f"{API_URL}/projects", headers={"X-Logpickr-API-Token": self.token})
             response.raise_for_status()
@@ -67,14 +67,13 @@ class Workgroup:
             if error.response.reason == 'Bad Request':
                 raise Exception("Invalid login credentials")
 
-        return ""
-
 
 class Project:
     """A Logpickr project
     """
 
     def __init__(self, pid: str, owner: Workgroup):
+        """Create a Logpickr project from a project ID and the Workgroup it was created by"""
         self.id = pid
         self.owner = owner
         self._graph = None
@@ -95,6 +94,7 @@ class Project:
 
     @property
     def graph_instances(self):
+        """Returns all of the project's Graph Instances, performing and REST request for any instances that don't already exist within the project."""
         if len(self._graph_instances) < len(self.process_keys): # IE if there are new graph instances available
             self._graph_instances = []
             for k in self.process_keys:
@@ -102,7 +102,7 @@ class Project:
         return self._graph_instances
 
     def graph_instance_from_key(self, process_id):
-        """Performs a REST for the graph instance assosciated with the process ID"""
+        """Performs a REST request for the graph instance associated with a process key, and returns it"""
         try:
             response = req.get(f"{API_URL}/project/{self.id}/graphInstance",
                                params={"processId": process_id},
@@ -116,7 +116,7 @@ class Project:
 
     @property
     def datasources(self):
-        """Requests and returns the list of tables associated with the project"""
+        """Requests and returns the list of datasources associated with the project"""
         try:
             response = req.get(f"{API_URL}/datasources", params={"id": f"{self.id}"},
                                headers={"X-Logpickr-API-Token": self.owner.token})
@@ -139,8 +139,7 @@ class Project:
         return self._process_keys
 
     def add_file(self, path):
-        """Adds a file to the projects
-        @:param: path, string path to the file"""
+        """Adds a file to the project"""
         try:
             response = req.post(f"{API_URL}/project/{self.id}/file?teamId={self.owner.id}",
                                 files={'file': (path.split("/")[-1], open(path, 'rb'), "text/csv")},
@@ -155,7 +154,7 @@ class Project:
 
 
 class Datasource:
-    """An SQL table that can be sent requests by the user"""
+    """An Druid table that can be sent requests by the user"""
 
     def __init__(self, name: str, dstype: str, host: str, port: str, project: Project):
         self.name = name
@@ -167,14 +166,14 @@ class Datasource:
         self._cursor = None
         self._columns = None
 
-    def request(self, command):
-        """Placeholder method header, sends an SQL request to the table
-        @:param: command, the request to send"""
-        self.cursor.execute(command)
+    def request(self, sqlreq):
+        """Sends an SQL request to the datasource and returns the results"""
+        self.cursor.execute(sqlreq)
         return self.cursor.fetchall()
 
     @property
     def columns(self):
+        """Returns the columns of the datasource"""
         if self._columns is None:
             cols = self.request(
                 f"SELECT COLUMN_NAME, ORDINAL_POSITION, DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '{self.name}' ORDER BY 2")
@@ -183,6 +182,7 @@ class Datasource:
 
     @property
     def connection(self):
+        """Returns the pydruid connection to the datasource, after initializing it if need be"""
         if self._connection is None:
             self._connection = pydruid.db.connect("localhost", self.port, path="/druid/v2/sql",
                                                   user=self.project.owner.id, password=self.project.owner.key)
@@ -190,6 +190,7 @@ class Datasource:
 
     @property
     def cursor(self):
+        """Returns the pydruid cursor on the datasource, after initializing it if it doesn't exist"""
         if self._cursor is None:
             self._cursor = self.connection.cursor()
         return self._cursor
