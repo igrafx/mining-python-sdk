@@ -2,7 +2,7 @@ import json
 
 
 class Graph:
-    """A graph from a Logpickr project
+    """A graph from a Logpickr project, created with the parent Project's ID, a list of vertices and a list of edges
     """
 
     def __init__(self, project_id: str, vertices: list, edges: list):
@@ -12,6 +12,7 @@ class Graph:
 
     @staticmethod
     def from_json(project_id, jsstring):
+        """Static method that creates a Graph based on the json representation returned by the Logpickr API"""
         jgraph = json.loads(jsstring)
         jverts = jgraph["vertices"]
         jedges = jgraph["edges"]
@@ -29,7 +30,8 @@ class Graph:
 
 
 class GraphInstance(Graph):
-
+    """A graph instance from a Logpickr project, created with the parent Project's ID, a list of vertex instances and a list of edge instances
+    """
     def __init__(self, project_id: str, vertices: list, edges: list, rework_total: int, concurrency_rate: float):
         super().__init__(project_id, vertices, edges)
         self.rework_total = rework_total
@@ -37,6 +39,7 @@ class GraphInstance(Graph):
 
     @staticmethod
     def from_json(project_id, jsstring):
+        """Static method that creates a GraphInstance based on the json representation returned by the Logpickr API"""
         jgraph = json.loads(jsstring)
         jverts = jgraph["vertexInstances"]
         jedges = jgraph["edgeInstances"]
@@ -59,7 +62,7 @@ class GraphInstance(Graph):
 
 
 class Vertex:
-    """Vertex of a Logpicker Graph
+    """Vertex of a Logpicker Graph. Has a unique id and a name
     """
 
     def __init__(self, vid: str, name: str):
@@ -68,6 +71,7 @@ class Vertex:
 
 
 class VertexInstance(Vertex):
+    """Vertex of a Logpickr Graph Instance. Has a unique id, a name, an event instance and a lis t of concurrent vertices"""
 
     def __init__(self, vid: str, name: str, event_instance: int, concurrent_vertices: list):
         super().__init__(vid, name)
@@ -76,6 +80,7 @@ class VertexInstance(Vertex):
 
     @staticmethod
     def from_json(jvert):
+        """Static method that created a VertexInstance from its json representation"""
         # If there are no concurrent vertices, there's going to be no concurrentVertices argument, instead of an empty
         # list, so I have to do this nonsense instead to make sure I don't get key errors
         conc = [v["name"] +str(v["eventInstance"]) for v in jvert["concurrentVertices"]] if "concurrentVertices" in jvert.keys() else []
@@ -85,7 +90,7 @@ class VertexInstance(Vertex):
 
 
 class Edge:
-    """Edge between two vertices of a Logpickr graph
+    """Edge between two vertices of a Logpickr Graph. Has a unique id, a source and a destination 
     """
 
     def __init__(self, eid: str, source: Vertex, destination: Vertex):
@@ -95,6 +100,7 @@ class Edge:
 
 
 class EdgeInstance:
+    """Edge between two vertices of a Logpickr Graph Instance. Has a unique id, a source and a destination, and a list of concurrent edges"""
 
     def __init__(self, source: VertexInstance, destination: VertexInstance, concurrent_edges: list):
         self.source = source
@@ -103,7 +109,7 @@ class EdgeInstance:
 
     @staticmethod
     def from_json(jedge, vertices):
-
+        """Static method that created an EdgeInstance from its json representation"""
         conc = [edge_dict_to_str(e) for e in jedge["concurrentEdges"]] if "concurrentEdges" in jedge.keys() else []
         source = next(v for v in vertices if v.id == jedge["source"]["id"])
         dest = next(v for v in vertices if v.id == jedge["destination"]["id"])
@@ -113,6 +119,7 @@ class EdgeInstance:
 
 
 def edge_dict_to_str(edge):
+    """Helper method for comparison that creates a unique string from a json edge instance"""
     csource = edge["source"]
     cdest = edge["destination"]
     return (str(csource["id"]) + csource["name"] + str(csource["eventInstance"]) +
@@ -120,6 +127,7 @@ def edge_dict_to_str(edge):
 
 
 def edge_to_str(edge):
+    """Helper method that creates a unique string from an EdgeInstance"""
     csource = edge.source
     cdest = edge.destination
     return (str(csource.id) + csource.name + str(csource.event_instance) +
