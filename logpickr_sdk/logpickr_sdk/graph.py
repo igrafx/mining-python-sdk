@@ -101,7 +101,7 @@ class VertexInstance(Vertex):
 
     @staticmethod
     def from_json(jvert):
-        """Static method that created a VertexInstance from its json representation"""
+        """Static method that creates a VertexInstance from its json representation"""
         # If there are no concurrent vertices, there's going to be no concurrentVertices argument, instead of an empty
         # list, so I have to do this nonsense instead to make sure I don't get key errors
         conc = [v["name"] +str(v["eventInstance"]) for v in jvert["concurrentVertices"]] if "concurrentVertices" in jvert.keys() else []
@@ -125,7 +125,7 @@ class Edge:
 
 
 class EdgeInstance:
-    """Edge between two vertices of a Logpickr Graph Instance. Has a unique id, a source and a destination, and a list of concurrent edges"""
+    """Edge between two vertices of a Logpickr Graph Instance. Has a source and a destination, and a list of concurrent edges"""
 
     def __init__(self, source: VertexInstance, destination: VertexInstance, concurrent_edges: list):
         self.source = source
