@@ -1,6 +1,7 @@
 from logpickr_sdk.graph import Graph, GraphInstance
 import requests as req
 import pydruid.db
+import pandas
 
 API_URL = "http://localhost:8080/pub"
 AUTH_URL = "http://localhost:28080"
@@ -138,8 +139,8 @@ class Project:
         """Queries the datasources to find the different process keys of the project"""
         if len(self._process_keys) == 0:
             ds = self.datasources[0]
-            rows = ds.request(f"SELECT DISTINCT processkey FROM \"{ds.name}\"")
-            self._process_keys = [pk[0] for pk in rows]
+            res = ds.request(f"SELECT DISTINCT processkey FROM \"{ds.name}\"")
+            self._process_keys = [key for key in res['processkey']]
 
         return self._process_keys
 
@@ -172,17 +173,20 @@ class Datasource:
         self._columns = None
 
     def request(self, sqlreq):
-        """Sends an SQL request to the datasource and returns the results"""
+        """Sends an SQL request to the datasource and returns the results as a pandas Dataframe"""
         self.cursor.execute(sqlreq)
-        return self.cursor.fetchall()
+        rows = self.cursor.fetchall()
+        cols = list(rows[0]._fields)
+        data = [list(r) for r in rows]
+        return pandas.DataFrame(data, columns=cols)
 
     @property
     def columns(self):
         """Returns the columns of the datasource"""
         if self._columns is None:
-            cols = self.request(
+            res = self.request(
                 f"SELECT COLUMN_NAME, ORDINAL_POSITION, DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '{self.name}' ORDER BY 2")
-            self._columns = [x[0] for x in cols]
+            self._columns = [x for x in res["COLUMN_NAME"]]
         return self._columns
 
     @property
