@@ -1,0 +1,222 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workgroups and Projects &#8212; Logpickr SDK  documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Graphs and Graph Instances" href="graph.html" />
+    <link rel="prev" title="Welcome to Logpickr SDK’s documentation!" href="../index.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="graph.html" title="Graphs and Graph Instances"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Welcome to Logpickr SDK’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Logpickr SDK  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Workgroups and Projects</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="workgroups-and-projects">
+<h1>Workgroups and Projects<a class="headerlink" href="#workgroups-and-projects" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="workgroups">
+<h2>Workgroups<a class="headerlink" href="#workgroups" title="Permalink to this headline">¶</a></h2>
+<p>Workgroups are the first and essential step to accessing your Logpickr data. They are instanciated with a valid workgroup ID and Secret key (which can be found in your Workgroup settings in Process Explorer 360). Workgroups allow you to access the projects created within the workgroup and the associated datasources.</p>
+<dl class="py class">
+<dt id="logpickr_sdk.workgroup.Workgroup">
+<em class="property">class </em><code class="sig-prename descclassname">logpickr_sdk.workgroup.</code><code class="sig-name descname">Workgroup</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">client_id</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">key</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#logpickr_sdk.workgroup.Workgroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>A Logpickr workgroup, which is used to log in and access projects</p>
+<dl class="py method">
+<dt id="logpickr_sdk.workgroup.Workgroup.datasources">
+<em class="property">property </em><code class="sig-name descname">datasources</code><a class="headerlink" href="#logpickr_sdk.workgroup.Workgroup.datasources" title="Permalink to this definition">¶</a></dt>
+<dd><p>Requests and returns the list of datasources associated with the workgroup</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="logpickr_sdk.workgroup.Workgroup.login">
+<code class="sig-name descname">login</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#logpickr_sdk.workgroup.Workgroup.login" title="Permalink to this definition">¶</a></dt>
+<dd><p>Logs in to the Logpickr API with the Workgroup’s credentials and retrieves a token for later requests</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="logpickr_sdk.workgroup.Workgroup.projects">
+<em class="property">property </em><code class="sig-name descname">projects</code><a class="headerlink" href="#logpickr_sdk.workgroup.Workgroup.projects" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs a REST request for projects, then gets project data for any projects that don’t already exist in the Workgroup</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="projects">
+<h2>Projects<a class="headerlink" href="#projects" title="Permalink to this headline">¶</a></h2>
+<p>A Project object contains the the information about a (drumroll please) Logpickr project! <em>note to self: remove the sarcasm.</em> Each project allows you to get the various <a class="reference external" href="graph.html">graphs</a> it contains, and access its <a class="reference internal" href="#datasources">Datasources</a>.</p>
+<dl class="py class">
+<dt id="logpickr_sdk.workgroup.Project">
+<em class="property">class </em><code class="sig-prename descclassname">logpickr_sdk.workgroup.</code><code class="sig-name descname">Project</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pid</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">owner</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#logpickr_sdk.workgroup.Workgroup" title="logpickr_sdk.workgroup.Workgroup">logpickr_sdk.workgroup.Workgroup</a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#logpickr_sdk.workgroup.Project" title="Permalink to this definition">¶</a></dt>
+<dd><p>A Logpickr project</p>
+<dl class="py method">
+<dt id="logpickr_sdk.workgroup.Project.add_file">
+<code class="sig-name descname">add_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em><span class="sig-paren">)</span><a class="headerlink" href="#logpickr_sdk.workgroup.Project.add_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a file to the project</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="logpickr_sdk.workgroup.Project.datasources">
+<em class="property">property </em><code class="sig-name descname">datasources</code><a class="headerlink" href="#logpickr_sdk.workgroup.Project.datasources" title="Permalink to this definition">¶</a></dt>
+<dd><p>Requests and returns the list of datasources associated with the project</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="logpickr_sdk.workgroup.Project.graph">
+<em class="property">property </em><code class="sig-name descname">graph</code><a class="headerlink" href="#logpickr_sdk.workgroup.Project.graph" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs a REST for the project model graph if it hasn’t already been retrieved</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="logpickr_sdk.workgroup.Project.graph_instance_from_key">
+<code class="sig-name descname">graph_instance_from_key</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">process_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#logpickr_sdk.workgroup.Project.graph_instance_from_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs a REST request for the graph instance associated with a process key, and returns it</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="logpickr_sdk.workgroup.Project.graph_instances">
+<em class="property">property </em><code class="sig-name descname">graph_instances</code><a class="headerlink" href="#logpickr_sdk.workgroup.Project.graph_instances" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all of the project’s Graph Instances, performing and REST request for any instances that don’t already exist within the project.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="logpickr_sdk.workgroup.Project.process_keys">
+<em class="property">property </em><code class="sig-name descname">process_keys</code><a class="headerlink" href="#logpickr_sdk.workgroup.Project.process_keys" title="Permalink to this definition">¶</a></dt>
+<dd><p>Queries the datasources to find the different process keys of the project</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="datasources">
+<h2>Datasources<a class="headerlink" href="#datasources" title="Permalink to this headline">¶</a></h2>
+<p>Datasources allow you to perform custom SQL requests to the Druid databases containing the data for your projects. Datasources are always obtained through the <a class="reference internal" href="#workgroups">Workgroups</a> or the <a class="reference internal" href="#projects">Projects</a>, so you shouldn’t need to instanciate one on your lonesome.</p>
+<dl class="py class">
+<dt id="logpickr_sdk.workgroup.Datasource">
+<em class="property">class </em><code class="sig-prename descclassname">logpickr_sdk.workgroup.</code><code class="sig-name descname">Datasource</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">dstype</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">host</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">port</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">project</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#logpickr_sdk.workgroup.Project" title="logpickr_sdk.workgroup.Project">logpickr_sdk.workgroup.Project</a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#logpickr_sdk.workgroup.Datasource" title="Permalink to this definition">¶</a></dt>
+<dd><p>An Druid table that can be sent requests by the user</p>
+<dl class="py method">
+<dt id="logpickr_sdk.workgroup.Datasource.columns">
+<em class="property">property </em><code class="sig-name descname">columns</code><a class="headerlink" href="#logpickr_sdk.workgroup.Datasource.columns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the columns of the datasource</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="logpickr_sdk.workgroup.Datasource.connection">
+<em class="property">property </em><code class="sig-name descname">connection</code><a class="headerlink" href="#logpickr_sdk.workgroup.Datasource.connection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the pydruid connection to the datasource, after initializing it if need be</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="logpickr_sdk.workgroup.Datasource.cursor">
+<em class="property">property </em><code class="sig-name descname">cursor</code><a class="headerlink" href="#logpickr_sdk.workgroup.Datasource.cursor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the pydruid cursor on the datasource, after initializing it if it doesn’t exist</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="logpickr_sdk.workgroup.Datasource.request">
+<code class="sig-name descname">request</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sqlreq</span></em><span class="sig-paren">)</span><a class="headerlink" href="#logpickr_sdk.workgroup.Datasource.request" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sends an SQL request to the datasource and returns the results as a pandas Dataframe</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Workgroups and Projects</a><ul>
+<li><a class="reference internal" href="#workgroups">Workgroups</a></li>
+<li><a class="reference internal" href="#projects">Projects</a></li>
+<li><a class="reference internal" href="#datasources">Datasources</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../index.html"
+                        title="previous chapter">Welcome to Logpickr SDK’s documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="graph.html"
+                        title="next chapter">Graphs and Graph Instances</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/moduledocs/workgroup.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="graph.html" title="Graphs and Graph Instances"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Welcome to Logpickr SDK’s documentation!"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Logpickr SDK  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Workgroups and Projects</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Theotime Dugois.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.1.1.
+    </div>
+  </body>
+</html>
