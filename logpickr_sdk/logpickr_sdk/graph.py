@@ -1,4 +1,6 @@
 import json
+import graphviz
+import os
 
 
 class Graph:
@@ -27,6 +29,24 @@ class Graph:
                 raise Exception("Invalid edge")
 
         return Graph(project_id, vertices, edges)
+
+    def display(self):
+        """Renders and displays the graph using Graphviz"""
+        graphname = str(self).split("x")[-1].strip(">") #Name is basically the pointer
+        dot = graphviz.Digraph(name= graphname, format="svg")
+        
+        for e in self.edges:
+            vs = e.source
+            vd = e.destination
+            dot.node(vs.graphviz_id,vs.name)
+            dot.node(vd.graphviz_id,vd.name)
+            dot.edge(vs.graphviz_id, vd.graphviz_id)
+
+        if not os.path.isdir(".lpk_graphs"):
+            os.makedirs(".lpk_graphs")
+
+        dot.render(f".lpk_graphs/graph{graphname}.gv", view=True)
+
 
 
 class GraphInstance(Graph):
@@ -69,6 +89,10 @@ class Vertex:
         self.id = vid
         self.name = name
 
+    @property
+    def graphviz_id(self):
+        return self.name.replace(" ", "") + self.id
+
 
 class VertexInstance(Vertex):
     """Vertex of a Logpickr Graph Instance. Has a unique id, a name, an event instance and a lis t of concurrent vertices"""
@@ -87,6 +111,10 @@ class VertexInstance(Vertex):
         # Note: the concurrent vertices are currently just ids constructed from the event instance and name. While it
         # should be unique, this method is only called right before these weird ids get replaced with actual pointers
         return VertexInstance(jvert["id"], jvert["name"], jvert["eventInstance"], conc)
+
+    @property
+    def graphviz_id(self):
+        return self.name.replace(" ", "") + self.id + str(self.event_instance)
 
 
 class Edge:
