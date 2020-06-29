@@ -58,9 +58,8 @@ class GraphInstance(Graph):
         self.concurrency_rate = concurrency_rate
 
     @staticmethod
-    def from_json(project_id, jsstring):
+    def from_json(project_id, jgraph):
         """Static method that creates a GraphInstance based on the json representation returned by the Logpickr API"""
-        jgraph = json.loads(jsstring)
         jverts = jgraph["vertexInstances"]
         jedges = jgraph["edgeInstances"]
 
@@ -69,8 +68,6 @@ class GraphInstance(Graph):
             # replace the list of "ids" with a list of the proper objects
             oldconcurr = vertex.concurrent_vertices
             vertex.concurrent_vertices = [v for v in vertices if (v.name + str(v.event_instance)) in oldconcurr]
-        # Up to this point: works fine, good job me
-        print("oi")
         edges = [EdgeInstance.from_json(e, vertices) for e in jedges]
 
         for edge in edges:
