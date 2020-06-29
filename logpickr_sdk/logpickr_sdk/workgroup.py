@@ -109,9 +109,14 @@ class Project:
                                headers={"X-Logpickr-API-Token": self.owner.token})
             response.raise_for_status()
             graph = response.json()
-            graph_instance = GraphInstance.from_json(self.id, str(graph).replace("\'", "\""))
+            graph_instance = GraphInstance.from_json(self.id, graph)
         except req.HTTPError as error:
             print(f"HTTP Error occured: {error}")
+            return None
+        except Exception as error:
+            print(f"Could not parse graph: {error}")
+            print(response.json())
+            return None
         return graph_instance
 
     @property
