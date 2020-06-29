@@ -1,4 +1,4 @@
-sphinxdocs/_*
+sphinxdocs/_build
 tiddelibits
 **/.pytest_cache
 **/.lpk_graphs
