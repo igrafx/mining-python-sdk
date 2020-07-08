@@ -121,7 +121,7 @@ class Project:
                                    params={"processId": process_id},
                                    headers={"X-Logpickr-API-Token": self.owner.token})  # try again
             response.raise_for_status()
-            graph = response.json()
+            graph = response.json()["value"]
             graph_instance = GraphInstance.from_json(self.id, graph)
         except req.HTTPError as error:
             print(f"HTTP Error occured: {error}")
