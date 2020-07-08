@@ -49,6 +49,10 @@ class Workgroup:
             print(f"HTTP Error occurred: {error}")
 
         return self._datasources
+        
+    def project_from_id(pid):
+        """Returns a project based on its id, or None if no such project exists"""
+        return next((p for p in self.projects if p.id == pid), None)
 
     def login(self):
         """Logs in to the Logpickr API with the Workgroup's credentials and retrieves a token for later requests"""
