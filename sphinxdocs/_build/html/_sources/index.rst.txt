@@ -10,6 +10,7 @@ Welcome to Logpickr SDK's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   howto
    moduledocs/workgroup
    moduledocs/graph
 
