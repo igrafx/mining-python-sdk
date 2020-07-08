@@ -7,6 +7,6 @@ setup(name="logpickr_sdk",
       author="Theotime Dugois",
       author_email="theotime.dugois@gmail.com",
       packages=["logpickr_sdk"],
-      install_requires=['requests', 'pandas', 'pydruid==0.5.9', 'sphinx', 'pytest'],
+      install_requires=['requests', 'pandas', 'pydruid==0.5.9', 'graphviz', 'sphinx', 'pytest'],
       licence="TBD"  # TODO: Work this out with Daniel
       )
