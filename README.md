@@ -1,5 +1,17 @@
 # logpickr-sdk
 
+## Requirements
+
+This package requires python 3.6 or above. Get the latest version of python at https://www.python.org/.
+
+The required packages should be automatically installed when installing the package for the first time. If they somehow don't, they are:
+
+* requests `pip3 install requests`
+* pydruid (version 0.5.9 is used here, as version 0.6.0 and 0.6.1 have a currently unresolved bug that prevents from connecting to the databases) `pip3 install pydruid==0.5.9`
+* pandas `pip3 install pandas`
+* sphinx for the docs `pip3 install sphinx`
+* pytest for the unittests `pip3 install pytest`
+
 ## Installing
 
 To install the SDK from source, simply navigate to `logpickr_sdk`, and run `pip install .`  
@@ -10,4 +22,8 @@ This means that any changes made to the source will be instantly reflected anywh
 ## Docs
 
 The documentation is built with [Sphinx 1.8.0](https://www.sphinx-doc.org/en/master/) and can be found at `sphinxdocs/_build/index.html`. 
-To regenerate the doc, simply go to `sphinxdocs` and use the command `make html` (this requires Sphinx, which can be installed through pip)
+To regenerate the doc, simply go to `sphinxdocs` and use the command `make html` (this requires Sphinx, which can be installed through pip, see [above](#requirements))
+
+## Running the tests
+
+The tests are written for pytest, which should be installed with this package. Navigate to the test folder and run `pytest -v` (the -v flag is optional but can help see what fails )
