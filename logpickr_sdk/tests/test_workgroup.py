@@ -2,13 +2,22 @@ import pytest
 from logpickr_sdk.workgroup import Workgroup, Project, Datasource
 import requests as req
 
-ID = "fb6eeb8f-574c-469b-8eef-276ed6cfa823"
-SECRET = "72deb3cf-502d-4d8e-ab69-513d3c2694fa"
+@pytest.fixture()
+def ID(pytestconfig):
+    return pytestconfig.getoption("id")
+
+@pytest.fixture()
+def SECRET(pytestconfig):
+    return pytestconfig.getoption("key")
+    
+@pytest.fixture()
+def PROJECT_ID(pytestconfig):
+    return pytestconfig.getoption("project")
 
 
 class TestWorkgroup:
 
-    def test_create_workgroup(self):
+    def test_create_workgroup(self, ID, SECRET):
         w = Workgroup(ID, SECRET)
         assert w.id == ID
         assert w.key == SECRET
@@ -19,44 +28,46 @@ class TestWorkgroup:
         with pytest.raises(Exception):
             assert Workgroup("a", "b")
 
-    def test_projects(self):
+    def test_projects(self, ID, SECRET):
         w = Workgroup(ID, SECRET)
         assert len(w.projects) > 0  # Since there should be projects in the workgroup
 
-    def test_tables(self):
+    def test_tables(self, ID, SECRET):
         w = Workgroup(ID, SECRET)
         assert len(w.datasources) > 0  # Since there should be projects in the workgroup
 
 
-PROJECT_ID = 14
 
 
-class TestProject():
+class TestProject:
 
-    wg = Workgroup(ID, SECRET)
-
-    def test_create_project(self):
-        p = Project(PROJECT_ID, TestProject.wg)
+    def test_create_project(self, ID, SECRET):
+        wg = Workgroup(ID, SECRET)
+        p = Project(PROJECT_ID, wg)
         assert p.id == PROJECT_ID
         assert p._graph is None
         assert len(p._graph_instances) == 0
         assert len(p._datasources) == 0
         assert p.owner is not None
 
-    def test_graph(self):
-        p = Project(PROJECT_ID, TestProject.wg)
+    def test_graph(self, ID, SECRET, PROJECT_ID):
+        wg = Workgroup(ID, SECRET)
+        p = Project(PROJECT_ID, wg)
         assert p.graph is not None
 
-    def test_graph_instances(self):
-        p = Project(PROJECT_ID, TestProject.wg)
+    def test_graph_instances(self, ID, SECRET, PROJECT_ID):
+        wg = Workgroup(ID, SECRET)
+        p = Project(PROJECT_ID, wg)
         assert len(p.graph_instances) > 0
 
-    def test_datasources(self):
-        p = Project(PROJECT_ID, TestProject.wg)
+    def test_datasources(self, ID, SECRET, PROJECT_ID):
+        wg = Workgroup(ID, SECRET)
+        p = Project(PROJECT_ID, wg)
         assert len(p.datasources) > 0
 
-    def test_add_file(self):
-        p = Project(PROJECT_ID, TestProject.wg)
+    def test_add_file(self, ID, SECRET, PROJECT_ID):
+        wg = Workgroup(ID, SECRET)
+        p = Project(PROJECT_ID, wg)
         assert p.add_file("testdata.csv")
 
 
@@ -69,8 +80,9 @@ PORT = ""
 
 class TestDatasource:
 
-    def test_create_datasource(self):
-        p = Project(PROJECT_ID, TestProject.wg)
+    def test_create_datasource(self, ID, SECRET, PROJECT_ID):
+        wg = Workgroup(ID, SECRET)
+        p = Project(PROJECT_ID, wg)
         ds = Datasource(NAME, TYPE, HOST, PORT, p)
         assert ds.name == NAME
         assert ds.type == TYPE
@@ -81,7 +93,8 @@ class TestDatasource:
         # TODO: add some tests to make sure you can't do forbidden things like create tables, add columns, edit values
         # Basically make sure you're in read-only mode
 
-    def test_colums(self):
-        p = Project(PROJECT_ID, TestProject.wg)
+    def test_colums(self, ID, SECRET, PROJECT_ID):
+        wg = Workgroup(ID, SECRET)
+        p = Project(PROJECT_ID, wg)
         ds = p.datasources[0]
         assert ds.columns != []
