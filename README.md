@@ -26,4 +26,4 @@ To regenerate the doc, simply go to `sphinxdocs` and use the command `make html`
 
 ## Running the tests
 
-The tests are written for pytest, which should be installed with this package. Navigate to the test folder and run `pytest -v` (the -v flag is optional but can help see what fails )
+The tests are written for pytest, which should be installed with this package. Navigate to the test folder and run `pytest -v --id "workgroup id" --key "workgroup key" --project "the id of a project"`, replacing what's in quotes with the appropriate values (keeping them in quotes, as the id and key contain some hyphens, which messes with parsing). The -v (verbose) flag is optional, but it can help see what went wrong.
