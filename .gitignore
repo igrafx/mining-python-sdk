@@ -2,3 +2,6 @@ sphinxdocs/_build
 tiddelibits
 **/.pytest_cache
 **/.lpk_graphs
+logpickr_sdk/.idea
+logpickr_sdk/.lpk_graphs
+logpickr_sdk/.pytest_cache
