@@ -50,8 +50,9 @@ class Workgroup:
 
         return self._datasources
         
-    def project_from_id(pid):
+    def project_from_id(self, pid):
         """Returns a project based on its id, or None if no such project exists"""
+        
         return next((p for p in self.projects if p.id == pid), None)
 
     def login(self):
