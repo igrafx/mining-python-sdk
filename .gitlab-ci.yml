@@ -22,14 +22,12 @@ before_script:
   - pip install virtualenv
   - virtualenv venv
   - source venv/bin/activate
+  - pip install logpickr_sdk/
 
 run:
   script:
     - cd logpickr_sdk
     - python setup.py bdist_wheel
-    # an alternative approach is to install and run:
-    - pip install dist/*
-    # run the command here
   artifacts:
     paths:
       - dist/*.whl
@@ -37,7 +35,7 @@ run:
 pages:
   script:
     - pip install sphinx sphinx-rtd-theme
-    # should already be installed by the packaga, but better safe than sorry
+    # should already be installed by the package, but better safe than sorry
     - cd sphinxdocs ; make html
     - mv build/html/ ../public/
   artifacts:
