@@ -25,6 +25,7 @@ before_script:
 
 run:
   script:
+    - cd logpickr_sdk
     - python setup.py bdist_wheel
     # an alternative approach is to install and run:
     - pip install dist/*
