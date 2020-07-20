@@ -24,23 +24,18 @@ before_script:
   - source venv/bin/activate
   - pip install logpickr_sdk/
 
-build_wheel:
+run:
   script:
     - cd logpickr_sdk
     - python setup.py bdist_wheel
-    - cd dist
-    - cp *.whl logpick_sdk.whl
   artifacts:
     paths:
       - logpickr_sdk/dist/*.whl
 
 pages:
-  dependencies:
-    - build_wheel
   script:
     - pip install sphinx sphinx-rtd-theme
     # should already be installed by the package, but better safe than sorry
-    - mv logpick_sdk/dist/logpick_sdk.whl sphinxdocs/_static
     - cd sphinxdocs ; make html
     - mv _build/html/ ../public/
   artifacts:
