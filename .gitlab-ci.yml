@@ -1,0 +1,45 @@
+# Official language image. Look for the different tagged releases at:
+# https://hub.docker.com/r/library/python/tags/
+image: python:latest
+
+# Change pip's cache directory to be inside the project directory since we can
+# only cache local items.
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+
+# Pip's cache doesn't store the python packages
+# https://pip.pypa.io/en/stable/reference/pip_install/#caching
+#
+# If you want to also cache the installed packages, you have to install
+# them in a virtualenv and cache it as well.
+cache:
+  paths:
+    - .cache/pip
+    - venv/
+
+before_script:
+  - python -V  # Print out python version for debugging
+  - pip install virtualenv
+  - virtualenv venv
+  - source venv/bin/activate
+  - pip install logpickr_sdk/
+
+run:
+  script:
+    - cd logpickr_sdk
+    - python setup.py bdist_wheel
+  artifacts:
+    paths:
+      - logpickr_sdk/dist/*.whl
+
+pages:
+  script:
+    - pip install sphinx sphinx-rtd-theme
+    # should already be installed by the package, but better safe than sorry
+    - cd sphinxdocs ; make html
+    - mv _build/html/ ../public/
+  artifacts:
+    paths:
+      - public
+  only:
+    - master

@@ -21,8 +21,8 @@ This means that any changes made to the source will be instantly reflected anywh
 
 ## Docs
 
-The documentation is built with [Sphinx 1.8.0](https://www.sphinx-doc.org/en/master/) and can be found at `sphinxdocs/_build/index.html`. 
-To regenerate the doc, simply go to `sphinxdocs` and use the command `make html` (this requires Sphinx, which can be installed through pip, see [above](#requirements))
+The documentation is built with [Sphinx 1.8.0](https://www.sphinx-doc.org/en/master/) and can be found at https://logpickr.gitlab.io/logpickr-sdk/. 
+To regenerate the doc, simply go to `sphinxdocs` and use the command `make html` (this requires Sphinx, which can be installed through pip, see [above](#requirements)). The documentation will be built in the `sphinxdocs/_build/html` folder. Alternatively, any push to the master branch will trigger a rebuild of the online docs.
 
 ## Running the tests
 
