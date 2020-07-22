@@ -39,7 +39,9 @@ pages:
     # should already be installed by the package, but better safe than sorry
     - ls logpickr_sdk/dist/
     - mv logpickr_sdk/dist/logpickr_sdk.whl sphinxdocs/_static
-    - cd sphinxdocs ; make html
+    - cd sphinxdocs
+    - ls _static
+    - make html
     - mv _build/html/ ../public/
   artifacts:
     paths:
