@@ -38,7 +38,8 @@ pages:
     - pip install sphinx sphinx-rtd-theme
     # should already be installed by the package, but better safe than sorry
     - ls logpickr_sdk/dist/
-    - mv logpickr_sdk/dist/logpickr_sdk.whl sphinxdocs/_static
+    - mkdir sphinxdocs/_static
+    - mv logpickr_sdk/dist/logpickr_sdk.whl sphinxdocs/_static/
     - cd sphinxdocs
     - ls _static/
     - make html
