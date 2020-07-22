@@ -71,11 +71,10 @@ class TestProject:
         assert p.add_file("testdata.csv")
 
 
-# TODO: fill this in with the appropriate values
-NAME = ""
-TYPE = ""
-HOST = ""
-PORT = ""
+NAME = "22"
+TYPE = "events"
+HOST = "allinone"
+PORT = "8082"
 
 
 class TestDatasource:
