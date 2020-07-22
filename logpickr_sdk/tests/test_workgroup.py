@@ -1,3 +1,6 @@
+# Apache License 2.0, Copyright 2020 Logpickr
+# https://gitlab.com/logpickr/logpickr-sdk/-/blob/master/LICENSE
+
 import pytest
 from logpickr_sdk.workgroup import Workgroup, Project, Datasource
 import requests as req

@@ -1,3 +1,6 @@
+# Apache License 2.0, Copyright 2020 Logpickr
+# https://gitlab.com/logpickr/logpickr-sdk/-/blob/master/LICENSE
+
 import json
 import graphviz
 import os
