@@ -1,18 +1,28 @@
 How to use the SDK
 ==================
 
+.. _here : https://gitlab.com/logpickr/logpickr-sdk
+.. _f-strings : https://realpython.com/python-f-strings/
+.. _Dataframe : https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html
+.. _Python Database API : https://www.python.org/dev/peps/pep-0249/
+
 Installing
 ----------
 
 .. role:: bash(code)
    :language: bash
 
-First, install the SDK. If we've published it, then you can simply install it with :bash:`pip install logpickr_sdk`. If not, then install from source.
+First, install the SDK. If we've published it, then you can simply install it with :bash:`pip install logpickr_sdk`. If not, then install from source or download the wheel and install that.
 
 From source:
 ++++++++++++
 
-The source code for the SDK can be found `here`_ . Once installed, go to `logpickr_sdk` and run :bash:`pip3 install .`. Dependencies should be automatically installed along with it. Before installing, you can run the tests 
+The source code for the SDK can be found `here`_ . Once installed, go to `logpickr_sdk` and run :bash:`pip install .`. Dependencies should be automatically installed along with it. Before installing, you can run the tests.
+
+From wheel:
++++++++++++
+
+First, download the latest version of the wheel :download:`here <_static/logpickr_sdk.whl>`. Then, navigate to your download folder and run :bash:`pip install logpickr_sdk.whl`.
 
 Getting Started
 -------------------------
@@ -94,8 +104,4 @@ Alternatively, if need be, you can directly use the datasource's `connection` an
     ds = my_project.datasources[0]
     ds.connection
     ds.cursor
-
-.. _f-strings : https://realpython.com/python-f-strings/
-.. _Dataframe : https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html
-.. _Python Database API : https://www.python.org/dev/peps/pep-0249/
 
