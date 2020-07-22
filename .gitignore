@@ -1,5 +1,7 @@
-sphinxdocs/_build
 sphinxdocs/_build/*
+sphinxdocs/_build/html/*
+sphinxdocs/_build/doctrees/*
+sphinxdocs/_build/doctrees/moduledocs/*
 sphinxdocs/_static
 tiddelibits
 **/.pytest_cache
