@@ -30,7 +30,7 @@ run:
     - python setup.py bdist_wheel
   artifacts:
     paths:
-      - dist
+      - dist/*
 
 pages:
   script:
