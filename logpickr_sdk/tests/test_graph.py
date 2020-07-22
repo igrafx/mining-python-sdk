@@ -1,29 +1,44 @@
+# Apache License 2.0, Copyright 2020 Logpickr
+# https://gitlab.com/logpickr/logpickr-sdk/-/blob/master/LICENSE
+
+import pytest
 from logpickr_sdk.workgroup import Workgroup, Project, Datasource
 from logpickr_sdk.graph import Graph, Vertex, Edge
 from random import randint, choice
 
-ID = "fb6eeb8f-574c-469b-8eef-276ed6cfa823"
-SECRET = "72deb3cf-502d-4d8e-ab69-513d3c2694fa"
+@pytest.fixture()
+def ID(pytestconfig):
+    return pytestconfig.getoption("id")
 
-try:
-    w = Workgroup(ID, SECRET)
-    project = Project(w.projects[0])  # Creates a project with the first possible ID
-except Exception as e:
-    project = Project(0)
+@pytest.fixture()
+def SECRET(pytestconfig):
+    return pytestconfig.getoption("key")
+    
+@pytest.fixture()
+def PROJECT_ID(pytestconfig):
+    return pytestconfig.getoption("project")
+
 
 class TestGraph:
-    def test_graph_creation(self):
+    def test_graph_creation(self, ID, SECRET, PROJECT_ID):
+        w = Workgroup(ID, SECRET)
+        project = Project(PROJECT_ID, w)
         g = project.graph
-        assert g.parent_id == project.id
         assert len(g.vertices) > 0
         assert len(g.edges) > 0
-        assert g.rework_total == -1  # Since this is a graph, not a graph instance
-        assert g.concurrency_rate == -1
 
-    def test_graph_instance(self):
+    def test_graph_instance(self, ID, SECRET, PROJECT_ID):
+        w = Workgroup(ID, SECRET)
+        project = Project(PROJECT_ID, w)
         g = project.graph_instances[0]
-        assert g.rework_total >= 0
-        assert g.concurrency_rate >= 0
+        assert g.rework_total is not None
+        assert g.concurrency_rate is not None
+
+    def test_graph_with_bad_edges(self):
+
+        jsonstring = open("graph_with_invalid_edges.json").readline()
+        with pytest.raises(Exception):
+            assert Graph.from_json(14, jsonstring)
 
     def test_from_json(self):
         text = open("graph.json").readline().strip("\n")
@@ -34,48 +49,51 @@ class TestGraph:
 
 class TestVertex:
 
-    def random_vertex(self):
+    def random_vertex(self, project):
         g = project.graph
         return choice(g.vertices)
 
-    def random_vertex_instance(self):
+    def random_vertex_instance(self, project):
         g = project.graph_instances[0]
         return choice(g.vertices)
 
-    def test_created_vertex(self):
-        v = self.random_vertex()
+    def test_created_vertex(self, ID, SECRET, PROJECT_ID):
+        w = Workgroup(ID, SECRET)
+        project = Project(PROJECT_ID, w)
+        v = self.random_vertex(project)
         assert v.id is not None
         assert v.name != ""
-        assert v.event_instance == -1  # vertex non instancié
-        assert v.concurrent_vertices is None
-        assert v.parent == project.graph
 
-    def test_vertex_instance(self):
-        v = self.random_vertex_instance()
-        assert v.event_instance != -1
+    def test_vertex_instance(self, ID, SECRET, PROJECT_ID):
+        w = Workgroup(ID, SECRET)
+        project = Project(PROJECT_ID, w)
+        v = self.random_vertex_instance(project)
+        assert v.event_instance is not None
         assert v.concurrent_vertices is not None
 
 
 class TestEdge:
 
-    def random_edge(self):
+    def random_edge(self, project):
         g = project.graph
         return choice(g.edges)
 
-    def random_edge_instance(self):
+    def random_edge_instance(self, project):
         g = project.graph_instances[0]
         return choice(g.edges)
 
-    def test_created_edge(self):
-        e = self.random_edge()
+    def test_created_edge(self, ID, SECRET, PROJECT_ID):
+        w = Workgroup(ID, SECRET)
+        project = Project(PROJECT_ID, w)
+        e = self.random_edge(project)
         assert e.id is not None
-        assert e.parent == project.graph
         assert e.source is not None
         assert type(e.source) == Vertex
         assert e.destination is not None
         assert type(e.destination) == Vertex
-        assert e.concurrent_edges is None
 
-    def test_edge_instance(self):
-        e = self.random_edge_instance()
+    def test_edge_instance(self, ID, SECRET, PROJECT_ID):
+        w = Workgroup(ID, SECRET)
+        project = Project(PROJECT_ID, w)
+        e = self.random_edge_instance(project)
         assert e.concurrent_edges is not None
