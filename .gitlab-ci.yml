@@ -40,7 +40,7 @@ pages:
     - ls logpickr_sdk/dist/
     - mv logpickr_sdk/dist/logpickr_sdk.whl sphinxdocs/_static
     - cd sphinxdocs
-    - ls _static
+    - ls _static/
     - make html
     - mv _build/html/ ../public/
   artifacts:
