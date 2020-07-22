@@ -28,9 +28,10 @@ run:
   script:
     - cd logpickr_sdk
     - python setup.py bdist_wheel
+    - mv dist/*.whl public/downloads
   artifacts:
     paths:
-      - dist/*
+      - public/downloads
 
 pages:
   script:
