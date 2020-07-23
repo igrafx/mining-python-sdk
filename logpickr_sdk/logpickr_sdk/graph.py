@@ -21,7 +21,8 @@ class Graph:
         jgraph = json.loads(jsstring)
         jverts = jgraph["vertices"]
         jedges = jgraph["edges"]
-        vertices = [Vertex(vertex["id"], vertex["name"]) for vertex in jverts]
+        vertices = [Vertex(vertex["id"], vertex["name"], vertex["category"]) if "category" in vertex.keys()
+                    else Vertex(vertex["id"], vertex["name"]) for vertex in jverts]
         edges = []
         for edge in jedges:
             source = next((x for x in vertices if x.id == edge["source"]), None)
@@ -41,8 +42,24 @@ class Graph:
         for e in self.edges:
             vs = e.source
             vd = e.destination
-            dot.node(vs.graphviz_id,vs.name)
-            dot.node(vd.graphviz_id,vd.name)
+            nodeshape = "ellipse"
+            vsname = vs.name
+            if vs.is_gateway:
+                nodeshape = "diamond"
+                vsname = vs.category.split("_")[1]
+            elif vs.name == "START":
+                nodeshape = "doublecircle"
+            dot.node(vs.graphviz_id, vsname, shape=nodeshape)
+
+            vdname = vd.name
+            nodeshape = "circle"
+            if vd.is_gateway:
+                nodeshape = "diamond"
+                vdname = vd.category.split("_")[1]
+            elif vd.name == "END":
+                nodeshape = "doublecircle"
+            dot.node(vd.graphviz_id, vdname, shape=nodeshape)
+
             dot.edge(vs.graphviz_id, vd.graphviz_id)
 
         if not os.path.isdir(".lpk_graphs"):
@@ -85,9 +102,11 @@ class Vertex:
     """Vertex of a Logpicker Graph. Has a unique id and a name
     """
 
-    def __init__(self, vid: str, name: str):
+    def __init__(self, vid: str, name: str, category: str = None):
         self.id = vid
         self.name = name
+        self.category = category
+        self.is_gateway = category is not None
 
     @property
     def graphviz_id(self):
