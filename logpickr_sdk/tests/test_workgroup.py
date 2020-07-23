@@ -92,11 +92,45 @@ class TestDatasource:
         assert ds.port == PORT
         assert ds.project == p
 
-        # TODO: add some tests to make sure you can't do forbidden things like create tables, add columns, edit values
-        # Basically make sure you're in read-only mode
-
-    def test_colums(self, ID, SECRET, PROJECT_ID):
+    def test_columns(self, ID, SECRET, PROJECT_ID):
         wg = Workgroup(ID, SECRET)
         p = Project(PROJECT_ID, wg)
         ds = p.datasources[0]
         assert ds.columns != []
+
+    def test_non_empty_ds(self, ID, SECRET, PROJECT_ID):
+        wg = Workgroup(ID, SECRET)
+        p = None
+        for pr in wg.projects:
+            try:
+                len(pr.process_keys)
+                p = pr
+                break
+            except Exception:
+                continue
+
+        ds = p.datasources[0]
+        assert len(ds.request(f'SELECT * FROM "{ds.name}"').values) > 0
+
+    def test_read_only(self, ID, SECRET, PROJECT_ID):
+        wg = Workgroup(ID, SECRET)
+        p = None
+        for pr in wg.projects:
+            try:
+                len(pr.process_keys)
+                p = pr
+                break
+            except Exception:
+                continue
+
+        ds = p.datasources[0]
+        pk = p.process_keys[0]
+        # Test that all of those requests will fail
+        with pytest.raises(Exception):
+            assert ds.request(f'DELETE FROM "{ds.name}" WHERE processkey = \'{pk}\'')
+        with pytest.raises(Exception):
+            assert ds.request(f'INSERT INTO "{ds.name}"(processkey) VALUES (\'{pk}\')')
+        with pytest.raises(Exception):
+            assert ds.request(f'DROP TABLE "{ds.name}"')
+        with pytest.raises(Exception):
+            assert ds.request(f'ALTER TABLE "{ds.name}" DROP COLUMN processkey')
