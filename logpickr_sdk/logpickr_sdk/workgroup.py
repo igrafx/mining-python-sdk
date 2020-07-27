@@ -187,6 +187,45 @@ class Project:
             print(response.text)
         return True
 
+    def train_status(self):
+        """Returns True if the train is currently running, False otherwise"""
+        try:
+            response = req.get(f"{API_URL}/train/{self.id}", headers={"X-Logpickr-API-Token": self.owner.token})
+            if response.status_code == 401:  # Only possible if the token has expired
+                self.owner.token = self.owner.login()
+                response = req.get(f"{API_URL}/train/{self.id}", headers={"X-Logpickr-API-Token": self.owner.token})
+            response.raise_for_status()
+        except req.HTTPError as error:
+            print(f"Http error occured: {error}")
+            print(response.text)
+        
+        return response.json()["isTrainRunning"]
+
+    def launch_train(self):
+        """Makes an API call to manually launch the train of a project"""
+        try:
+            response = req.post(f"{API_URL}/train/{self.id}/launch", headers={"X-Logpickr-API-Token": self.owner.token})
+            if response.status_code == 401:  # Only possible if the token has expired
+                self.owner.token = self.owner.login()
+                response = req.get(f"{API_URL}/train/{self.id}/launch", headers={"X-Logpickr-API-Token": self.owner.token})
+            response.raise_for_status()
+        except req.HTTPError as error:
+            print(f"Http error occured: {error}")
+            print(response.text)
+
+    def stop_train(self):
+        """Makes an API call to manually stop the train of a project"""
+        try:
+            response = req.delete(f"{API_URL}/train/{self.id}", headers={"X-Logpickr-API-Token": self.owner.token})
+            if response.status_code == 401:  # Only possible if the token has expired
+                self.owner.token = self.owner.login()
+                response = req.delete(f"{API_URL}/train/{self.id}", headers={"X-Logpickr-API-Token": self.owner.token})
+            response.raise_for_status()
+        except req.HTTPError as error:
+            print(f"Http error occured: {error}")
+            print(response.text)
+
+
 
 class Datasource:
     """An Druid table that can be sent requests by the user"""
