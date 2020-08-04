@@ -46,19 +46,19 @@ class Graph:
             vsname = vs.name
             if vs.is_gateway:
                 nodeshape = "diamond"
-                vsname = vs.category.split("_")[1]
+                vsname = "×" if "XOR" in vs.category else "+"
             elif vs.name == "START":
                 nodeshape = "doublecircle"
-            dot.node(vs.graphviz_id, vsname, shape=nodeshape)
+            dot.node(vs.graphviz_id, vsname, shape=nodeshape, style="filled", fillcolor=vs.color)
 
             vdname = vd.name
             nodeshape = "ellipse"
             if vd.is_gateway:
                 nodeshape = "diamond"
-                vdname = vd.category.split("_")[1]
+                vdname = "×" if "XOR" in vd.category else "+"
             elif vd.name == "END":
                 nodeshape = "doublecircle"
-            dot.node(vd.graphviz_id, vdname, shape=nodeshape)
+            dot.node(vd.graphviz_id, vdname, shape=nodeshape, style="filled", fillcolor=vd.color)
 
             dot.edge(vs.graphviz_id, vd.graphviz_id)
 
@@ -101,11 +101,13 @@ class Vertex:
     """Vertex of a Logpicker Graph. Has a unique id and a name
     """
 
-    def __init__(self, vid: str, name: str, category: str = None):
+    def __init__(self, vid: str, name: str, category: str = None, color: str = "white", parent: Graph = None):
         self.id = vid
         self.name = name
         self.category = category
-        self.is_gateway = category is not None
+        self.is_gateway = category.find('AND') >=0 or category.find('XOR') >= 0 if category is not None else False
+        self.color = color
+        self.parent = parent
 
     @property
     def graphviz_id(self):
