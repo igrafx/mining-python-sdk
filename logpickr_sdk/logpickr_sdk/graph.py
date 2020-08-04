@@ -21,7 +21,8 @@ class Graph:
         jgraph = json.loads(jsstring)
         jverts = jgraph["vertices"]
         jedges = jgraph["edges"]
-        vertices = [Vertex(vertex["id"], vertex["name"]) for vertex in jverts]
+        vertices = [Vertex(vertex["id"], vertex["name"], vertex["category"]) if "category" in vertex.keys()
+                    else Vertex(vertex["id"], vertex["name"]) for vertex in jverts]
         edges = []
         for edge in jedges:
             source = next((x for x in vertices if x.id == edge["source"]), None)
@@ -35,14 +36,30 @@ class Graph:
 
     def display(self):
         """Renders and displays the graph using Graphviz"""
-        graphname = str(self).split("x")[-1].strip(">") #Name is basically the pointer
-        dot = graphviz.Digraph(name= graphname, format="svg")
-        
+        graphname = str(self).split("x")[-1].strip(">")  # Name is basically the pointer
+        dot = graphviz.Digraph(name=graphname, format="svg")
+
         for e in self.edges:
             vs = e.source
             vd = e.destination
-            dot.node(vs.graphviz_id,vs.name)
-            dot.node(vd.graphviz_id,vd.name)
+            nodeshape = "ellipse"
+            vsname = vs.name
+            if vs.is_gateway:
+                nodeshape = "diamond"
+                vsname = "×" if "XOR" in vs.category else "+"
+            elif vs.name == "START":
+                nodeshape = "doublecircle"
+            dot.node(vs.graphviz_id, vsname, shape=nodeshape, style="filled", fillcolor=vs.color)
+
+            vdname = vd.name
+            nodeshape = "ellipse"
+            if vd.is_gateway:
+                nodeshape = "diamond"
+                vdname = "×" if "XOR" in vd.category else "+"
+            elif vd.name == "END":
+                nodeshape = "doublecircle"
+            dot.node(vd.graphviz_id, vdname, shape=nodeshape, style="filled", fillcolor=vd.color)
+
             dot.edge(vs.graphviz_id, vd.graphviz_id)
 
         if not os.path.isdir(".lpk_graphs"):
@@ -51,10 +68,10 @@ class Graph:
         dot.render(f".lpk_graphs/graph{graphname}.gv", view=True)
 
 
-
 class GraphInstance(Graph):
     """A graph instance from a Logpickr project, created with the parent Project's ID, a list of vertex instances and a list of edge instances
     """
+
     def __init__(self, project_id: str, vertices: list, edges: list, rework_total: int, concurrency_rate: float):
         super().__init__(project_id, vertices, edges)
         self.rework_total = rework_total
@@ -80,14 +97,17 @@ class GraphInstance(Graph):
         return GraphInstance(project_id, vertices, edges, jgraph["reworkTotal"], jgraph["concurrencyRate"])
 
 
-
 class Vertex:
     """Vertex of a Logpicker Graph. Has a unique id and a name
     """
 
-    def __init__(self, vid: str, name: str):
+    def __init__(self, vid: str, name: str, category: str = None, color: str = "white", parent: Graph = None):
         self.id = vid
         self.name = name
+        self.category = category
+        self.is_gateway = category.find('AND') >=0 or category.find('XOR') >= 0 if category is not None else False
+        self.color = color
+        self.parent = parent
 
     @property
     def graphviz_id(self):
@@ -97,8 +117,8 @@ class Vertex:
 class VertexInstance(Vertex):
     """Vertex of a Logpickr Graph Instance. Has a unique id, a name, an event instance and a lis t of concurrent vertices"""
 
-    def __init__(self, vid: str, name: str, event_instance: int, concurrent_vertices: list):
-        super().__init__(vid, name)
+    def __init__(self, vid: str, name: str, event_instance: int, concurrent_vertices: list, category: str = None):
+        super().__init__(vid, name, category)
         self.event_instance = event_instance
         self.concurrent_vertices = concurrent_vertices
 
@@ -107,10 +127,15 @@ class VertexInstance(Vertex):
         """Static method that creates a VertexInstance from its json representation"""
         # If there are no concurrent vertices, there's going to be no concurrentVertices argument, instead of an empty
         # list, so I have to do this nonsense instead to make sure I don't get key errors
-        conc = [v["name"] +str(v["eventInstance"]) for v in jvert["concurrentVertices"]] if "concurrentVertices" in jvert.keys() else []
+        conc = [v["name"] + str(v["eventInstance"]) for v in
+                jvert["concurrentVertices"]] if "concurrentVertices" in jvert.keys() else []
         # Note: the concurrent vertices are currently just ids constructed from the event instance and name. While it
         # should be unique, this method is only called right before these weird ids get replaced with actual pointers
-        return VertexInstance(jvert["id"], jvert["name"], jvert["eventInstance"], conc)
+        return VertexInstance(jvert["id"], jvert["name"], jvert["eventInstance"], conc,
+                              jvert["category"]) if "catergory" in jvert.keys() else VertexInstance(jvert["id"],
+                                                                                                    jvert["name"],
+                                                                                                    jvert["eventInstance"],
+                                                                                                    conc)
 
     @property
     def graphviz_id(self):

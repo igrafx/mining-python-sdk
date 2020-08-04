@@ -52,10 +52,10 @@ class Workgroup:
             print(f"HTTP Error occurred: {error}")
 
         return self._datasources
-        
+
     def project_from_id(self, pid):
         """Returns a project based on its id, or None if no such project exists"""
-        
+
         return next((p for p in self.projects if p.id == pid), None)
 
     def login(self):
@@ -97,10 +97,11 @@ class Project:
     def graph(self):
         """Performs a REST for the project model graph if it hasn't already been retrieved"""
         try:
-            response = req.get(f"{API_URL}/project/{self.id}/graph", headers={"X-Logpickr-API-Token": self.owner.token})
+            response = req.get(f"{API_URL}/project/{self.id}/graph", params={"mode": "gateways"},
+                               headers={"X-Logpickr-API-Token": self.owner.token})
             if response.status_code == 401:  # Only possible if the token has expired
                 self.owner.token = self.owner.login()
-                response = req.get(f"{API_URL}/project/{self.id}/graph",
+                response = req.get(f"{API_URL}/project/{self.id}/graph", params={"mode": "gateways"},
                                    headers={"X-Logpickr-API-Token": self.owner.token})  # trying again
             response.raise_for_status()
             self._graph = Graph.from_json(self.id, response.text)
@@ -111,7 +112,7 @@ class Project:
     @property
     def graph_instances(self):
         """Returns all of the project's Graph Instances, performing and REST request for any instances that don't already exist within the project."""
-        if len(self._graph_instances) < len(self.process_keys): # IE if there are new graph instances available
+        if len(self._graph_instances) < len(self.process_keys):  # IE if there are new graph instances available
             self._graph_instances = []
             for k in self.process_keys:
                 self._graph_instances.append(self.graph_instance_from_key(k))
@@ -121,12 +122,12 @@ class Project:
         """Performs a REST request for the graph instance associated with a process key, and returns it"""
         try:
             response = req.get(f"{API_URL}/project/{self.id}/graphInstance",
-                               params={"processId": process_id},
+                               params={"processId": process_id, "mode": "gateways"},
                                headers={"X-Logpickr-API-Token": self.owner.token})
             if response.status_code == 401:  # Only possible if the token has expired
                 self.owner.token = self.owner.login()
                 response = req.get(f"{API_URL}/project/{self.id}/graphInstance",
-                                   params={"processId": process_id},
+                                   params={"processId": process_id, "mode": "gateways"},
                                    headers={"X-Logpickr-API-Token": self.owner.token})  # try again
             response.raise_for_status()
             graph = response.json()["value"]
