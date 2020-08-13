@@ -96,6 +96,14 @@ class GraphInstance(Graph):
 
         return GraphInstance(project_id, vertices, edges, jgraph["reworkTotal"], jgraph["concurrencyRate"])
 
+category_dict = {
+    "start":"START",
+    "end":"END",
+    "gateway_and_split":"AND_SPLIT",
+    "gateway_xor_split":"XOR_SPLIT",
+    "gateway_and_join":"AND_JOIN",
+    "gateway_xor_join":"XOR_JOIN",
+}
 
 class Vertex:
     """Vertex of a Logpicker Graph. Has a unique id and a name
@@ -104,8 +112,9 @@ class Vertex:
     def __init__(self, vid: str, name: str, category: str = None, color: str = "white", parent: Graph = None):
         self.id = vid
         self.name = name
-        self.category = category
-        self.is_gateway = category.find('AND') >=0 or category.find('XOR') >= 0 if category is not None else False
+        self.category = category if category in category_dict.values()\
+            else (category_dict.get(category.lower(), "TASK") if category else category_dict.get(name.lower(), "TASK"))
+        self.is_gateway = self.category.find('AND') >= 0 or self.category.find('XOR') >= 0
         self.color = color
         self.parent = parent
 
