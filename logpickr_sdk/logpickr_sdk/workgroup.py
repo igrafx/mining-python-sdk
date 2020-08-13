@@ -9,6 +9,17 @@ import pandas
 API_URL = "http://localhost:8080/pub"
 AUTH_URL = "http://localhost:28080"
 
+def set_API_URL(url):
+    global API_URL
+    if url.find("/pub") != -1:
+        API_URL = url
+    else:
+        API_URL = url + "/pub"
+
+def set_AUTH_URL(url):
+    global AUTH_URL
+    AUTH_URL = url
+
 
 class Workgroup:
     """A Logpickr workgroup, which is used to log in and access projects"""
