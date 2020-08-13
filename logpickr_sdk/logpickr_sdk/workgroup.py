@@ -262,7 +262,7 @@ class Datasource:
     def connection(self):
         """Returns the pydruid connection to the datasource, after initializing it if need be"""
         if self._connection is None:
-            self._connection = pydruid.db.connect("localhost", self.port, path="/druid/v2/sql",
+            self._connection = pydruid.db.connect(self.host, self.port, path="/druid/v2/sql",
                                                   user=self.project.owner.id, password=self.project.owner.key)
         return self._connection
 
