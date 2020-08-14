@@ -24,12 +24,15 @@ Graphs
 ------
 
 .. autoclass:: logpickr_sdk.graph.Graph
+   :special-members: __init__
    :members:
    
 .. autoclass:: logpickr_sdk.graph.Edge
+   :special-members: __init__
    :members:
    
 .. autoclass:: logpickr_sdk.graph.Vertex
+   :special-members: __init__
    :members:
    
 Graph Instances
