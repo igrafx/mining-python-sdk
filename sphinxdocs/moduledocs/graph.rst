@@ -1,3 +1,5 @@
+.. py:currentmodule:: logpickr_sdk
+
 Graphs and Graph Instances
 ==========================
 
@@ -23,15 +25,15 @@ Each GraphInstance, in turn, represents the path through the model_ taken by a s
 Graphs
 ------
 
-.. autoclass:: logpickr_sdk.graph.Graph
+.. autoclass:: Graph
    :special-members: __init__
    :members:
    
-.. autoclass:: logpickr_sdk.graph.Edge
+.. autoclass:: Edge
    :special-members: __init__
    :members:
    
-.. autoclass:: logpickr_sdk.graph.Vertex
+.. autoclass:: Vertex
    :special-members: __init__
    :members:
    
@@ -41,13 +43,13 @@ Graph Instances
 **Note: GraphInstance and VertexInstance extend Graph and Vertex respectively**
 
 
-.. autoclass:: logpickr_sdk.graph.GraphInstance
+.. autoclass:: GraphInstance
    :members:
    
-.. autoclass:: logpickr_sdk.graph.EdgeInstance
+.. autoclass:: EdgeInstance
    :members:
    
-.. autoclass:: logpickr_sdk.graph.VertexInstance
+.. autoclass:: VertexInstance
    :members:
 
 .. _project : workgroup.html#Projects
