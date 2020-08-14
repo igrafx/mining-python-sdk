@@ -11,13 +11,23 @@ class Graph:
     """
 
     def __init__(self, project_id: str, vertices: list, edges: list):
+        """
+
+        :param project_id: the ID of the parent project
+        :param vertices: the list of vertices
+        :param edges: the list of edges
+        """
         self.project_id = project_id
         self.vertices = vertices
         self.edges = edges
 
     @staticmethod
     def from_json(project_id, jsstring):
-        """Static method that creates a Graph based on the json representation returned by the Logpickr API"""
+        """Static method that creates a Graph based on the json representation returned by the Logpickr API
+
+        :param project_id: the ID of the project this graph is in
+        :param jsstring: the json string we want to parse the graph from
+        """
         jgraph = json.loads(jsstring)
         jverts = jgraph["vertices"]
         jedges = jgraph["edges"]
@@ -79,7 +89,10 @@ class GraphInstance(Graph):
 
     @staticmethod
     def from_json(project_id, jgraph):
-        """Static method that creates a GraphInstance based on the json representation returned by the Logpickr API"""
+        """Static method that creates a GraphInstance based on the json representation returned by the Logpickr API
+
+        :param project_id: the ID of the project the graph is in
+        :param jgraph: the json dictionary containing the graph data"""
         jverts = jgraph["vertexInstances"]
         jedges = jgraph["edgeInstances"]
 
@@ -96,20 +109,29 @@ class GraphInstance(Graph):
 
         return GraphInstance(project_id, vertices, edges, jgraph["reworkTotal"], jgraph["concurrencyRate"])
 
+
 category_dict = {
-    "start":"START",
-    "end":"END",
-    "gateway_and_split":"AND_SPLIT",
-    "gateway_xor_split":"XOR_SPLIT",
-    "gateway_and_join":"AND_JOIN",
-    "gateway_xor_join":"XOR_JOIN",
+    "start": "START",
+    "end": "END",
+    "gateway_and_split": "AND_SPLIT",
+    "gateway_xor_split": "XOR_SPLIT",
+    "gateway_and_join": "AND_JOIN",
+    "gateway_xor_join": "XOR_JOIN",
 }
 
+
 class Vertex:
-    """Vertex of a Logpicker Graph. Has a unique id and a name
+    """Vertex of a Logpicker Graph.
     """
 
     def __init__(self, vid: str, name: str, category: str = None, color: str = "white", parent: Graph = None):
+        """Creates a Vertex
+
+        :param vid: the vertex's ID
+        :param name: the vertex's name
+        :param category: the vertex's category. Can be none, in which case the category will be extrapolated from the name
+        :param color: the color you want the vertex to have in the displayed graph, white by default
+        :param parent: the graph the vertex belongs to. Can be useful for graph operations. None by default"""
         self.id = vid
         self.name = name
         self.category = category if category in category_dict.values()\
@@ -120,6 +142,7 @@ class Vertex:
 
     @property
     def graphviz_id(self):
+        """Generates a unique id for the Vertex, to be used in displaying it through graphviz"""
         return self.name.replace(" ", "") + self.id
 
 
@@ -148,6 +171,7 @@ class VertexInstance(Vertex):
 
     @property
     def graphviz_id(self):
+        """Generates a unique id for the Vertex, to be used in displaying it through graphviz"""
         return self.name.replace(" ", "") + self.id + str(self.event_instance)
 
 
@@ -181,7 +205,9 @@ class EdgeInstance:
 
 
 def edge_dict_to_str(edge):
-    """Helper method for comparison that creates a unique string from a json edge instance"""
+    """Helper method for comparison that creates a unique string from a json edge instance
+
+    :param edge: the json dictionary to turn into a string"""
     csource = edge["source"]
     cdest = edge["destination"]
     return (str(csource["id"]) + csource["name"] + str(csource["eventInstance"]) +
@@ -189,7 +215,9 @@ def edge_dict_to_str(edge):
 
 
 def edge_to_str(edge):
-    """Helper method that creates a unique string from an EdgeInstance"""
+    """Helper method that creates a unique string from an EdgeInstance
+
+    :param edge: the Edge to turn into a string"""
     csource = edge.source
     cdest = edge.destination
     return (str(csource.id) + csource.name + str(csource.event_instance) +

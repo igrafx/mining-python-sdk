@@ -9,14 +9,22 @@ import pandas
 API_URL = "http://localhost:8080/pub"
 AUTH_URL = "http://localhost:28080"
 
-def set_API_URL(url):
+
+def set_api_url(url):
+    """Sets the API url
+
+    :param url: the url to query for API calls"""
     global API_URL
     if url.find("/pub") != -1:
         API_URL = url
     else:
         API_URL = url + "/pub"
 
-def set_AUTH_URL(url):
+
+def set_auth_url(url):
+    """Sets the authentication url
+
+    :param url: the url to query for authentication calls"""
     global AUTH_URL
     AUTH_URL = url
 
@@ -25,7 +33,10 @@ class Workgroup:
     """A Logpickr workgroup, which is used to log in and access projects"""
 
     def __init__(self, client_id: str, key: str):
-        """ Creates a Logpickr Workgroup and automatically logs in to the Logpickr API using the provided client id and secret key"""
+        """ Creates a Logpickr Workgroup and automatically logs in to the Logpickr API using the provided client id and secret key
+
+        :param client_id: the workgroup ID, which can be found in Process Explorer 360
+        :param key: the workgroup's secret key, used for authetication, also found in Process Explorer 360"""
         self.id = client_id
         self.key = key
         self._projects = []
@@ -96,7 +107,10 @@ class Project:
     """
 
     def __init__(self, pid: str, owner: Workgroup):
-        """Create a Logpickr project from a project ID and the Workgroup it was created by"""
+        """Create a Logpickr project from a project ID and the Workgroup it was created by
+
+        :param pid: the Project's ID
+        :param owner: the Workgroup that the Project belongs to"""
         self.id = pid
         self.owner = owner
         self._graph = None
@@ -130,7 +144,9 @@ class Project:
         return self._graph_instances
 
     def graph_instance_from_key(self, process_id):
-        """Performs a REST request for the graph instance associated with a process key, and returns it"""
+        """Performs a REST request for the graph instance associated with a process key, and returns it
+
+        :param process_id: the id of the process whose graph we want to get"""
         try:
             response = req.get(f"{API_URL}/project/{self.id}/graphInstance",
                                params={"processId": process_id, "mode": "gateways"},
@@ -181,7 +197,9 @@ class Project:
         return self._process_keys
 
     def add_file(self, path):
-        """Adds a file to the project"""
+        """Adds a file to the project
+
+        :param path: the path to the file"""
         try:
             response = req.post(f"{API_URL}/project/{self.id}/file?teamId={self.owner.id}",
                                 files={'file': (path.split("/")[-1], open(path, 'rb'), "text/csv")},
@@ -199,6 +217,7 @@ class Project:
             print(response.text)
         return True
 
+    @property
     def train_status(self):
         """Returns True if the train is currently running, False otherwise"""
         try:
@@ -237,6 +256,38 @@ class Project:
             print(f"Http error occured: {error}")
             print(response.text)
 
+    def prediction(self, case_ids):
+        """Queries the API to make a prediction for certain cases of the project
+        :param case_ids: list of the ids of the cases we want to make predictions on"""
+
+        try:
+            response = req.post(f"{API_URL}/project/{self.id}/prediction", params={"caseIds": case_ids},
+                                headers={"X-Logpickr-API-Token": self.owner.token})
+            if response.status_code == 401:  # Only possible if the token has expired
+                self.owner.token = self.owner.login()
+                response = req.post(f"{API_URL}/project/{self.id}/prediction", params={"caseIds": case_ids},
+                                    headers={"X-Logpickr-API-Token": self.owner.token})
+            response.raise_for_status()
+        except req.HTTPError as error:
+            print(f"Http error occured: {error}")
+            print(response.text)
+            return
+
+        prediction_id = response.json()["resultUrl"].split("/")[-1]
+
+        try:
+            response = req.get(f"{API_URL}/project/prediction/{prediction_id}",
+                               headers={"X-Logpickr-API-Token": self.owner.token})
+            if response.status_code == 401:  # Only possible if the token has expired
+                self.owner.token = self.owner.login()
+                response = req.get(f"{API_URL}/project/prediction/{prediction_id}",
+                                   headers={"X-Logpickr-API-Token": self.owner.token})
+            response.raise_for_status()
+            return response.json()
+        except req.HTTPError as error:
+            print(f"Http error occured: {error}")
+            print(response.text)
+
 
 
 class Datasource:
@@ -253,7 +304,9 @@ class Datasource:
         self._columns = None
 
     def request(self, sqlreq):
-        """Sends an SQL request to the datasource and returns the results as a pandas Dataframe"""
+        """Sends an SQL request to the datasource and returns the results as a pandas Dataframe
+
+        :param sqlreq: the SQL request to execute"""
         self.cursor.execute(sqlreq)
         rows = self.cursor.fetchall()
         cols = list(rows[0]._fields)
