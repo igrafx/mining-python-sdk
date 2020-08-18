@@ -77,7 +77,7 @@ The model graph is (simply enough) accessed through the "graph" function::
     >>> g = my_project.graph()
     >>> g.display()
     
-The `.display()` method uses graphviz to render the graph in svg format and displays it. It works on both Graph and GraphInstance objects. Additionally, when calling a graph, you can pass a `True` or `gateways=True` argument to get the graph in a bpmn-like structure ::
+The `.display()` method uses graphviz to render the graph in svg format and displays it. It works on both Graph and GraphInstance objects. Additionally, when calling a graph, you can pass a :bash:`True` or :bash:`gateways=True` argument to get the graph in a bpmn-like structure ::
 
     >>> my_project = wg.project_from_id(32)
     >>> g = my_project.graph(True)
