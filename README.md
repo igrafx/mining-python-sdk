@@ -9,7 +9,8 @@ The required packages should be automatically installed when installing the pack
 * requests `pip3 install requests`
 * pydruid (version 0.5.9 is used here, as version 0.6.0 and 0.6.1 have a currently unresolved bug that prevents from connecting to the databases) `pip3 install pydruid==0.5.9`
 * pandas `pip3 install pandas`
-* sphinx for the docs `pip3 install sphinx`
+* graphviz to display the graphs `pip3 install graphviz`
+* sphinx and the Read the Docs theme for the documentation `pip3 install sphinx sphinx-rtd-theme`
 * pytest for the unittests `pip3 install pytest`
 
 ## Installing
