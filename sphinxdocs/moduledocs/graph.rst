@@ -13,6 +13,20 @@ Each `project`_ has a single model graph, which is sometimes referred to as the 
    :alt: A model graph
    
 *The model graph represents all of the ways a bank loan application can be handled*
+
+This model graph can be acessed in two formats: either in a basic format where the only vertices are tasks, or in a BMPN-like structure with AND and XOR gateways to better illustrate the process flow. This second model can be accessed by passing a `gateways=True` parameter to the graph function.
+
+.. image:: regular.svg
+   :width: 250
+   :alt: The model graph in its basic format
+   
+*The model graph in its basic format*
+
+.. image:: bpmn.svg
+   :width: 250
+   :alt: The model graph in its BPMN-like format
+   
+*The model graph in its BPMN-like format*
    
 Each GraphInstance, in turn, represents the path through the model_ taken by a single process. Each project_ has a list of processes, and for every proccess there exists a graph instance. Similarly to the model graphs, the edges represent the path taken by the process through the possible events.
 
