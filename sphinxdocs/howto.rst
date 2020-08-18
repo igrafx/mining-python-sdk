@@ -71,13 +71,17 @@ Alternatively, if you already know the ID of the project you want to work with y
 
 Once you have the project you want to use, you can access its components: the model graph, the graph instances, and the datasources.
 
-The model graph is (simply enough) accessed through the "graph" property::
+The model graph is (simply enough) accessed through the "graph" function::
 
     >>> my_project = wg.project_from_id(9)
-    >>> g = my_project.graph
+    >>> g = my_project.graph()
     >>> g.display()
     
-The `.display()` method uses graphviz to render the graph in svg format and displays it. It works on both Graph and GraphInstance objects.
+The `.display()` method uses graphviz to render the graph in svg format and displays it. It works on both Graph and GraphInstance objects. Additionally, when calling a graph, you can pass a `True` or `gateways=True` argument to get the graph in a bpmn-like structure ::
+
+    >>> my_project = wg.project_from_id(32)
+    >>> g = my_project.graph(True)
+    >>> g.display()
 
 The graph instances are accessible as a list, or you can request one directly by using one of the project's process keys::
 
