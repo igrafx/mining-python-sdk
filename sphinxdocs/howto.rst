@@ -111,3 +111,20 @@ Alternatively, if need be, you can directly use the datasource's `connection` an
     >>> ds.connection
     >>> ds.cursor
 
+Once you have your project, you can make it train and run predictions on it. For the training, the project has the :bash:`launch_train()` and :bash:`stop_train()` methods, as well as a :bash:`train_status` property, which can be used like so::
+    >>> my_project = wg.project_from_id(42)
+    >>> my_project.train_status
+    False
+    >>> my_project.lauch_train()
+    >>>my_project.train_status
+    True
+    >>> my_project.stop_train()
+    >>> my_project.train_status
+    False
+
+Once the train is complete, you can run predictions on the case IDs you want in your project::
+    >>> my_project = wg.project_from_id(17)
+    >>> my_project.train_status # we can make sure the training is finished
+    False
+    >>> case_list = ["1235acd", "6568bbn", "9124kxc"]
+    >>> prediction_data = my_project.prediction(case_list)
