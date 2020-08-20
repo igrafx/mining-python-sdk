@@ -118,15 +118,16 @@ class Project:
         self._datasources = []
         self._process_keys = []
 
-    @property
-    def graph(self):
-        """Performs a REST for the project model graph if it hasn't already been retrieved"""
+    def graph(self, gateways=False):
+        """Performs a REST for the project model graph if it hasn't already been retrieved
+        :param gateways: Boolean that controls whether the graph returned will be BPMN-like or not"""
+        parameters = {"mode": "gateways"} if gateways else {}
         try:
-            response = req.get(f"{API_URL}/project/{self.id}/graph", params={"mode": "gateways"},
+            response = req.get(f"{API_URL}/project/{self.id}/graph", params=parameters,
                                headers={"X-Logpickr-API-Token": self.owner.token})
             if response.status_code == 401:  # Only possible if the token has expired
                 self.owner.token = self.owner.login()
-                response = req.get(f"{API_URL}/project/{self.id}/graph", params={"mode": "gateways"},
+                response = req.get(f"{API_URL}/project/{self.id}/graph", params=parameters,
                                    headers={"X-Logpickr-API-Token": self.owner.token})  # trying again
             response.raise_for_status()
             self._graph = Graph.from_json(self.id, response.text)
@@ -149,7 +150,7 @@ class Project:
         :param process_id: the id of the process whose graph we want to get"""
         try:
             response = req.get(f"{API_URL}/project/{self.id}/graphInstance",
-                               params={"processId": process_id, "mode": "gateways"},
+                               params={"processId": process_id},  # , "mode": "gateways"},
                                headers={"X-Logpickr-API-Token": self.owner.token})
             if response.status_code == 401:  # Only possible if the token has expired
                 self.owner.token = self.owner.login()
