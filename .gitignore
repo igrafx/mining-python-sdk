@@ -9,3 +9,4 @@ tiddelibits
 logpickr_sdk/.idea
 logpickr_sdk/.lpk_graphs
 logpickr_sdk/.pytest_cache
+.DS_Store
