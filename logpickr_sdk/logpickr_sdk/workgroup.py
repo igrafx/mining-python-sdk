@@ -144,18 +144,19 @@ class Project:
                 self._graph_instances.append(self.graph_instance_from_key(k))
         return self._graph_instances
 
-    def graph_instance_from_key(self, process_id):
+    def graph_instance_from_key(self, process_id, detailed=False):
         """Performs a REST request for the graph instance associated with a process key, and returns it
 
         :param process_id: the id of the process whose graph we want to get"""
+        parameters = {"processId": process_id, "mode": "gateways"} if detailed else {"processId": process_id, "mode": "simplified"}
         try:
             response = req.get(f"{API_URL}/project/{self.id}/graphInstance",
-                               params={"processId": process_id},  # , "mode": "gateways"},
+                               params=parameters,
                                headers={"X-Logpickr-API-Token": self.owner.token})
             if response.status_code == 401:  # Only possible if the token has expired
                 self.owner.token = self.owner.login()
                 response = req.get(f"{API_URL}/project/{self.id}/graphInstance",
-                                   params={"processId": process_id, "mode": "gateways"},
+                                   params=parameters,
                                    headers={"X-Logpickr-API-Token": self.owner.token})  # try again
             response.raise_for_status()
             graph = response.json()["value"]

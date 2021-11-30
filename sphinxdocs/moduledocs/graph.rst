@@ -31,7 +31,7 @@ This model graph can be acessed in two formats: either in a basic format where t
    
 *The model graph in its BPMN-like format*
    
-Each GraphInstance, in turn, represents the path through the model_ taken by a single process. Each project_ has a list of processes, and for every proccess there exists a graph instance. Similarly to the model graphs, the edges represent the path taken by the process through the possible events.
+Each GraphInstance, in turn, represents the path through the model_ taken by a single process. Each project_ has a list of processes, and for every proccess there exists a graph instance. Similarly to the model graphs, the edges represent the path taken by the process through the possible events. This GraphInstance could be obtained detailed with gateways by passing a :bash:`detailed=True` parameter to the graphInstance function.
 
 .. image:: processgraph.svg
    :width: 500
