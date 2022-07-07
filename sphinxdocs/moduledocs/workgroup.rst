@@ -1,7 +1,7 @@
 .. py:currentmodule:: logpickr_sdk
 
-Workgroups and Projects
-=======================
+Workgroups, Projects and Mapping
+================================
 
 Workgroups
 ----------
@@ -17,14 +17,75 @@ Projects
 --------
 
 A Project object contains the the information about a Logpickr project. 
-You can create a column mapping and send file.
+You can create a column mapping and send file. For that you need to provide a `ColumnMapping`_ and `FileStructure`_
 Each project allows you to get the various `graphs`_ it contains, and access its `Datasources`_.
 
 .. autoclass:: Project
    :special-members: __init__
    :members:
+
+
+ColumnMapping
+-------------
+
+ColumnMapping must be provided before sending a file.
+ColumnMapping contains `CaseIdOrActivityMapping`_ for CaseIdMapping or ActivityMapping , list of `TimeMapping`_ , list of `DimensionMapping`_ and list of `MetricMapping`_.
+
+.. autoclass:: ColumnMapping
+   :special-members: __init__
+   :members:
+
+
+CaseIdOrActivityMapping
+-----------------------
+
+A CaseIdOrActivityMapping that must be provided to ColumnMapping_
+
+.. autoclass:: CaseIdOrActivityMapping
+   :special-members: __init__
+   :members:
    
-   
+
+TimeMapping
+-----------
+
+A TimeMapping that must be provided to ColumnMapping_
+
+.. autoclass:: TimeMapping
+   :special-members: __init__
+   :members:
+
+
+DimensionMapping
+----------------
+
+A DimensionMapping that must be provided to ColumnMapping_
+
+.. autoclass:: DimensionMapping
+   :special-members: __init__
+   :members:
+
+
+MetricMapping
+-------------
+
+A MetricMapping that must be provided to ColumnMapping_
+
+.. autoclass:: MetricMapping
+   :special-members: __init__
+   :members:
+
+
+FileStructure
+-------------
+
+FileStructure that must be provided to create_column_mapping
+
+.. autoclass:: FileStructure
+   :special-members: __init__
+   :members:
+
+
 Datasources
 -----------
 
