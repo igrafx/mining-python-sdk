@@ -105,12 +105,22 @@ class Workgroup:
 class FileStructure:
     """FileStrucutre used to create a column mapping"""
 
-    def __init__(self, charset: str, delimiter: str, quoteChar: str, escapeChar: str, colChar: str, commentChar: str, columnSeparator: str, header: bool = True):
+    def __init__(self, charset: str, delimiter: str, quoteChar: str, escapeChar: str, eolChar: str, commentChar: str, columnSeparator: str, header: bool = True):
+        """ Creates a FileStructure used to create a column mapping
+
+        :param charset: the charset of the file (UTF-8, ..)
+        :param delimiter: the delimeter of the file (';', ',', ..)
+        :param quoteChar: the character to quote field in the file ('\',...)
+        :param escapeChar: the character to ('\\', ...)
+        :param eolChar: the character for the end of line ('\\n')
+        :param commentChar: the character to comment ('#')
+        :param columnSeparator: the character for the separator in the CSV file (';')
+        :param header: boolean to say if the file contains a header"""
         self.charset = charset
         self.delimiter = delimiter
         self.quoteChar = quoteChar
         self.escapeChar = escapeChar
-        self.colChar = colChar
+        self.eolChar = eolChar
         self.header = header
         self.commentChar = commentChar
         self.columnSeparator = columnSeparator
@@ -136,9 +146,9 @@ class FileStructure:
         return self.escapeChar
 
     @property
-    def colChar(self):
-        """Returns the colChar of the FileStructure"""
-        return self.colChar
+    def eolChar(self):
+        """Returns the eolChar of the FileStructure"""
+        return self.eolChar
 
     @property
     def header(self):
@@ -161,7 +171,7 @@ class FileStructure:
             'delimiter': self.delimiter,
             'quoteChar': self.quoteChar,
             'escapeChar': self.escapeChar,
-            'colChar': self.colChar,
+            'eolChar': self.eolChar,
             'header': self.header,
             'commentChar': self.commentChar,
             'columnSeparator': self.columnSeparator
@@ -171,6 +181,9 @@ class CaseIdOrActivityMapping:
     """CaseId or Activity column mapping"""
 
     def __init__(self, columnIndex: int):
+        """ Creates a CaseIdOrActivityMapping used to create a column mapping
+
+        :param columnIndex: an integer of the column (start at 0)"""
         self.columnIndex = columnIndex
 
     @property
@@ -179,6 +192,7 @@ class CaseIdOrActivityMapping:
         return self.columnIndex
 
     def tojson(self):
+        """Returns json of CaseIdOrActivityMapping"""
         {
             'columnIndex': self.columnIndex
         }
@@ -187,6 +201,10 @@ class TimeMapping:
     """Time mapping used in column mapping"""
 
     def __init__(self, columnIndex: int, Timeformat: str):
+        """ Creates a TimeMapping used to create a column mapping
+
+        :param columnIndex: an integer of the column (start at 0)
+        :param format: a string of the format of the time column"""
         self.columnIndex = columnIndex
         self.format = Timeformat
 
@@ -201,6 +219,7 @@ class TimeMapping:
         return self.format
 
     def tojson(self):
+        """Returns the json format of TimeMapping"""
         {
             'columnIndex': self.columnIndex,
             'format': self.format
@@ -213,7 +232,14 @@ class DimensionAggregation(Enum):
 
 class DimensionMapping:
     """Dimension mapping used in column mapping"""
+
     def __init__(self, name: str, columnIndex: int, isCaseScope: bool, aggregation: DimensionAggregation = None):
+        """ Creates a DimensionMapping used to create a column mapping
+
+        :param name: the name of the dimension
+        :param columnIndex: an integer of the column (start at 0)
+        :param isCaseScope: a boolean to define the scope of the dimension (True if Case Dimension, False for Task Dimension)
+        :param aggregation: Enum for the aggregation type (FIRST, LAST, DISTINCT). Can be None."""
         self.name = name
         self.columnIndex = columnIndex
         self.isCaseScope = isCaseScope
@@ -240,6 +266,7 @@ class DimensionMapping:
         return self.aggregation
 
     def tojson(self):
+        """Returns the json format of the DimensionMapping"""
         return {
             'name': self.name,
             'columnIndex': self.columnIndex,
@@ -258,7 +285,15 @@ class MetricAggregation(Enum):
 
 class MetricMapping:
     """Metric mapping used in column mapping"""
+
     def __init__(self, name: str, columnIndex: int, isCaseScope: bool, unit: str = None, aggregation: MetricAggregation = None):
+        """ Creates a DimensionMapping used to create a column mapping
+
+        :param name: the name of the metric
+        :param columnIndex: an integer of the column (start at 0)
+        :param isCaseScope: a boolean to define the scope of the dimension (True if Case Dimension, False for Task Dimension)
+        :param unit: a string which describe the unit of the metric. Can be None
+        :param aggregation: Enum for the aggregation type (FIRST, LAST, MIN, MAX, SUM, AVG, MEDIAN). Can be None."""
         self.name = name
         self.columnIndex = columnIndex
         self.unit = unit
@@ -291,6 +326,7 @@ class MetricMapping:
         return self.aggregation
 
     def tojson(self):
+        """Returns the json format of the MetricMapping"""
         return {
             'name': self.name,
             'columnIndex': self.columnIndex,
@@ -303,6 +339,13 @@ class ColumnMapping:
     """Description of the columnMapping before sending a file"""
 
     def __init__(self, caseidmapping: CaseIdOrActivityMapping, activitymapping: CaseIdOrActivityMapping, timemappings: list[TimeMapping], dimensionmappings: list[DimensionMapping], metricmappings: list[MetricMapping] ):
+        """ Creates a ColumnMapping
+
+        :param caseidmapping: the caseid mapping
+        :param activitymapping: the activitymapping
+        :param timemappings: list of one or two TimeMapping
+        :param dimensionmappings: List of DimensionMapping. Can be None
+        :param metricmappings: List of MetricMapping. Can be None."""
         self.caseidmapping = caseidmapping
         self.activitymapping = activitymapping
         self.timemappings = timemappings
@@ -335,6 +378,7 @@ class ColumnMapping:
         return self.metricmappings
 
     def tojson(self):
+        """Returns the json format of the ColumnMapping"""
         return {
             'caseIdMapping': self.caseidmapping.tojson,
             'activityMapping': self.activitymapping.tojson,
@@ -456,9 +500,8 @@ class Project:
     def create_column_mapping(self, filestructure:FileStructure, columnmapping: ColumnMapping):
         """Create a column mapping to the project
 
-        :param 
-            filestructure: the filestructure
-            columnmapping: the columnmapping"""
+        :param filestructure: the filestructure
+        :param columnmapping: the columnmapping"""
         try:
             response = req.post(f"{API_URL}/project/{self.id}/column-mapping",
                                 json={'fileStructure': filestructure.tojson, 'columnMapping': columnmapping.tojson},
