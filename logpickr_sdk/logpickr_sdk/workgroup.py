@@ -1,10 +1,11 @@
-# Apache License 2.0, Copyright 2020 Logpickr
+# Apache License 2.0, Copyright 2022 Logpickr
 # https://gitlab.com/logpickr/logpickr-sdk/-/blob/master/LICENSE
 
 from logpickr_sdk.graph import Graph, GraphInstance
 import requests as req
 import pydruid.db
 import pandas
+from enum import Enum
 
 API_URL = "http://localhost:8080/pub"
 AUTH_URL = "http://localhost:28080"
@@ -101,6 +102,246 @@ class Workgroup:
             if error.response.reason == 'Bad Request':
                 raise Exception("Invalid login credentials")
 
+class FileStructure:
+    """FileStrucutre used to create a column mapping"""
+
+    def __init__(self, charset: str, delimiter: str, quoteChar: str, escapeChar: str, colChar: str, commentChar: str, columnSeparator: str, header: bool = True):
+        self.charset = charset
+        self.delimiter = delimiter
+        self.quoteChar = quoteChar
+        self.escapeChar = escapeChar
+        self.colChar = colChar
+        self.header = header
+        self.commentChar = commentChar
+        self.columnSeparator = columnSeparator
+
+    @property
+    def charset(self):
+        """Returns the charset of the FileStructure"""
+        return self.charset
+
+    @property
+    def delimiter(self):
+        """Returns the delimiter of the FileStructure"""
+        return self.delimiter
+
+    @property
+    def quoteChar(self):
+        """Returns the quoteChar of the FileStructure"""
+        return self.quoteChar
+
+    @property
+    def escapeChar(self):
+        """Returns the escapeChar of the FileStructure"""
+        return self.escapeChar
+
+    @property
+    def colChar(self):
+        """Returns the colChar of the FileStructure"""
+        return self.colChar
+
+    @property
+    def header(self):
+        """Returns the header of the FileStructure"""
+        return self.header
+
+    @property
+    def commentChar(self):
+        """Returns the commentChar of the FileStructure"""
+        return self.commentChar
+
+    @property
+    def columnSeparator(self):
+        """Returns the columnSeparator of the FileStructure"""
+        return self.columnSeparator
+
+    def tojson(self):
+        return {
+            'charset': self.charset,
+            'delimiter': self.delimiter,
+            'quoteChar': self.quoteChar,
+            'escapeChar': self.escapeChar,
+            'colChar': self.colChar,
+            'header': self.header,
+            'commentChar': self.commentChar,
+            'columnSeparator': self.columnSeparator
+        }
+
+class CaseIdOrActivityMapping:
+    """CaseId or Activity column mapping"""
+
+    def __init__(self, columnIndex: int):
+        self.columnIndex = columnIndex
+
+    @property
+    def columnIndex(self):
+        """Returns the columnIndex of the CaseIdOrActivityMapping"""
+        return self.columnIndex
+
+    def tojson(self):
+        {
+            'columnIndex': self.columnIndex
+        }
+
+class TimeMapping:
+    """Time mapping used in column mapping"""
+
+    def __init__(self, columnIndex: int, Timeformat: str):
+        self.columnIndex = columnIndex
+        self.format = Timeformat
+
+    @property
+    def columnIndex(self):
+        """Returns the columnIndex of the TimeMapping"""
+        return self.columnIndex
+
+    @property
+    def format(self):
+        """Returns the format of the TimeMapping"""
+        return self.format
+
+    def tojson(self):
+        {
+            'columnIndex': self.columnIndex,
+            'format': self.format
+        }
+
+class DimensionAggregation(Enum):
+    FIRST = "FIRST"
+    LAST = "LAST"
+    DISTINCT = "DISTINCT"
+
+class DimensionMapping:
+    """Dimension mapping used in column mapping"""
+    def __init__(self, name: str, columnIndex: int, isCaseScope: bool, aggregation: DimensionAggregation = None):
+        self.name = name
+        self.columnIndex = columnIndex
+        self.isCaseScope = isCaseScope
+        self.aggregation = aggregation
+
+    @property
+    def name(self):
+        """Returns the name of the DimensionMapping"""
+        return self.name
+
+    @property
+    def columnIndex(self):
+        """Returns the columnIndex of the DimensionMapping"""
+        return self.columnIndex
+
+    @property
+    def isCaseScope(self):
+        """Returns if isCaseScope of the DimensionMapping"""
+        return self.isCaseScope
+
+    @property
+    def aggregation(self):
+        """Returns aggregation of the DimensionMapping"""
+        return self.aggregation
+
+    def tojson(self):
+        return {
+            'name': self.name,
+            'columnIndex': self.columnIndex,
+            'isCaseScope': self.isCaseScope,
+            'aggregation': self.aggregation
+        }
+
+class MetricAggregation(Enum):
+    FIRST = "FIRST"
+    LAST = "LAST"
+    MIN = "MIN"
+    MAX = "MAX"
+    SUM = "SUM"
+    AVG = "AVG"
+    MEDIAN = "MEDIAN"
+
+class MetricMapping:
+    """Metric mapping used in column mapping"""
+    def __init__(self, name: str, columnIndex: int, isCaseScope: bool, unit: str = None, aggregation: MetricAggregation = None):
+        self.name = name
+        self.columnIndex = columnIndex
+        self.unit = unit
+        self.isCaseScope = isCaseScope
+        self.aggregation = aggregation
+
+    @property
+    def name(self):
+        """Returns the name of the MetricMapping"""
+        return self.name
+
+    @property
+    def columnIndex(self):
+        """Returns the columnIndex of the MetricMapping"""
+        return self.columnIndex
+
+    @property
+    def unit(self):
+        """Returns the unit of the MetricMapping"""
+        return self.unit
+
+    @property
+    def isCaseScope(self):
+        """Returns if isCaseScope of the MetricMapping"""
+        return self.isCaseScope
+
+    @property
+    def aggregation(self):
+        """Returns aggregation of the MetricMapping"""
+        return self.aggregation
+
+    def tojson(self):
+        return {
+            'name': self.name,
+            'columnIndex': self.columnIndex,
+            'unit': self.unit,
+            'isCaseScope': self.isCaseScope,
+            'aggregation': self.aggregation
+        }
+
+class ColumnMapping:
+    """Description of the columnMapping before sending a file"""
+
+    def __init__(self, caseidmapping: CaseIdOrActivityMapping, activitymapping: CaseIdOrActivityMapping, timemappings: list[TimeMapping], dimensionmappings: list[DimensionMapping], metricmappings: list[MetricMapping] ):
+        self.caseidmapping = caseidmapping
+        self.activitymapping = activitymapping
+        self.timemappings = timemappings
+        self.dimensionmappings = dimensionmappings
+        self.metricmappings = metricmappings
+
+    @property
+    def caseidmapping(self):
+        """Returns the caseidmapping of the ColumnMapping"""
+        return self.caseidmapping
+
+    @property
+    def activitymapping(self):
+        """Returns the activitymapping of the ColumnMapping"""
+        return self.activitymapping
+
+    @property
+    def timemappings(self):
+        """Returns the timemappings of the ColumnMapping"""
+        return self.timemappings
+
+    @property
+    def dimensionmappings(self):
+        """Returns the dimensionmappings of the ColumnMapping"""
+        return self.dimensionmappings
+
+    @property
+    def metricmappings(self):
+        """Returns the metricmappings of the ColumnMapping"""
+        return self.metricmappings
+
+    def tojson(self):
+        return {
+            'caseIdMapping': self.caseidmapping.tojson,
+            'activityMapping': self.activitymapping.tojson,
+            'timeMappings': [tm.tojson for tm in self.timemappings],
+            'dimensionsMappings': [dm.tojson for tm in self.dimensionmappings],
+            'metricsMappings': [mm.tojson for tm in self.metricmappings]
+        }
 
 class Project:
     """A Logpickr project
@@ -198,6 +439,43 @@ class Project:
 
         return self._process_keys
 
+    def column_mapping_exists(self):
+        """Check if a column mapping to the project"""
+        try:
+            response = req.get(f"{API_URL}/project/{self.id}/column-mapping-exists", headers={"X-Logpickr-API-Token": self.owner.token})
+            if response.status_code == 401:  # Only possible if the token has expired
+                self.owner.token = self.owner.login()
+                response = req.get(f"{API_URL}/project/{self.id}/column-mapping-exists", headers={"X-Logpickr-API-Token": self.owner.token})
+            response.raise_for_status()
+        except req.HTTPError as error:
+            print(f"Http error occured: {error}")
+            print(response.text)
+        
+        return bool(response.json()["exists"])
+
+    def create_column_mapping(self, filestructure:FileStructure, columnmapping: ColumnMapping):
+        """Create a column mapping to the project
+
+        :param 
+            filestructure: the filestructure
+            columnmapping: the columnmapping"""
+        try:
+            response = req.post(f"{API_URL}/project/{self.id}/column-mapping",
+                                json={'fileStructure': filestructure.tojson, 'columnMapping': columnmapping.tojson},
+                                headers={"X-Logpickr-API-Token": self.owner.token,
+                                         "accept": "application/json, text/plain, */*"})
+            if response.status_code == 401:  # Only possible if the token has expired
+                self.owner.token = self.owner.login()
+                response = req.post(f"{API_URL}/project/{self.id}/column-mapping",
+                                    json={'fileStructure': filestructure.tojson, 'columnMapping': columnmapping.tojson},
+                                    headers={"X-Logpickr-API-Token": self.owner.token,
+                                            "accept": "application/json, text/plain, */*"})  # try again
+            response.raise_for_status()
+        except req.HTTPError as error:
+            print(f"Http error occured: {error}")
+            print(response.text)
+        return True
+
     def add_file(self, path):
         """Adds a file to the project
 
@@ -289,7 +567,6 @@ class Project:
         except req.HTTPError as error:
             print(f"Http error occured: {error}")
             print(response.text)
-
 
 
 class Datasource:

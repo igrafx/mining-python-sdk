@@ -9,4 +9,8 @@ tiddelibits
 logpickr_sdk/.idea
 logpickr_sdk/.lpk_graphs
 logpickr_sdk/.pytest_cache
+logpickr_sdk/dist
+logpickr_sdk/build
+logpickr_sdk/logpickr_sdk.egg-info
+venv
 .DS_Store

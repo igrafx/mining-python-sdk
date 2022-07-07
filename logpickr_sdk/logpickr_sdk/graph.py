@@ -1,4 +1,4 @@
-# Apache License 2.0, Copyright 2020 Logpickr
+# Apache License 2.0, Copyright 2022 Logpickr
 # https://gitlab.com/logpickr/logpickr-sdk/-/blob/master/LICENSE
 
 import json

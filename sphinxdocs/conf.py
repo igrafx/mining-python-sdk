@@ -18,7 +18,7 @@ import sphinx_rtd_theme
 # -- Project information -----------------------------------------------------
 
 project = 'Logpickr SDK'
-copyright = '2021, Logpickr'
+copyright = '2022, Logpickr'
 author = 'Logpickr'
 
 
