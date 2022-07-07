@@ -16,7 +16,9 @@ Workgroups are the first and essential step to accessing your Logpickr data. The
 Projects
 --------
 
-A Project object contains the the information about a Logpickr project. Each project allows you to get the various `graphs`_ it contains, and access its `Datasources`_.
+A Project object contains the the information about a Logpickr project. 
+You can create a column mapping and send file.
+Each project allows you to get the various `graphs`_ it contains, and access its `Datasources`_.
 
 .. autoclass:: Project
    :special-members: __init__

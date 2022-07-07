@@ -43,6 +43,9 @@ pages:
     - cd sphinxdocs
     - ls _static/
     - make html
+    - mv _build/html/_downloads/*/logpickr_sdk.whl _build/html/_downloads/
+    - rm -r  _build/html/_downloads/*/
+    - sed -i -E 's#_downloads/.+/logpickr_sdk.whl#_downloads/logpickr_sdk.whl#g' _build/html/howto.html
     - mv _build/html/ ../public/
   artifacts:
     paths:
