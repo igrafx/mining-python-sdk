@@ -104,7 +104,7 @@ class Workgroup:
 
 
 class FileStructure:
-    """FileStrucutre used to create a column mapping"""
+    """FileStructure used to create a column mapping"""
 
     def __init__(self, charset: str, delimiter: str, quoteChar: str, escapeChar: str, eolChar: str, commentChar: str, columnSeparator: str, header: bool = True):
         """ Creates a FileStructure used to create a column mapping
@@ -115,7 +115,7 @@ class FileStructure:
         :param escapeChar: the character to ('\\', ...)
         :param eolChar: the character for the end of line ('\\n')
         :param commentChar: the character to comment ('#')
-        :param columnSeparator: the character for the separator in the CSV file (';')
+        :param columnSeparator: the character for the separator in column the CSV file ('|')
         :param header: boolean to say if the file contains a header"""
         self.charset = charset
         self.delimiter = delimiter
