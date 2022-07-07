@@ -102,6 +102,7 @@ class Workgroup:
             if error.response.reason == 'Bad Request':
                 raise Exception("Invalid login credentials")
 
+
 class FileStructure:
     """FileStrucutre used to create a column mapping"""
 
@@ -166,6 +167,7 @@ class FileStructure:
         return self.columnSeparator
 
     def tojson(self):
+        """Returns Json format of FileStructure"""
         return {
             'charset': self.charset,
             'delimiter': self.delimiter,
@@ -176,6 +178,7 @@ class FileStructure:
             'commentChar': self.commentChar,
             'columnSeparator': self.columnSeparator
         }
+
 
 class CaseIdOrActivityMapping:
     """CaseId or Activity column mapping"""
@@ -196,6 +199,7 @@ class CaseIdOrActivityMapping:
         {
             'columnIndex': self.columnIndex
         }
+
 
 class TimeMapping:
     """Time mapping used in column mapping"""
@@ -225,10 +229,12 @@ class TimeMapping:
             'format': self.format
         }
 
+
 class DimensionAggregation(Enum):
     FIRST = "FIRST"
     LAST = "LAST"
     DISTINCT = "DISTINCT"
+
 
 class DimensionMapping:
     """Dimension mapping used in column mapping"""
@@ -274,6 +280,7 @@ class DimensionMapping:
             'aggregation': self.aggregation
         }
 
+
 class MetricAggregation(Enum):
     FIRST = "FIRST"
     LAST = "LAST"
@@ -282,6 +289,7 @@ class MetricAggregation(Enum):
     SUM = "SUM"
     AVG = "AVG"
     MEDIAN = "MEDIAN"
+
 
 class MetricMapping:
     """Metric mapping used in column mapping"""
@@ -335,6 +343,7 @@ class MetricMapping:
             'aggregation': self.aggregation
         }
 
+
 class ColumnMapping:
     """Description of the columnMapping before sending a file"""
 
@@ -386,6 +395,7 @@ class ColumnMapping:
             'dimensionsMappings': [dm.tojson for tm in self.dimensionmappings],
             'metricsMappings': [mm.tojson for tm in self.metricmappings]
         }
+
 
 class Project:
     """A Logpickr project
