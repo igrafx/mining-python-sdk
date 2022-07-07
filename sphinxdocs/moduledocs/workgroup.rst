@@ -1,7 +1,7 @@
 .. py:currentmodule:: logpickr_sdk
 
-Workgroups and Projects
-=======================
+Workgroups, Projects and Mapping
+================================
 
 Workgroups
 ----------
@@ -26,7 +26,7 @@ Each project allows you to get the various `graphs`_ it contains, and access its
 
 
 ColumnMapping
---------
+-------------
 
 ColumnMapping must be provided before sending a file.
 ColumnMapping contains `CaseIdOrActivityMapping`_ for CaseIdMapping or ActivityMapping , list of `TimeMapping`_ , list of `DimensionMapping`_ and list of `MetricMapping`_.
@@ -37,7 +37,8 @@ ColumnMapping contains `CaseIdOrActivityMapping`_ for CaseIdMapping or ActivityM
 
 
 CaseIdOrActivityMapping
---------
+-----------------------
+
 A CaseIdOrActivityMapping that must be provided to ColumnMapping_
 
 .. autoclass:: CaseIdOrActivityMapping
@@ -46,7 +47,8 @@ A CaseIdOrActivityMapping that must be provided to ColumnMapping_
    
 
 TimeMapping
---------
+-----------
+
 A TimeMapping that must be provided to ColumnMapping_
 
 .. autoclass:: TimeMapping
@@ -55,7 +57,8 @@ A TimeMapping that must be provided to ColumnMapping_
 
 
 DimensionMapping
---------
+----------------
+
 A DimensionMapping that must be provided to ColumnMapping_
 
 .. autoclass:: DimensionMapping
@@ -64,7 +67,8 @@ A DimensionMapping that must be provided to ColumnMapping_
 
 
 MetricMapping
---------
+-------------
+
 A MetricMapping that must be provided to ColumnMapping_
 
 .. autoclass:: MetricMapping
@@ -73,7 +77,8 @@ A MetricMapping that must be provided to ColumnMapping_
 
 
 FileStructure
---------
+-------------
+
 FileStructure that must be provided to create_column_mapping
 
 .. autoclass:: FileStructure
