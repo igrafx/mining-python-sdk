@@ -30,4 +30,4 @@ columnmapping = lpk.ColumnMapping(caseidmapping=caseidmapping, activitymapping=a
 
 project.create_column_mapping(filestructure=filestructure, columnmapping=columnmapping)
 
-project.add_file("./BankLoanData-EN.csv")
+project.add_file("./data/BankLoanData-EN.csv")
