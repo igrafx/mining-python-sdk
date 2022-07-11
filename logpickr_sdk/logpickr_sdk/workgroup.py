@@ -95,7 +95,7 @@ class Workgroup:
 class FileStructure:
     """FileStructure used to create a column mapping"""
 
-    def __init__(self, charset: str, delimiter: str, quoteChar: str, escapeChar: str, eolChar: str, commentChar: str, columnSeparator: str, header: bool = True):
+    def __init__(self, charset: str, delimiter: str, quoteChar: str, escapeChar: str, eolChar: str, commentChar: str, header: bool = True):
         """ Creates a FileStructure used to create a column mapping
 
         :param charset: the charset of the file (UTF-8, ..)
@@ -104,7 +104,6 @@ class FileStructure:
         :param escapeChar: the character to ('\\', ...)
         :param eolChar: the character for the end of line ('\\n')
         :param commentChar: the character to comment ('#')
-        :param columnSeparator: the character for the separator in column the CSV file ('|')
         :param header: boolean to say if the file contains a header"""
         self._charset = charset
         self._delimiter = delimiter
@@ -113,7 +112,7 @@ class FileStructure:
         self._eolChar = eolChar
         self._header = header
         self._commentChar = commentChar
-        self._columnSeparator = columnSeparator
+        self._columnSeparator = '|' # Not used in API. Will be implemented in future version
 
     @property
     def charset(self):
@@ -149,11 +148,6 @@ class FileStructure:
     def commentChar(self):
         """Returns the commentChar of the FileStructure"""
         return self._commentChar
-
-    @property
-    def columnSeparator(self):
-        """Returns the columnSeparator of the FileStructure"""
-        return self._columnSeparator
 
     def tojson(self):
         """Returns Json format of FileStructure"""

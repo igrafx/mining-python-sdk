@@ -15,7 +15,6 @@ filestructure = lpk.FileStructure(
     escapeChar = '\\',
     eolChar = "\r\n",
     commentChar = "#",
-    columnSeparator = "|",
     header = True
 )
 
