@@ -2,7 +2,7 @@
 
 ## Requirements
 
-This package requires python 3.6 or above. Get the latest version of python at https://www.python.org/.
+This package requires python 3.6.8 or above. Get the latest version of python at https://www.python.org/.
 
 The required packages should be automatically installed when installing the package for the first time. If they somehow don't, they are:
 
