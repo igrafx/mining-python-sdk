@@ -6,6 +6,7 @@ import requests as req
 import pydruid.db
 import pandas
 from enum import Enum
+from typing import List
 
 class Workgroup:
     """A Logpickr workgroup, which is used to log in and access projects"""
@@ -336,15 +337,19 @@ class MetricMapping:
         }
 
 
+List_of_TimeMapping = List[TimeMapping]
+List_of_DimensionMapping = List[DimensionMapping]
+List_of_MetricMapping = List[MetricMapping]
+
 class ColumnMapping:
     """Description of the columnMapping before sending a file"""
 
-    def __init__(self, caseidmapping: CaseIdOrActivityMapping, activitymapping: CaseIdOrActivityMapping, timemappings: list[TimeMapping], dimensionmappings: list[DimensionMapping], metricmappings: list[MetricMapping] ):
+    def __init__(self, caseidmapping: CaseIdOrActivityMapping, activitymapping: CaseIdOrActivityMapping, timemappings: List_of_TimeMapping, dimensionmappings: List_of_DimensionMapping, metricmappings: List_of_MetricMapping ):
         """ Creates a ColumnMapping
 
         :param caseidmapping: the caseid mapping
         :param activitymapping: the activitymapping
-        :param timemappings: list of one or two TimeMapping
+        :param timemappings: List of one or two TimeMapping
         :param dimensionmappings: List of DimensionMapping. Can be None
         :param metricmappings: List of MetricMapping. Can be None."""
         self._caseidmapping = caseidmapping
