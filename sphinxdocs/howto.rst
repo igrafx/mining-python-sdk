@@ -35,20 +35,11 @@ First, open up Process Explorer 360, and go to your workgroup settings. In the s
    :alt: The settings
    
    
-To begin, go ahead and import the package, and check that the current API url matches the one in Process Explorer 360::
+To begin, go ahead and import the package::
 
     >>> import logpickr_sdk as lpk   # the 'as lpk' is entirely optional, but it will make the rest of our code much more readable
-    >>> print(lpk.workgroup.API_URL)
-    https://localhost:8080/pub
-    # Let's check the authentication url while we're at it
-    >>> print(lpk.workgroup.AUTH_URL)
-    https://localhost:28080
-    
-If the value doesn't match, you can set it using the `set_api_url` method, and if needed set the authentification url accordingly::
 
-    >>> lpk.set_api_url("https://dev-api.logpickr.com")
-    >>> lpk.set_auth_url("https://dev-auth.logpickr.com")
-    
+
 Workgroups and Projects
 -----------------------
 
@@ -56,7 +47,9 @@ The first step of using the Logpickr SDK will be to create a workgroup, using th
 
     >>> w_id = "fb6eeb8f-574c-469b-8eef-276ed6cfa823"
     >>> w_key = "72deb3cf-502d-4d8e-ab69-513d3c2694fa"
-    >>> wg = lpk.Workgroup(w_id, w_key)
+    >>> api_url = "https://dev-api.logpickr.com"
+    >>> auth_url = "https://dev-auth.logpickr.com"
+    >>> wg = lpk.Workgroup(w_id, w_key, api_url, auth_url)
 
 Once the workgroup is created, you can access the list of projects assosciated with the workgroup through the projects property::
     

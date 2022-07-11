@@ -97,9 +97,3 @@ Datasources allow you to perform custom SQL requests to the Druid databases cont
    
 .. _graphs: graph.html
 
-Utility functions
------------------
-
-.. autofunction:: set_api_url
-
-.. autofunction:: set_auth_url
