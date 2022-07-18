@@ -1,7 +1,7 @@
 How to use the SDK
 ==================
 
-.. _here : https://gitlab.com/logpickr/logpickr-sdk
+.. _here : https://gitlab.com/igrafx/logpickr/logpickr-sdk
 .. _f-strings : https://realpython.com/python-f-strings/
 .. _Dataframe : https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html
 .. _Python Database API : https://www.python.org/dev/peps/pep-0249/
