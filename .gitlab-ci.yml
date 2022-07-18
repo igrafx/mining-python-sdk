@@ -71,16 +71,16 @@ pages:
     # should already be installed by the package, but better safe than sorry
     - ls logpickr_sdk/dist/
     - mkdir sphinxdocs/_static
-    - mv logpickr_sdk/dist/logpickr_sdk_${CI_COMMIT_REF_SLUG}.whl sphinxdocs/_static/logpickr_sdk.whl
+    - mv logpickr_sdk/dist/logpickr_sdk_${CI_COMMIT_REF_SLUG}.whl sphinxdocs/_static/
     - cd sphinxdocs
     - ls _static/
     - make html
-    - mv _build/html/_downloads/*/logpickr_sdk.whl _build/html/_downloads/
+    - mv _build/html/_downloads/*/logpickr_sdk_${CI_COMMIT_REF_SLUG}.whl _build/html/_downloads/
     - rm -r  _build/html/_downloads/*/
-    - sed -i -E 's#_downloads/.+/logpickr_sdk.whl#_downloads/logpickr_sdk.whl#g' _build/html/howto.html
+    - sed -i -E "s#_downloads/.+/logpickr_sdk.whl#_downloads/logpickr_sdk_${CI_COMMIT_REF_SLUG}.whl#g" _build/html/howto.html
     - mv _build/html/ ../public/
   artifacts:
     paths:
       - public
   only:
-    - master
+    - tags
