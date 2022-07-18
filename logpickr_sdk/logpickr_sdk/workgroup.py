@@ -113,7 +113,6 @@ class FileStructure:
         self._eolChar = eolChar
         self._header = header
         self._commentChar = commentChar
-        self._columnSeparator = '|' # Not used in API. Will be implemented in future version
 
     @property
     def charset(self):
@@ -159,8 +158,7 @@ class FileStructure:
             'escapeChar': self._escapeChar,
             'eolChar': self._eolChar,
             'header': self._header,
-            'commentChar': self._commentChar,
-            'columnSeparator': self._columnSeparator
+            'commentChar': self._commentChar
         }
 
 

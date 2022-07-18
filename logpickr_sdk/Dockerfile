@@ -2,6 +2,12 @@ FROM python:3.6.8-slim
 
 MAINTAINER Fabrice Baranski <fabrice.baranski@igrafx.com>
 
+RUN apt-get update && \
+	apt-get install ffmpeg libsm6 libxext6  -y && \
+	pip install --upgrade pip && \
+	pip install Pillow pandas anonympy dask && \
+	pip install --no-deps cape-privacy==0.3.0
+
 ADD logpickr_sdk /tmp/logpickr_sdk
 ADD ./setup.py /tmp/setup.py
 
