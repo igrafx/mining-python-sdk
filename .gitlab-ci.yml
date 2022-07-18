@@ -56,7 +56,7 @@ build_wheel:
     - python setup.py bdist_wheel
     - cd dist
     - cp *.whl logpickr_sdk.whl
-    - cp logpickr_sdk.whl logpickr_sdk/dist/logpickr_sdk_${CI_COMMIT_REF_SLUG}.whl
+    - cp logpickr_sdk.whl logpickr_sdk_${CI_COMMIT_REF_SLUG}.whl
   artifacts:
     paths:
       - logpickr_sdk/dist/logpickr_sdk_${CI_COMMIT_REF_SLUG}.whl
