@@ -71,7 +71,7 @@ pages:
     # should already be installed by the package, but better safe than sorry
     - ls logpickr_sdk/dist/
     - mkdir sphinxdocs/_static
-    - mv logpickr_sdk.whl sphinxdocs/_static/
+    - mv logpickr_sdk_${CI_COMMIT_REF_SLUG}.whl sphinxdocs/_static/logpickr_sdk.whl
     - cd sphinxdocs
     - ls _static/
     - make html
