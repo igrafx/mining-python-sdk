@@ -78,7 +78,7 @@ pages:
     - make html
     - mv _build/html/_downloads/*/logpickr_sdk_${CI_COMMIT_REF_SLUG}.whl _build/html/_downloads/
     - rm -r  _build/html/_downloads/*/
-    - sed -i -E "s#_downloads/.+/logpickr_sdk.whl#_downloads/logpickr_sdk_${CI_COMMIT_REF_SLUG}.whl#g" _build/html/howto.html
+    - sed -i -E "s#_downloads/.+/logpickr_sdk_${CI_COMMIT_REF_SLUG}.whl#_downloads/logpickr_sdk_${CI_COMMIT_REF_SLUG}.whl#g" _build/html/howto.html
     - mv _build/html/ ../public/
   artifacts:
     paths:
