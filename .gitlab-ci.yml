@@ -72,7 +72,7 @@ pages:
     - ls logpickr_sdk/dist/
     - mkdir sphinxdocs/_static
     - mv logpickr_sdk/dist/logpickr_sdk_${CI_COMMIT_REF_SLUG}.whl sphinxdocs/_static/
-    - sed -i -E "s#<_static/logpickr_sdk.whl>#<_static/logpickr_sdk_${CI_COMMIT_REF_SLUG}.whl>#g" sphinxdocs/howto.rst
+    - sed -i -E "s#logpickr_sdk.whl#logpickr_sdk_${CI_COMMIT_REF_SLUG}.whl#g" sphinxdocs/howto.rst
     - cd sphinxdocs
     - ls _static/
     - make html
