@@ -19,7 +19,7 @@ Alternatively, if you plan to modify the SDK, use `pip install -e .`.
 This will create a symlink to the current directory instead of compressing and installing the source.
 This means that any changes made to the source will be instantly reflected anywhere the module is used.
 
-To install using wheel package : `pip install https://igrafx.gitlab.io/logpickr/logpickr-sdk/_downloads/logpickr_sdk.whl`
+To install using wheel package : `pip install https://igrafx.gitlab.io/logpickr/logpickr-sdk/_downloads/logpickr_sdk_<VERSION_NUMBER>.whl`
 
 ## Docs
 
@@ -29,3 +29,10 @@ To regenerate the doc, simply go to `sphinxdocs` and use the command `make html`
 ## Running the tests
 
 The tests are written for pytest, which should be installed with this package. Navigate to the test folder and run `pytest -v --id "workgroup id" --key "workgroup key" --project "the id of a project"`, replacing what's in quotes with the appropriate values (keeping them in quotes, as the id and key contain some hyphens, which messes with parsing). The -v (verbose) flag is optional, but it can help see what went wrong.
+
+## Download packages
+
+Download the corresponding wheel package to the Mining platform version
+
+* [2.13.0 and above](https://gitlab.com/igrafx/logpickr/logpickr-sdk/-/jobs/artifacts/2.13.0/download?job=build_wheel)
+* [2.12.1 and below](https://gitlab.com/igrafx/logpickr/logpickr-sdk/-/jobs/artifacts/2.12.1/download?job=build_wheel)
