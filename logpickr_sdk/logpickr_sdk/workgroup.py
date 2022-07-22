@@ -491,10 +491,10 @@ class Project:
     def column_mapping_exists(self):
         """Check if a column mapping to the project"""
         try:
-            response = req.get(f"{self.owner.apiurl}/{self.id}/column-mapping-exists", headers={"X-Logpickr-API-Token": self.owner.token})
+            response = req.get(f"{self.owner.apiurl}/project/{self.id}/column-mapping-exists", headers={"X-Logpickr-API-Token": self.owner.token})
             if response.status_code == 401:  # Only possible if the token has expired
                 self.owner.token = self.owner.login()
-                response = req.get(f"{self.owner.apiurl}/{self.id}/column-mapping-exists", headers={"X-Logpickr-API-Token": self.owner.token})
+                response = req.get(f"{self.owner.apiurl}/project/{self.id}/column-mapping-exists", headers={"X-Logpickr-API-Token": self.owner.token})
             response.raise_for_status()
         except req.HTTPError as error:
             print(f"Http error occured: {error}")
@@ -508,13 +508,13 @@ class Project:
         :param filestructure: the filestructure
         :param columnmapping: the columnmapping"""
         try:
-            response = req.post(f"{self.owner.apiurl}/{self.id}/column-mapping",
+            response = req.post(f"{self.owner.apiurl}/project/{self.id}/column-mapping",
                                 json={'fileStructure': filestructure.tojson(), 'columnMapping': columnmapping.tojson()},
                                 headers={"X-Logpickr-API-Token": self.owner.token,
                                          "content-type": "application/json"})
             if response.status_code == 401:  # Only possible if the token has expired
                 self.owner.token = self.owner.login()
-                response = req.post(f"{self.owner.apiurl}/{self.id}/column-mapping",
+                response = req.post(f"{self.owner.apiurl}/project/{self.id}/column-mapping",
                                     json={'fileStructure': filestructure.tojson(), 'columnMapping': columnmapping.tojson()},
                                     headers={"X-Logpickr-API-Token": self.owner.token,
                                             "content-type": "application/json"})  # try again
