@@ -488,6 +488,20 @@ class Project:
 
         return self._process_keys
 
+    def reset(self):
+        """Reset all project data except name, description and users rights."""
+        try:
+            response = req.post(f"{self.owner.apiurl}/project/{self.id}/reset", headers={"X-Logpickr-API-Token": self.owner.token})
+            if response.status_code == 401:  # Only possible if the token has expired
+                self.owner.token = self.owner.login()
+                response = req.post(f"{self.owner.apiurl}/project/{self.id}/reset", headers={"X-Logpickr-API-Token": self.owner.token})
+            response.raise_for_status()
+        except req.HTTPError as error:
+            print(f"Http error occured: {error}")
+            print(response.text)
+        
+        return response.status_code == 204
+
     def column_mapping_exists(self):
         """Check if a column mapping to the project"""
         try:
