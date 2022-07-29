@@ -557,7 +557,7 @@ class Project:
         except req.HTTPError as error:
             print(f"Http error occured: {error}")
             print(response.text)
-        return True
+        return response.status_code == 204
 
     @property
     def train_status(self):
