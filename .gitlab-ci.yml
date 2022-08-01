@@ -53,6 +53,7 @@ build_wheel:
   <<: *install_sdk
   script:
     - cd logpickr_sdk
+    - sed -i -E "s#version=.*,#version=\"{CI_COMMIT_REF_SLUG}.whl\",#g" setup.py
     - python setup.py bdist_wheel
     - cd dist
     - cp *.whl logpickr_sdk.whl
