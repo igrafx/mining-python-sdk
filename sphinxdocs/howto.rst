@@ -17,7 +17,7 @@ First, install the SDK. If we've published it, then you can simply install it wi
 From source:
 ++++++++++++
 
-The source code for the SDK can be found `here`_ . Once installed, go to `logpickr_sdk` and run :bash:`pip install .`. Dependencies should be automatically installed along with it. Before installing, you can run the tests.
+The source code for the SDK can be found `_here` _. Once installed, go to `logpickr_sdk` and run :bash:`pip install .`. Dependencies should be automatically installed along with it. Before installing, you can run the tests.
 
 From wheel:
 +++++++++++
@@ -45,8 +45,8 @@ Workgroups and Projects
 
 The first step of using the Logpickr SDK will be to create a workgroup, using the credentials you copied from Process Explorer 360::
 
-    >>> w_id = "fb6eeb8f-574c-469b-8eef-276ed6cfa823"
-    >>> w_key = "72deb3cf-502d-4d8e-ab69-513d3c2694fa"
+    >>> w_id = "<YOUR WORKGROUP ID>"
+    >>> w_key = "<YOUR WORKGROUP KEY>"
     >>> api_url = "https://dev-api.logpickr.com"
     >>> auth_url = "https://dev-auth.logpickr.com"
     >>> wg = lpk.Workgroup(w_id, w_key, api_url, auth_url)
