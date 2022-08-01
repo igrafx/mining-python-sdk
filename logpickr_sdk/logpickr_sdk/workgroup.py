@@ -536,7 +536,7 @@ class Project:
         except req.HTTPError as error:
             print(f"Http error occured: {error}")
             print(response.text)
-        return True
+        return response.status_code == 204
 
     def add_file(self, path):
         """Adds a file to the project
@@ -557,7 +557,7 @@ class Project:
         except req.HTTPError as error:
             print(f"Http error occured: {error}")
             print(response.text)
-        return response.status_code == 204
+        return response.status_code == 201
 
     @property
     def train_status(self):
