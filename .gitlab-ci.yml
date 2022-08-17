@@ -43,6 +43,29 @@ image: python:latest
 variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
 
+setup:
+  stage: .pre
+  script:
+    # Wheel package file name convention is the following:
+    # {distribution}-{version}(-{build tag})?-{python tag}-{abi tag}-{platform tag}.whl
+    # Thus it cannot contain any '-' character in it's version number
+    # See https://peps.python.org/pep-0491/#file-name-convention
+
+    # Replace '-' with '.'
+    - version=${CI_COMMIT_REF_NAME//-/.}
+    # Remove prefix before '/' (feat/ or fix/)
+    - version=$(echo $version | sed 's-.*/--g')
+    # Replace every characters except alphanumerical and '.' with '_'
+    - version=$(echo $version | sed 's/[^a-zA-Z0-9.]/_/g')
+    # If CI_COMMIT_REF_SLUG was not defined, assign default value
+    - version=${version:-0.0.1}
+    - wheel_filename="logpickr_sdk-${version}-py3-none-any.whl"
+    - echo "VERSION=${version}" >> build.env
+    - echo "WHEEL_FILENAME=${wheel_filename}" >> build.env
+  artifacts:
+    reports:
+      dotenv: build.env
+
 cache:
   paths:
     - .cache/pip
@@ -53,14 +76,14 @@ build_wheel:
   <<: *install_sdk
   script:
     - cd logpickr_sdk
-    - sed -i -E "s#version=.*,#version=\"{CI_COMMIT_REF_SLUG}\",#g" setup.py
+    - sed -i -E "s#version=.*,#version=\"${VERSION}\",#g" setup.py
     - python setup.py bdist_wheel
     - cd dist
     - cp *.whl logpickr_sdk.whl
-    - cp logpickr_sdk.whl logpickr_sdk_${CI_COMMIT_REF_SLUG}.whl
+    - cp logpickr_sdk.whl ${WHEEL_FILENAME}
   artifacts:
     paths:
-      - logpickr_sdk/dist/logpickr_sdk_${CI_COMMIT_REF_SLUG}.whl
+      - logpickr_sdk/dist/${WHEEL_FILENAME}
 
 pages:
   stage: doc
@@ -72,14 +95,14 @@ pages:
     # should already be installed by the package, but better safe than sorry
     - ls logpickr_sdk/dist/
     - mkdir sphinxdocs/_static
-    - mv logpickr_sdk/dist/logpickr_sdk_${CI_COMMIT_REF_SLUG}.whl sphinxdocs/_static/
-    - sed -i -E "s#logpickr_sdk.whl#logpickr_sdk_${CI_COMMIT_REF_SLUG}.whl#g" sphinxdocs/howto.rst
+    - mv logpickr_sdk/dist/${WHEEL_FILENAME} sphinxdocs/_static/
+    - sed -i -E "s#logpickr_sdk.whl#${WHEEL_FILENAME}#g" sphinxdocs/howto.rst
     - cd sphinxdocs
     - ls _static/
     - make html
-    - mv _build/html/_downloads/*/logpickr_sdk_${CI_COMMIT_REF_SLUG}.whl _build/html/_downloads/
+    - mv _build/html/_downloads/*/${WHEEL_FILENAME} _build/html/_downloads/
     - rm -r  _build/html/_downloads/*/
-    - sed -i -E "s#_downloads/.+/logpickr_sdk_${CI_COMMIT_REF_SLUG}.whl#_downloads/logpickr_sdk_${CI_COMMIT_REF_SLUG}.whl#g" _build/html/howto.html
+    - sed -i -E "s#_downloads/.+/${WHEEL_FILENAME}#_downloads/${WHEEL_FILENAME}#g" _build/html/howto.html
     - mv _build/html/ ../public/
   artifacts:
     paths:
