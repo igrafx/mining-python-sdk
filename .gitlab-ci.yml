@@ -75,8 +75,8 @@ build_wheel:
   stage: build
   <<: *install_sdk
   script:
-    - echo "VERSION=${version}" >> build_wheel.env
-    - echo "WHEEL_FILENAME=${wheel_filename}" >> build_wheel.env
+    - echo "VERSION=${VERSION}" >> build_wheel.env
+    - echo "WHEEL_FILENAME=${WHEEL_FILENAME}" >> build_wheel.env
     - cd logpickr_sdk
     - sed -i -E "s#version=.*,#version=\"${VERSION}\",#g" setup.py
     - python setup.py bdist_wheel
