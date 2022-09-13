@@ -89,6 +89,9 @@ pages:
   stage: doc
   dependencies:
     - build_wheel
+  needs:
+    - job: setup
+      artifacts: true    
   <<: *install_sdk
   script:
     - pip install sphinx sphinx-rtd-theme
