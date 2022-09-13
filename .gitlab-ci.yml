@@ -15,7 +15,7 @@
     - if: $CI_COMMIT_TAG
 
 stages:
-  - test
+#  - test
   - build
   - doc
 
@@ -84,6 +84,8 @@ build_wheel:
   artifacts:
     paths:
       - logpickr_sdk/dist/${WHEEL_FILENAME}
+    reports:
+      dotenv: build.env
 
 pages:
   stage: doc
@@ -91,6 +93,7 @@ pages:
     job: build_wheel
     artifacts: true
   script:
+    - echo ${WHEEL_FILENAME}
     - pip install sphinx sphinx-rtd-theme
     # should already be installed by the package, but better safe than sorry
     - ls logpickr_sdk/dist/
