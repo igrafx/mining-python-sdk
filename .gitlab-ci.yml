@@ -84,16 +84,16 @@ build_wheel:
   artifacts:
     paths:
       - logpickr_sdk/dist/${WHEEL_FILENAME}
+    reports:
+      dotenv: build.env
 
 pages:
   stage: doc
-  dependencies:
-    - build_wheel
   needs:
-    - job: setup
-      artifacts: true    
-  <<: *install_sdk
+    job: build_wheel
+    artifacts: true
   script:
+    - echo ${WHEEL_FILENAME}
     - pip install sphinx sphinx-rtd-theme
     # should already be installed by the package, but better safe than sorry
     - ls logpickr_sdk/dist/
