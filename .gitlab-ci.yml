@@ -75,6 +75,8 @@ build_wheel:
   stage: build
   <<: *install_sdk
   script:
+    - echo "VERSION=${VERSION}" >> build_wheel.env
+    - echo "WHEEL_FILENAME=${WHEEL_FILENAME}" >> build_wheel.env
     - cd logpickr_sdk
     - sed -i -E "s#version=.*,#version=\"${VERSION}\",#g" setup.py
     - python setup.py bdist_wheel
@@ -84,13 +86,16 @@ build_wheel:
   artifacts:
     paths:
       - logpickr_sdk/dist/${WHEEL_FILENAME}
+      - build_wheel.env
 
 pages:
   stage: doc
-  dependencies:
-    - build_wheel
-  <<: *install_sdk
+  needs:
+    job: build_wheel
+    artifacts: true
   script:
+    - source build_wheel.env
+    - echo "${WHEEL_FILENAME}"
     - pip install sphinx sphinx-rtd-theme
     # should already be installed by the package, but better safe than sorry
     - ls logpickr_sdk/dist/

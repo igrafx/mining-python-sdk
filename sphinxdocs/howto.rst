@@ -45,8 +45,8 @@ Workgroups and Projects
 
 The first step of using the Logpickr SDK will be to create a workgroup, using the credentials you copied from Process Explorer 360::
 
-    >>> w_id = "<YOUR WORKGROUP ID>"
-    >>> w_key = "<YOUR WORKGROUP KEY>"
+    >>> w_id = "<your Workgroup ID>"
+    >>> w_key = "<Your Workgroup KEY>"
     >>> api_url = "https://dev-api.logpickr.com"
     >>> auth_url = "https://dev-auth.logpickr.com"
     >>> wg = lpk.Workgroup(w_id, w_key, api_url, auth_url)
