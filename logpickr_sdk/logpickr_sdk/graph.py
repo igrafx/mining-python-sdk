@@ -197,8 +197,10 @@ class EdgeInstance:
     def from_json(jedge, vertices):
         """Static method that created an EdgeInstance from its json representation"""
         conc = [edge_dict_to_str(e) for e in jedge["concurrentEdges"]] if "concurrentEdges" in jedge.keys() else []
-        source = next(v for v in vertices if v.id == jedge["source"]["id"])
-        dest = next(v for v in vertices if v.id == jedge["destination"]["id"])
+        jedge_s = jedge["source"]
+        jedge_d = jedge["destination"]
+        source = next(v for v in vertices if v.id == jedge_s["id"] and v.event_instance == jedge_s["eventInstance"])
+        dest = next(v for v in vertices if v.id == jedge_d["id"] and v.event_instance == jedge_d["eventInstance"])
         # Note: the concurrent edges are currently just ids constructed from the edge vertices' ids. While it
         # should be unique, this method is only called right before these weird ids get replaced with actual pointers
         return EdgeInstance(source, dest, conc)

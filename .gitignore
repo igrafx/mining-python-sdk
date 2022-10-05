@@ -14,3 +14,4 @@ logpickr_sdk/build
 logpickr_sdk/logpickr_sdk.egg-info
 venv
 .DS_Store
+logpickr_sdk/test.py
