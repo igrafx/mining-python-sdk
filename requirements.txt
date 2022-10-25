@@ -3,3 +3,4 @@ requests
 pydruid
 sqlalchemy
 pandas
+pytest
