@@ -663,7 +663,7 @@ class Datasource:
         :param sqlreq: the SQL request to execute"""
         self.cursor.execute(sqlreq)
         rows = self.cursor.fetchall()
-        cols = list(rows[0]._fields)
+        cols = [i[0] for i in self.cursor.description]
         data = [list(r) for r in rows]
         return pandas.DataFrame(data, columns=cols)
 
