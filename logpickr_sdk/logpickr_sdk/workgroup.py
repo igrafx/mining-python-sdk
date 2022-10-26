@@ -158,7 +158,8 @@ class FileStructure:
             'escapeChar': self._escapeChar,
             'eolChar': self._eolChar,
             'header': self._header,
-            'commentChar': self._commentChar
+            'commentChar': self._commentChar,
+            'fileType': 'csv'
         }
 
 
