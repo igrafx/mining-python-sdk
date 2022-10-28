@@ -73,6 +73,11 @@ class TestProject:
         p = Project(PROJECT_ID, wg)
         assert p.add_file("testdata.csv")
 
+    def test_add_excel_file(self, ID, SECRET, PROJECT_ID):
+        wg = Workgroup(ID, SECRET)
+        p = Project(PROJECT_ID, wg)
+        assert p.add_file("p2pShortExcel.xlsx")
+
 
 NAME = "22"
 TYPE = "events"
