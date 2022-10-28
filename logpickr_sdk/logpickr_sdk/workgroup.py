@@ -74,7 +74,7 @@ class Workgroup:
     def login(self):
         """Logs in to the Logpickr API with the Workgroup's credentials and retrieves a token for later requests"""
 
-        login_url = f"{self._authurl}/auth/realms/logpickr/protocol/openid-connect/token"  # Note to self: ask if this will always be the same login url structure
+        login_url = f"{self._authurl}/realms/logpickr/protocol/openid-connect/token"  # Note to self: ask if this will always be the same login url structure
         login_data = {
             "grant_type": "urn:ietf:params:oauth:grant-type:uma-ticket",
             "audience": self.id,
@@ -93,10 +93,17 @@ class Workgroup:
                 raise Exception("Invalid login credentials")
 
 
+
+class FileType(str, Enum):
+    csv = "csv"
+    xls = "xls"
+    xlsx = "xlsx"
+
+
 class FileStructure:
     """FileStructure used to create a column mapping"""
 
-    def __init__(self, charset: str, delimiter: str, quoteChar: str, escapeChar: str, eolChar: str, commentChar: str, header: bool = True):
+    def __init__(self, charset: str, delimiter: str, quoteChar: str, escapeChar: str, eolChar: str, commentChar: str, fileType: FileType, sheetName: str, header: bool = True):
         """ Creates a FileStructure used to create a column mapping
 
         :param charset: the charset of the file (UTF-8, ..)
@@ -105,7 +112,9 @@ class FileStructure:
         :param escapeChar: the character to ('\\', ...)
         :param eolChar: the character for the end of line ('\\n')
         :param commentChar: the character to comment ('#')
-        :param header: boolean to say if the file contains a header"""
+        :param header: boolean to say if the file contains a header
+        :param fileType: the type of the file (csv, xls, xlsx)
+        :param sheetName: the name of the sheet in excel file"""
         self._charset = charset
         self._delimiter = delimiter
         self._quoteChar = quoteChar
@@ -113,6 +122,8 @@ class FileStructure:
         self._eolChar = eolChar
         self._header = header
         self._commentChar = commentChar
+        self._fileType = fileType
+        self._sheetName = sheetName
 
     @property
     def charset(self):
@@ -149,6 +160,16 @@ class FileStructure:
         """Returns the commentChar of the FileStructure"""
         return self._commentChar
 
+    @property
+    def fileType(self):
+        """Returns the fileType of the FileStructure"""
+        return self._fileType
+
+    @property
+    def sheetName(self):
+        """Returns the sheetName of the FileStructure"""
+        return self._sheetName
+
     def tojson(self):
         """Returns Json format of FileStructure"""
         return {
@@ -158,7 +179,18 @@ class FileStructure:
             'escapeChar': self._escapeChar,
             'eolChar': self._eolChar,
             'header': self._header,
-            'commentChar': self._commentChar
+            'commentChar': self._commentChar,
+            'fileType': self._fileType
+        } if self._fileType == FileType.csv else {
+            'charset': self._charset,
+            'delimiter': self._delimiter,
+            'quoteChar': self._quoteChar,
+            'escapeChar': self._escapeChar,
+            'eolChar': self._eolChar,
+            'header': self._header,
+            'commentChar': self._commentChar,
+            'fileType': self._fileType,
+            'sheetName': self._sheetName
         }
 
 
