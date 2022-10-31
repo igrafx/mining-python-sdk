@@ -34,6 +34,7 @@ The tests are written for pytest, which should be installed with this package. N
 ## Download packages
 
 Download the corresponding wheel package to the Mining platform version
+* [2.16.0 and above](https://gitlab.com/igrafx/logpickr/logpickr-sdk/-/jobs/artifacts/2.16.0/download?job=build_wheel)
 * [2.15.1 and above](https://gitlab.com/igrafx/logpickr/logpickr-sdk/-/jobs/artifacts/2.15.1/download?job=build_wheel)
 * [2.15.0 and above](https://gitlab.com/igrafx/logpickr/logpickr-sdk/-/jobs/artifacts/2.15.0/download?job=build_wheel)
 * [2.14.0 and above](https://gitlab.com/igrafx/logpickr/logpickr-sdk/-/jobs/artifacts/2.14.0/download?job=build_wheel)
