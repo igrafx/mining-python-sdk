@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name="logpickr_sdk",
-      version="2.15.1",
+      version="2.16.0",
       description="A python implementation of Logpickr's public API",
       url="logpickr.com",
       author="Logpickr",
