@@ -11,7 +11,7 @@ from typing import List
 class Workgroup:
     """A Logpickr workgroup, which is used to log in and access projects"""
 
-    def __init__(self, client_id: str, key: str, apiurl: str, authurl: str, ssl_verify = True):
+    def __init__(self, client_id: str, key: str, apiurl: str, authurl: str):
         """ Creates a Logpickr Workgroup and automatically logs in to the Logpickr API using the provided client id and secret key
 
         :param client_id: the workgroup ID, which can be found in Process Explorer 360
@@ -25,8 +25,6 @@ class Workgroup:
         self._projects = []
         self._datasources = []
         self.token = self.login()
-        self.header = "Authorization"
-        self.ssl_verify = ssl_verify
 
     @property
     def apiurl(self):
@@ -40,10 +38,10 @@ class Workgroup:
     def projects(self):
         """Performs a REST request for projects, then gets project data for any projects that don't already exist in the Workgroup"""
         try:
-            response = req.get(f"{self.apiurl}/projects", headers={self.header: "Bearer " + self.token}, verify=self.ssl_verify)
+            response = req.get(f"{self.apiurl}/projects", headers={"X-Logpickr-API-Token": self.token})
             if response.status_code == 401:  # Only possible if the token has expired
                 self.token = self.login()
-                response = req.get(f"{self.apiurl}/projects", headers={self.header: "Bearer "+ self.token}, verify=self.ssl_verify)
+                response = req.get(f"{self.apiurl}/projects", headers={"X-Logpickr-API-Token": self.token})
             response.raise_for_status()
             for pid in response.json():
                 if len([pro for pro in self._projects if pro.id == pid]) == 0:  # If there are no projects with that ID
@@ -78,7 +76,8 @@ class Workgroup:
 
         login_url = f"{self._authurl}/realms/logpickr/protocol/openid-connect/token"  # Note to self: ask if this will always be the same login url structure
         login_data = {
-            "grant_type": "client_credentials",
+            "grant_type": "urn:ietf:params:oauth:grant-type:uma-ticket",
+            "audience": self.id,
             "client_id": self.id,
             "client_secret": self.key
         }
@@ -429,7 +428,7 @@ class Project:
     """A Logpickr project
     """
 
-    def __init__(self, pid: str, owner: Workgroup, ssl_verify=True):
+    def __init__(self, pid: str, owner: Workgroup):
         """Create a Logpickr project from a project ID and the Workgroup it was created by
 
         :param pid: the Project's ID
@@ -447,11 +446,11 @@ class Project:
         parameters = {"mode": "gateways"} if gateways else {}
         try:
             response = req.get(f"{self.owner.apiurl}/project/{self.id}/graph", params=parameters,
-                               headers={self.owner.header: "Bearer "+ self.owner.token}, verify=self.owner.ssl_verify)
+                               headers={"X-Logpickr-API-Token": self.owner.token})
             if response.status_code == 401:  # Only possible if the token has expired
                 self.owner.token = self.owner.login()
                 response = req.get(f"{self.owner.apiurl}/project/{self.id}/graph", params=parameters,
-                                   headers={self.owner.header: "Bearer "+ self.owner.token}, verify=self.owner.ssl_verify)  # trying again
+                                   headers={"X-Logpickr-API-Token": self.owner.token})  # trying again
             response.raise_for_status()
             self._graph = Graph.from_json(self.id, response.text)
         except req.HTTPError as error:
@@ -475,14 +474,12 @@ class Project:
         try:
             response = req.get(f"{self.owner.apiurl}/project/{self.id}/graphInstance",
                                params=parameters,
-                               headers={self.owner.header: "Bearer "+ self.owner.token},
-                               verify=self.owner.ssl_verify)
+                               headers={"X-Logpickr-API-Token": self.owner.token})
             if response.status_code == 401:  # Only possible if the token has expired
                 self.owner.token = self.owner.login()
                 response = req.get(f"{self.owner.apiurl}/project/{self.id}/graphInstance",
                                    params=parameters,
-                                   headers={self.owner.header: "Bearer "+ self.owner.token},
-                                   verify=self.owner.ssl_verify)  # try again
+                                   headers={"X-Logpickr-API-Token": self.owner.token})  # try again
             response.raise_for_status()
             graph = response.json()["value"]
             graph_instance = GraphInstance.from_json(self.id, graph)
@@ -500,11 +497,11 @@ class Project:
         """Requests and returns the list of datasources associated with the project"""
         try:
             response = req.get(f"{self.owner.apiurl}/datasources", params={"id": f"{self.id}"},
-                               headers={self.owner.header: "Bearer "+ self.owner.token}, verify=self.owner.ssl_verify)
+                               headers={"X-Logpickr-API-Token": self.owner.token})
             if response.status_code == 401:  # Only possible if the token has expired
                 self.owner.token = self.owner.login()
                 response = req.get(f"{self.owner.apiurl}/datasources", params={"id": f"{self.id}"},
-                                   headers={self.owner.header: "Bearer "+ self.owner.token}, verify=self.owner.ssl_verify)  # try again
+                                   headers={"X-Logpickr-API-Token": self.owner.token})  # try again
             response.raise_for_status()
             self._datasources = [Datasource(x["name"], x["type"], x["host"], x["port"], self) for x in response.json()]
 
@@ -522,14 +519,28 @@ class Project:
             self._process_keys = [key for key in res['processkey']]
 
         return self._process_keys
-    
+
+    def reset(self):
+        """Reset all project data except name, description and users rights."""
+        try:
+            response = req.post(f"{self.owner.apiurl}/project/{self.id}/reset", headers={"X-Logpickr-API-Token": self.owner.token})
+            if response.status_code == 401:  # Only possible if the token has expired
+                self.owner.token = self.owner.login()
+                response = req.post(f"{self.owner.apiurl}/project/{self.id}/reset", headers={"X-Logpickr-API-Token": self.owner.token})
+            response.raise_for_status()
+        except req.HTTPError as error:
+            print(f"Http error occured: {error}")
+            print(response.text)
+        
+        return response.status_code == 204
+
     def column_mapping_exists(self):
         """Check if a column mapping to the project"""
         try:
-            response = req.get(f"{self.owner.apiurl}/project/{self.id}/column-mapping-exists", headers={self.owner.header: "Bearer "+ self.owner.token}, verify=self.owner.ssl_verify)
+            response = req.get(f"{self.owner.apiurl}/project/{self.id}/column-mapping-exists", headers={"X-Logpickr-API-Token": self.owner.token})
             if response.status_code == 401:  # Only possible if the token has expired
                 self.owner.token = self.owner.login()
-                response = req.get(f"{self.owner.apiurl}/project/{self.id}/column-mapping-exists", headers={self.owner.header: "Bearer "+ self.owner.token}, verify=self.owner.ssl_verify)
+                response = req.get(f"{self.owner.apiurl}/project/{self.id}/column-mapping-exists", headers={"X-Logpickr-API-Token": self.owner.token})
             response.raise_for_status()
         except req.HTTPError as error:
             print(f"Http error occured: {error}")
@@ -545,13 +556,13 @@ class Project:
         try:
             response = req.post(f"{self.owner.apiurl}/project/{self.id}/column-mapping",
                                 json={'fileStructure': filestructure.tojson(), 'columnMapping': columnmapping.tojson()},
-                                headers={self.owner.header: "Bearer "+ self.owner.token,
+                                headers={"X-Logpickr-API-Token": self.owner.token,
                                          "content-type": "application/json"})
             if response.status_code == 401:  # Only possible if the token has expired
                 self.owner.token = self.owner.login()
                 response = req.post(f"{self.owner.apiurl}/project/{self.id}/column-mapping",
                                     json={'fileStructure': filestructure.tojson(), 'columnMapping': columnmapping.tojson()},
-                                    headers={self.owner.header: "Bearer "+ self.owner.token,
+                                    headers={"X-Logpickr-API-Token": self.owner.token,
                                             "content-type": "application/json"})  # try again
             response.raise_for_status()
         except req.HTTPError as error:
@@ -562,10 +573,10 @@ class Project:
     def reset(self):
         """Makes an API call to manually reset a project"""
         try:
-            response = req.post(f"{self.owner.apiurl}/project/{self.id}/reset",headers={self.owner.header: "Bearer "+ self.owner.token})
+            response = req.post(f"{self.owner.apiurl}/project/{self.id}/reset",headers={"X-Logpickr-API-Token": self.owner.token})
             if response.status_code == 401:  # Only possible if the token has expired
                 self.owner.token = self.owner.login()
-                response = req.post(f"{self.owner.apiurl}/project/{self.id}/reset",headers={self.owner.header: "Bearer "+ self.owner.token})  # try again
+                response = req.post(f"{self.owner.apiurl}/project/{self.id}/reset",headers={"X-Logpickr-API-Token": self.owner.token})  # try again
             response.raise_for_status()
         except req.HTTPError as error:
             print(f"Http error occured: {error}")
@@ -579,13 +590,13 @@ class Project:
         try:
             response = req.post(f"{self.owner.apiurl}/project/{self.id}/file?teamId={self.owner.id}",
                                 files={'file': (path.split("/")[-1], open(path, 'rb'), "text/csv")},
-                                headers={self.owner.header: "Bearer "+ self.owner.token,
+                                headers={"X-Logpickr-API-Token": self.owner.token,
                                          "accept": "application/json, text/plain, */*"})
             if response.status_code == 401:  # Only possible if the token has expired
                 self.owner.token = self.owner.login()
                 response = req.post(f"{self.owner.apiurl}/project/{self.id}/file?teamId={self.owner.id}",
                                     files={'file': (path.split("/")[-1], open(path, 'rb'), "text/csv")},
-                                    headers={self.owner.header: "Bearer "+ self.owner.token,
+                                    headers={"X-Logpickr-API-Token": self.owner.token,
                                              "accept": "application/json, text/plain, */*"})  # try again
             response.raise_for_status()
         except req.HTTPError as error:
@@ -597,10 +608,10 @@ class Project:
     def train_status(self):
         """Returns True if the train is currently running, False otherwise"""
         try:
-            response = req.get(f"{self.owner.apiurl}/train/{self.id}", headers={self.owner.header: "Bearer "+ self.owner.token}, verify=self.owner.ssl_verify)
+            response = req.get(f"{self.owner.apiurl}/train/{self.id}", headers={"X-Logpickr-API-Token": self.owner.token})
             if response.status_code == 401:  # Only possible if the token has expired
                 self.owner.token = self.owner.login()
-                response = req.get(f"{self.owner.apiurl}/train/{self.id}", headers={self.owner.header: "Bearer "+ self.owner.token}, verify=self.owner.ssl_verify)
+                response = req.get(f"{self.owner.apiurl}/train/{self.id}", headers={"X-Logpickr-API-Token": self.owner.token})
             response.raise_for_status()
         except req.HTTPError as error:
             print(f"Http error occured: {error}")
@@ -611,10 +622,10 @@ class Project:
     def launch_train(self):
         """Makes an API call to manually launch the train of a project"""
         try:
-            response = req.post(f"{self.owner.apiurl}/train/{self.id}/launch", headers={self.owner.header: "Bearer "+ self.owner.token})
+            response = req.post(f"{self.owner.apiurl}/train/{self.id}/launch", headers={"X-Logpickr-API-Token": self.owner.token})
             if response.status_code == 401:  # Only possible if the token has expired
                 self.owner.token = self.owner.login()
-                response = req.get(f"{self.owner.apiurl}/train/{self.id}/launch", headers={self.owner.header: "Bearer "+ self.owner.token}, verify=self.owner.ssl_verify)
+                response = req.get(f"{self.owner.apiurl}/train/{self.id}/launch", headers={"X-Logpickr-API-Token": self.owner.token})
             response.raise_for_status()
         except req.HTTPError as error:
             print(f"Http error occured: {error}")
@@ -623,10 +634,10 @@ class Project:
     def stop_train(self):
         """Makes an API call to manually stop the train of a project"""
         try:
-            response = req.delete(f"{self.owner.apiurl}/train/{self.id}", headers={self.owner.header: "Bearer "+ self.owner.token})
+            response = req.delete(f"{self.owner.apiurl}/train/{self.id}", headers={"X-Logpickr-API-Token": self.owner.token})
             if response.status_code == 401:  # Only possible if the token has expired
                 self.owner.token = self.owner.login()
-                response = req.delete(f"{self.owner.apiurl}/train/{self.id}", headers={self.owner.header: "Bearer "+ self.owner.token})
+                response = req.delete(f"{self.owner.apiurl}/train/{self.id}", headers={"X-Logpickr-API-Token": self.owner.token})
             response.raise_for_status()
         except req.HTTPError as error:
             print(f"Http error occured: {error}")
@@ -638,11 +649,11 @@ class Project:
 
         try:
             response = req.post(f"{self.owner.apiurl}/project/{self.id}/prediction", params={"caseIds": case_ids},
-                                headers={self.owner.header: "Bearer "+ self.owner.token})
+                                headers={"X-Logpickr-API-Token": self.owner.token})
             if response.status_code == 401:  # Only possible if the token has expired
                 self.owner.token = self.owner.login()
                 response = req.post(f"{self.owner.apiurl}/project/{self.id}/prediction", params={"caseIds": case_ids},
-                                    headers={self.owner.header: "Bearer "+ self.owner.token})
+                                    headers={"X-Logpickr-API-Token": self.owner.token})
             response.raise_for_status()
         except req.HTTPError as error:
             print(f"Http error occured: {error}")
@@ -653,11 +664,11 @@ class Project:
 
         try:
             response = req.get(f"{self.owner.apiurl}/project/prediction/{prediction_id}",
-                               headers={self.owner.header: "Bearer "+ self.owner.token}, verify=self.owner.ssl_verify)
+                               headers={"X-Logpickr-API-Token": self.owner.token})
             if response.status_code == 401:  # Only possible if the token has expired
                 self.owner.token = self.owner.login()
                 response = req.get(f"{self.owner.apiurl}/project/prediction/{prediction_id}",
-                                   headers={self.owner.header: "Bearer "+ self.owner.token}, verify=self.owner.ssl_verify)
+                                   headers={"X-Logpickr-API-Token": self.owner.token})
             response.raise_for_status()
             return response.json()
         except req.HTTPError as error:
