@@ -11,20 +11,22 @@ from typing import List
 class Workgroup:
     """A Logpickr workgroup, which is used to log in and access projects"""
 
-    def __init__(self, client_id: str, key: str, apiurl: str, authurl: str, ssl_verify = True):
+    def __init__(self, client_id: str, key: str, apiurl: str, authurl: str, ssl_verify = True, realm_name: str = 'logpickr'):
         """ Creates a Logpickr Workgroup and automatically logs in to the Logpickr API using the provided client id and secret key
 
         :param client_id: the workgroup ID, which can be found in Process Explorer 360
         :param key: the workgroup's secret key, used for authetication, also found in Process Explorer 360
         :param apiurl: the url of the api found in Process Explorer 360
         :param authurl: the url of the authentication found in Process Explorer 360
-        :param ssl_verify: verify SSL certificates"""
+        :param ssl_verify: verify SSL certificates
+        :param realm_name: name of the keycloak realm with workgroup clients"""
         self.id = client_id
         self._apiurl = apiurl
         self._authurl = authurl
         self.key = key
         self._projects = []
         self._datasources = []
+        self._realm_name = realm_name
         self.token = self.login()
         self.header = "Authorization"
         self.ssl_verify = ssl_verify
@@ -75,9 +77,8 @@ class Workgroup:
         return next((p for p in self.projects if p.id == pid), None)
 
     def login(self):
-        """Logs in to the Logpickr API with the Workgroup's credentials and retrieves a token for later requests"""
-
-        login_url = f"{self._authurl}/realms/logpickr/protocol/openid-connect/token"  # Note to self: ask if this will always be the same login url structure
+        """ Can be called from the __init__ unlike self.login() """
+        login_url = f"{self._authurl}/realms/{self._realm_name}/protocol/openid-connect/token"  # Note to self: ask if this will always be the same login url structure
         login_data = {
             "grant_type": "client_credentials",
             "client_id": self.id,
@@ -93,6 +94,7 @@ class Workgroup:
             print(f"HTTP Error occured: {error}")
             if error.response.reason == 'Bad Request':
                 raise Exception("Invalid login credentials")
+
 
 
 
