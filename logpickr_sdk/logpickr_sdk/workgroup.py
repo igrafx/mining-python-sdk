@@ -603,7 +603,7 @@ class Project:
             response = req.post(f"{self.owner.apiurl}/train/{self.id}/launch", headers={"X-Logpickr-API-Token": self.owner.token}, verify=self.owner.ssl_verify)
             if response.status_code == 401:  # Only possible if the token has expired
                 self.owner.token = self.owner.login()
-                response = req.get(f"{self.owner.apiurl}/train/{self.id}/launch", headers={"X-Logpickr-API-Token": self.owner.token}, verify=self.owner.ssl_verify)
+                response = req.post(f"{self.owner.apiurl}/train/{self.id}/launch", headers={"X-Logpickr-API-Token": self.owner.token}, verify=self.owner.ssl_verify)
             response.raise_for_status()
         except req.HTTPError as error:
             print(f"Http error occured: {error}")
