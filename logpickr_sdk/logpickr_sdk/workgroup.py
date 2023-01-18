@@ -8,10 +8,11 @@ import pandas
 from enum import Enum
 from typing import List
 
+
 class Workgroup:
     """A Logpickr workgroup, which is used to log in and access projects"""
 
-    def __init__(self, client_id: str, key: str, apiurl: str, authurl: str, ssl_verify = True):
+    def __init__(self, client_id: str, key: str, apiurl: str, authurl: str, ssl_verify: bool = True):
         """ Creates a Logpickr Workgroup and automatically logs in to the Logpickr API using the provided client id and secret key
 
         :param client_id: the workgroup ID, which can be found in Process Explorer 360
@@ -25,10 +26,9 @@ class Workgroup:
         self.key = key
         self._projects = []
         self._datasources = []
-        self.token = self.login()
         self.header = "Authorization"
         self.ssl_verify = ssl_verify
-
+        self.token = self.login()
 
     @property
     def apiurl(self):
@@ -42,10 +42,12 @@ class Workgroup:
     def projects(self):
         """Performs a REST request for projects, then gets project data for any projects that don't already exist in the Workgroup"""
         try:
-            response = req.get(f"{self.apiurl}/projects", headers={"X-Logpickr-API-Token": self.token}, verify=self.ssl_verify)
+            response = req.get(f"{self.apiurl}/projects", headers={"X-Logpickr-API-Token": self.token},
+                               verify=self.ssl_verify)
             if response.status_code == 401:  # Only possible if the token has expired
                 self.token = self.login()
-                response = req.get(f"{self.apiurl}/projects", headers={"X-Logpickr-API-Token": self.token}, verify=self.ssl_verify)
+                response = req.get(f"{self.apiurl}/projects", headers={"X-Logpickr-API-Token": self.token},
+                                   verify=self.ssl_verify)
             response.raise_for_status()
             for pid in response.json():
                 if len([pro for pro in self._projects if pro.id == pid]) == 0:  # If there are no projects with that ID
@@ -100,7 +102,8 @@ class Workgroup:
 class FileStructure:
     """FileStructure used to create a column mapping"""
 
-    def __init__(self, charset: str, delimiter: str, quoteChar: str, escapeChar: str, eolChar: str, commentChar: str, header: bool = True):
+    def __init__(self, charset: str, delimiter: str, quoteChar: str, escapeChar: str, eolChar: str, commentChar: str,
+                 header: bool = True):
         """ Creates a FileStructure used to create a column mapping
 
         :param charset: the charset of the file (UTF-8, ..)
@@ -267,7 +270,7 @@ class DimensionMapping:
         } if self._aggregation else {
             'name': self._name,
             'columnIndex': self._columnIndex,
-            'isCaseScope': self._isCaseScope        
+            'isCaseScope': self._isCaseScope
         }
 
 
@@ -284,7 +287,8 @@ class MetricAggregation(Enum):
 class MetricMapping:
     """Metric mapping used in column mapping"""
 
-    def __init__(self, name: str, columnIndex: int, isCaseScope: bool, unit: str = None, aggregation: MetricAggregation = None):
+    def __init__(self, name: str, columnIndex: int, isCaseScope: bool, unit: str = None,
+                 aggregation: MetricAggregation = None):
         """ Creates a DimensionMapping used to create a column mapping
 
         :param name: the name of the metric
@@ -335,7 +339,7 @@ class MetricMapping:
             'name': self._name,
             'columnIndex': self._columnIndex,
             'unit': self._unit if self._unit else '',
-            'isCaseScope': self._isCaseScope        
+            'isCaseScope': self._isCaseScope
         }
 
 
@@ -343,10 +347,13 @@ List_of_TimeMapping = List[TimeMapping]
 List_of_DimensionMapping = List[DimensionMapping]
 List_of_MetricMapping = List[MetricMapping]
 
+
 class ColumnMapping:
     """Description of the columnMapping before sending a file"""
 
-    def __init__(self, caseidmapping: CaseIdOrActivityMapping, activitymapping: CaseIdOrActivityMapping, timemappings: List_of_TimeMapping, dimensionmappings: List_of_DimensionMapping, metricmappings: List_of_MetricMapping ):
+    def __init__(self, caseidmapping: CaseIdOrActivityMapping, activitymapping: CaseIdOrActivityMapping,
+                 timemappings: List_of_TimeMapping, dimensionmappings: List_of_DimensionMapping,
+                 metricmappings: List_of_MetricMapping):
         """ Creates a ColumnMapping
 
         :param caseidmapping: the caseid mapping
@@ -422,7 +429,8 @@ class Project:
             if response.status_code == 401:  # Only possible if the token has expired
                 self.owner.token = self.owner.login()
                 response = req.get(f"{self.owner.apiurl}/project/{self.id}/graph", params=parameters,
-                                   headers={"X-Logpickr-API-Token": self.owner.token}, verify=self.owner.ssl_verify)  # trying again
+                                   headers={"X-Logpickr-API-Token": self.owner.token},
+                                   verify=self.owner.ssl_verify)  # trying again
             response.raise_for_status()
             self._graph = Graph.from_json(self.id, response.text)
         except req.HTTPError as error:
@@ -442,7 +450,8 @@ class Project:
         """Performs a REST request for the graph instance associated with a process key, and returns it
 
         :param process_id: the id of the process whose graph we want to get"""
-        parameters = {"processId": process_id, "mode": "gateways"} if detailed else {"processId": process_id, "mode": "simplified"}
+        parameters = {"processId": process_id, "mode": "gateways"} if detailed else {"processId": process_id,
+                                                                                     "mode": "simplified"}
         try:
             response = req.get(f"{self.owner.apiurl}/project/{self.id}/graphInstance",
                                params=parameters,
@@ -475,7 +484,8 @@ class Project:
             if response.status_code == 401:  # Only possible if the token has expired
                 self.owner.token = self.owner.login()
                 response = req.get(f"{self.owner.apiurl}/datasources", params={"id": f"{self.id}"},
-                                   headers={"X-Logpickr-API-Token": self.owner.token}, verify=self.owner.ssl_verify)  # try again
+                                   headers={"X-Logpickr-API-Token": self.owner.token},
+                                   verify=self.owner.ssl_verify)  # try again
             response.raise_for_status()
             self._datasources = [Datasource(x["name"], x["type"], x["host"], x["port"], self) for x in response.json()]
 
@@ -497,32 +507,36 @@ class Project:
     def reset(self):
         """Reset all project data except name, description and users rights."""
         try:
-            response = req.post(f"{self.owner.apiurl}/project/{self.id}/reset", headers={"X-Logpickr-API-Token": self.owner.token}, verify=self.owner.ssl_verify)
+            response = req.post(f"{self.owner.apiurl}/project/{self.id}/reset",
+                                headers={"X-Logpickr-API-Token": self.owner.token}, verify=self.owner.ssl_verify)
             if response.status_code == 401:  # Only possible if the token has expired
                 self.owner.token = self.owner.login()
-                response = req.post(f"{self.owner.apiurl}/project/{self.id}/reset", headers={"X-Logpickr-API-Token": self.owner.token}, verify=self.owner.ssl_verify)
+                response = req.post(f"{self.owner.apiurl}/project/{self.id}/reset",
+                                    headers={"X-Logpickr-API-Token": self.owner.token}, verify=self.owner.ssl_verify)
             response.raise_for_status()
         except req.HTTPError as error:
             print(f"Http error occured: {error}")
             print(response.text)
-        
+
         return response.status_code == 204
 
     def column_mapping_exists(self):
         """Check if a column mapping to the project"""
         try:
-            response = req.get(f"{self.owner.apiurl}/project/{self.id}/column-mapping-exists", headers={"X-Logpickr-API-Token": self.owner.token}, verify=self.owner.ssl_verify)
+            response = req.get(f"{self.owner.apiurl}/project/{self.id}/column-mapping-exists",
+                               headers={"X-Logpickr-API-Token": self.owner.token}, verify=self.owner.ssl_verify)
             if response.status_code == 401:  # Only possible if the token has expired
                 self.owner.token = self.owner.login()
-                response = req.get(f"{self.owner.apiurl}/project/{self.id}/column-mapping-exists", headers={"X-Logpickr-API-Token": self.owner.token}, verify=self.owner.ssl_verify)
+                response = req.get(f"{self.owner.apiurl}/project/{self.id}/column-mapping-exists",
+                                   headers={"X-Logpickr-API-Token": self.owner.token}, verify=self.owner.ssl_verify)
             response.raise_for_status()
         except req.HTTPError as error:
             print(f"Http error occured: {error}")
             print(response.text)
-        
+
         return bool(response.json()["exists"])
 
-    def create_column_mapping(self, filestructure:FileStructure, columnmapping: ColumnMapping):
+    def create_column_mapping(self, filestructure: FileStructure, columnmapping: ColumnMapping):
         """Create a column mapping to the project
 
         :param filestructure: the filestructure
@@ -536,28 +550,32 @@ class Project:
             if response.status_code == 401:  # Only possible if the token has expired
                 self.owner.token = self.owner.login()
                 response = req.post(f"{self.owner.apiurl}/project/{self.id}/column-mapping",
-                                    json={'fileStructure': filestructure.tojson(), 'columnMapping': columnmapping.tojson()},
+                                    json={'fileStructure': filestructure.tojson(),
+                                          'columnMapping': columnmapping.tojson()},
                                     headers={"X-Logpickr-API-Token": self.owner.token,
-                                            "content-type": "application/json"},
+                                             "content-type": "application/json"},
                                     verify=self.owner.ssl_verify)  # try again
             response.raise_for_status()
         except req.HTTPError as error:
             print(f"Http error occured: {error}")
             print(response.text)
-        return response.status_code==204
+        return response.status_code == 204
 
     def reset(self):
         """Makes an API call to manually reset a project"""
         try:
-            response = req.post(f"{self.owner.apiurl}/project/{self.id}/reset",headers={"X-Logpickr-API-Token": self.owner.token}, verify=self.owner.ssl_verify)
+            response = req.post(f"{self.owner.apiurl}/project/{self.id}/reset",
+                                headers={"X-Logpickr-API-Token": self.owner.token}, verify=self.owner.ssl_verify)
             if response.status_code == 401:  # Only possible if the token has expired
                 self.owner.token = self.owner.login()
-                response = req.post(f"{self.owner.apiurl}/project/{self.id}/reset",headers={"X-Logpickr-API-Token": self.owner.token}, verify=self.owner.ssl_verify)  # try again
+                response = req.post(f"{self.owner.apiurl}/project/{self.id}/reset",
+                                    headers={"X-Logpickr-API-Token": self.owner.token},
+                                    verify=self.owner.ssl_verify)  # try again
             response.raise_for_status()
         except req.HTTPError as error:
             print(f"Http error occured: {error}")
             print(response.text)
-        return response.status_code==204
+        return response.status_code == 204
 
     def add_file(self, path):
         """Adds a file to the project
@@ -586,24 +604,28 @@ class Project:
     def train_status(self):
         """Returns True if the train is currently running, False otherwise"""
         try:
-            response = req.get(f"{self.owner.apiurl}/train/{self.id}", headers={"X-Logpickr-API-Token": self.owner.token}, verify=self.owner.ssl_verify)
+            response = req.get(f"{self.owner.apiurl}/train/{self.id}",
+                               headers={"X-Logpickr-API-Token": self.owner.token}, verify=self.owner.ssl_verify)
             if response.status_code == 401:  # Only possible if the token has expired
                 self.owner.token = self.owner.login()
-                response = req.get(f"{self.owner.apiurl}/train/{self.id}", headers={"X-Logpickr-API-Token": self.owner.token}, verify=self.owner.ssl_verify)
+                response = req.get(f"{self.owner.apiurl}/train/{self.id}",
+                                   headers={"X-Logpickr-API-Token": self.owner.token}, verify=self.owner.ssl_verify)
             response.raise_for_status()
         except req.HTTPError as error:
             print(f"Http error occured: {error}")
             print(response.text)
-        
+
         return response.json()["isTrainRunning"]
 
     def launch_train(self):
         """Makes an API call to manually launch the train of a project"""
         try:
-            response = req.post(f"{self.owner.apiurl}/train/{self.id}/launch", headers={"X-Logpickr-API-Token": self.owner.token}, verify=self.owner.ssl_verify)
+            response = req.post(f"{self.owner.apiurl}/train/{self.id}/launch",
+                                headers={"X-Logpickr-API-Token": self.owner.token}, verify=self.owner.ssl_verify)
             if response.status_code == 401:  # Only possible if the token has expired
                 self.owner.token = self.owner.login()
-                response = req.post(f"{self.owner.apiurl}/train/{self.id}/launch", headers={"X-Logpickr-API-Token": self.owner.token}, verify=self.owner.ssl_verify)
+                response = req.post(f"{self.owner.apiurl}/train/{self.id}/launch",
+                                    headers={"X-Logpickr-API-Token": self.owner.token}, verify=self.owner.ssl_verify)
             response.raise_for_status()
         except req.HTTPError as error:
             print(f"Http error occured: {error}")
@@ -612,10 +634,12 @@ class Project:
     def stop_train(self):
         """Makes an API call to manually stop the train of a project"""
         try:
-            response = req.delete(f"{self.owner.apiurl}/train/{self.id}", headers={"X-Logpickr-API-Token": self.owner.token}, verify=self.owner.ssl_verify)
+            response = req.delete(f"{self.owner.apiurl}/train/{self.id}",
+                                  headers={"X-Logpickr-API-Token": self.owner.token}, verify=self.owner.ssl_verify)
             if response.status_code == 401:  # Only possible if the token has expired
                 self.owner.token = self.owner.login()
-                response = req.delete(f"{self.owner.apiurl}/train/{self.id}", headers={"X-Logpickr-API-Token": self.owner.token}, verify=self.owner.ssl_verify)
+                response = req.delete(f"{self.owner.apiurl}/train/{self.id}",
+                                      headers={"X-Logpickr-API-Token": self.owner.token}, verify=self.owner.ssl_verify)
             response.raise_for_status()
         except req.HTTPError as error:
             print(f"Http error occured: {error}")
