@@ -11,14 +11,15 @@ from typing import List
 class Workgroup:
     """A Logpickr workgroup, which is used to log in and access projects"""
 
-    def __init__(self, client_id: str, key: str, apiurl: str, authurl: str, realm: str, ssl_verify = True):
+    def __init__(self, client_id: str, key: str, apiurl: str, authurl: str, realm: str = 'logpickr', ssl_verify = True):
         """ Creates a Logpickr Workgroup and automatically logs in to the Logpickr API using the provided client id and secret key
 
         :param client_id: the workgroup ID, which can be found in Process Explorer 360
         :param key: the workgroup's secret key, used for authetication, also found in Process Explorer 360
         :param apiurl: the url of the api found in Process Explorer 360
         :param authurl: the url of the authentication found in Process Explorer 360
-        :param ssl_verify: verify SSL certificates"""
+        :param ssl_verify: verify SSL certificates
+        :param realm: name of the keycloak realm with workgroup clients"""
         self.id = client_id
         self.key = key
         self._apiurl = apiurl
@@ -471,11 +472,11 @@ class Project:
                 self._graph_instances.append(self.graph_instance_from_key(k))
         return self._graph_instances
 
-    def graph_instance_from_key(self, process_id, detailed=False):
+    def graph_instance_from_key(self, process_id):
         """Performs a REST request for the graph instance associated with a process key, and returns it
 
         :param process_id: the id of the process whose graph we want to get"""
-        parameters = {"processId": process_id, "mode": "gateways"} if detailed else {"processId": process_id, "mode": "simplified"}
+        parameters = {"processId": process_id}
         try:
             response = req.get(f"{self.owner.apiurl}/project/{self.id}/graphInstance",
                                params=parameters,
@@ -488,7 +489,7 @@ class Project:
                                    headers={self.owner.header: "Bearer "+ self.owner.token},
                                    verify=self.owner.ssl_verify)  # try again
             response.raise_for_status()
-            graph = response.json()["value"]
+            graph = response.json()
             graph_instance = GraphInstance.from_json(self.id, graph)
         except req.HTTPError as error:
             print(f"HTTP Error occured: {error}")
