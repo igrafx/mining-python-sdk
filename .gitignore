@@ -12,6 +12,7 @@ logpickr_sdk/.pytest_cache
 logpickr_sdk/dist
 logpickr_sdk/build
 logpickr_sdk/logpickr_sdk.egg-info
+logpickr_sdk/logpickr_sdk/__pycache__
 venv
 .DS_Store
 logpickr_sdk/test.py
