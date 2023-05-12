@@ -4,7 +4,8 @@
     - pip install virtualenv
     - virtualenv venv
     - source venv/bin/activate
-    - pip install logpickr_sdk/
+    - pip install --upgrade pip
+    - pip install igrafx_mining_sdk/
 
 .security_and_quality_rules_template: &security_and_quality_rules
   rules:
@@ -51,15 +52,9 @@ setup:
     # Thus it cannot contain any '-' character in it's version number
     # See https://peps.python.org/pep-0491/#file-name-convention
 
-    # Replace '-' with '.'
-    - version=${CI_COMMIT_REF_NAME//-/.}
-    # Remove prefix before '/' (feat/ or fix/)
-    - version=$(echo $version | sed 's-.*/--g')
-    # Replace every characters except alphanumerical and '.' with '_'
-    - version=$(echo $version | sed 's/[^a-zA-Z0-9.]/_/g')
-    # If CI_COMMIT_REF_SLUG was not defined, assign default value
-    - version=${version:-0.0.1}
-    - wheel_filename="logpickr_sdk-${version}-py3-none-any.whl"
+    # Get version number from init_file
+    - version=$(cat igrafx_mining_sdk/igrafx_mining_sdk/__init__.py | grep -Eo "__version__ *= *['\"]([^'\"]+)['\"]" | sed "s/__version__ *= *['\"]\([^'\"]*\)['\"]/\1/")
+    - wheel_filename="igrafx_mining_sdk-${version}-py3-none-any.whl"
     - echo "VERSION=${version}" >> build.env
     - echo "WHEEL_FILENAME=${wheel_filename}" >> build.env
   artifacts:
@@ -77,15 +72,15 @@ build_wheel:
   script:
     - echo "VERSION=${VERSION}" >> build_wheel.env
     - echo "WHEEL_FILENAME=${WHEEL_FILENAME}" >> build_wheel.env
-    - cd logpickr_sdk
+    - cd igrafx_mining_sdk
     - sed -i -E "s#version=.*,#version=\"${VERSION}\",#g" setup.py
     - python setup.py bdist_wheel
     - cd dist
-    - cp *.whl logpickr_sdk.whl
-    - cp logpickr_sdk.whl ${WHEEL_FILENAME}
+    - cp *.whl igrafx_mining_sdk.whl
+    - cp igrafx_mining_sdk.whl ${WHEEL_FILENAME}
   artifacts:
     paths:
-      - logpickr_sdk/dist/${WHEEL_FILENAME}
+      - igrafx_mining_sdk/dist/${WHEEL_FILENAME}
       - build_wheel.env
 
 pages:
@@ -98,10 +93,10 @@ pages:
     - echo "${WHEEL_FILENAME}"
     - pip install sphinx sphinx-rtd-theme
     # should already be installed by the package, but better safe than sorry
-    - ls logpickr_sdk/dist/
+    - ls igrafx_mining_sdk/dist/
     - mkdir sphinxdocs/_static
-    - mv logpickr_sdk/dist/${WHEEL_FILENAME} sphinxdocs/_static/
-    - sed -i -E "s#logpickr_sdk.whl#${WHEEL_FILENAME}#g" sphinxdocs/howto.rst
+    - mv igrafx_mining_sdk/dist/${WHEEL_FILENAME} sphinxdocs/_static/
+    - sed -i -E "s#igrafx_mining_sdk.whl#${WHEEL_FILENAME}#g" sphinxdocs/howto.rst
     - cd sphinxdocs
     - ls _static/
     - make html

@@ -12,7 +12,7 @@
 #
 # import os
 # import sys
-# sys.path.insert(0, os.path.abspath('../logpickr_sdk'))
+# sys.path.insert(0, os.path.abspath('../igrafx_mining_sdk'))
 import sphinx_rtd_theme
 
 # -- Project information -----------------------------------------------------
