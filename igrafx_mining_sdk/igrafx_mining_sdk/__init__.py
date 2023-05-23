@@ -6,10 +6,15 @@ from igrafx_mining_sdk.datasource import Datasource
 from igrafx_mining_sdk.workgroup import Workgroup
 from igrafx_mining_sdk.project import Project
 from igrafx_mining_sdk.graph import Graph, GraphInstance
+import toml
 
-__author__ = 'iGrafx'
+with open('../../pyproject.toml', 'r') as f:
+    pyproject_data = toml.load(f)
+
+
+__author__ = pyproject_data['tool']['poetry']['authors'][0]
 __email__ = 'contact@igrafx.com'
-__version__ = '2.21.0'
+__version__ = pyproject_data['tool']['poetry']['version']
 
 __doc__ = """
 igrafx_mining_sdk

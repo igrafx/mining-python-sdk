@@ -1,19 +1,19 @@
 from setuptools import setup
-import re
+import toml
 
-# # Extract the version from the init file.
-init_file = "igrafx_mining_sdk/__init__.py"
-package_infos = {"__author__": None, "__email__": None, "__version__": None, "__doc__": None}
-for k in package_infos:
-    res = re.search(r"^%s = ['\"]([^'\"]*)['\"]" % k, open(init_file, "rt").read(), re.M)
-    if res:
-        package_infos[k] = res.group(1)
-    else:
-        raise RuntimeError(f'Unable to find {k} element in {init_file}')
+# Parse pyproject.toml file
+with open('../pyproject.toml', 'r') as f:
+    pyproject_data = toml.load(f)
 
-with open('../requirements.txt', 'r') as f:
-    requirements = [line.strip() for line in f if line.strip()]
+# Extract package information
+package_infos = {
+    "__author__": pyproject_data['tool']['poetry']['authors'][0],
+    "__version__": pyproject_data['tool']['poetry']['version'],
+    "__doc__": pyproject_data['tool']['poetry']['description']
+}
 
+# Extract requirements
+requirements = list(pyproject_data['tool']['poetry']['dependencies'].values())
 
 setup(
     name="igrafx_mining_sdk",

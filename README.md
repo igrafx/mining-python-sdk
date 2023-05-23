@@ -37,28 +37,7 @@ A detailed tutorial can be found in the [howto.md]() file.
 
 This package requires python 3.6.8 or above. Get the latest version of [Python](https://www.python.org/).
 
-The required packages should be automatically installed via the ```requirements.txt``` when installing for the first time. If they somehow aren't, these are the  necessary packages:
-
-* [Requests](https://pypi.org/project/requests/) 
-```shell
-pip install requests
-```
-* [Pydruid](https://pypi.org/project/pydruid/) (version 0.5.9 is used here, as version 0.6.0 and 0.6.1 have a currently unresolved bug that prevents from connecting to the databases) 
-```shell
-pip3 install pydruid==0.5.9
-```
-* [Pandas](https://pandas.pydata.org/docs/getting_started/install.html) 
-```shell
-pip install pandas
-```
-* [Sphinx](https://sphinx-rtd-theme.readthedocs.io/en/stable/installing.html) and the Read the Docs theme for the documentation
-```shell
-pip3 install sphinx sphinx-rtd-theme
-```
-* [Pytest](https://docs.pytest.org/en/7.1.x/getting-started.html) for the unit tests 
-```shell
-pip3 install pytest
-```
+The required packages should be installed via the ```pyproject.toml``` when running the  ```poetry install``` command. 
 
 ## Installing
 ***

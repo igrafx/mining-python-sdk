@@ -15,19 +15,20 @@ Please contact us to create an account.
 ## Table of Contents
 
 1. [Installing](#installing)
-2. [Getting Started](#getting-started)
-3. [Workgroups and Projects](#workgroups-and-projects)
-4. [Sending Data (File Structure and Column Mapping)](#sending-data)
-5. [Graphs](#graphs)
-6. [Graph Instances](#graph-instances)
-7. [Datasources](#datasources)
-8. [Using Pandas methods](#using-pandas-methods)
-9. [Using SQL Queries](#using-sql-queries)
-10. [Using the public API](#using-the-public-api)
-11. [Predictions](#predictions)
-12. [Access Druid database via JDBC](#access-druid-database-via-jdbc)
-13. [Access database via Druid Rest SQL queries](#access-database-via-druid-rest-sql-queries)
-14. [Further Documentation](#further-documentation)
+2. [Requirements](#requirements)
+3. [Getting Started](#getting-started)
+4. [Workgroups and Projects](#workgroups-and-projects)
+5. [Sending Data (File Structure and Column Mapping)](#sending-data)
+6. [Graphs](#graphs)
+7. [Graph Instances](#graph-instances)
+8. [Datasources](#datasources)
+9. [Using Pandas methods](#using-pandas-methods)
+10. [Using SQL Queries](#using-sql-queries)
+11. [Using the public API](#using-the-public-api)
+12. [Predictions](#predictions)
+13. [Access Druid database via JDBC](#access-druid-database-via-jdbc)
+14. [Access database via Druid Rest SQL queries](#access-database-via-druid-rest-sql-queries)
+15. [Further Documentation](#further-documentation)
 
 
 ## Installing
@@ -47,6 +48,28 @@ Then, navigate to your download folder and run:
 ```shell
 pip install igrafx_mining_sdk.whl
 ```
+
+## Requirements
+
+---
+The requirements of this SDK work with [Poetry](https://python-poetry.org/docs/).
+Please install it before proceeding further. Eventually, specify ``poetry env`` if you handle multiple python versions. The following commands could help you :
+```sh
+which python
+poetry env use ~/.pyenv/pyenv-win/versions/your/version
+```
+
+You must also make sure you add Poetry to your ``PATH``.
+
+Afterwards, you can install the dependencies in the `.venv` virtual environment.
+This command produces a [poetry.lock](poetry.lock) file that is not versioned to Git.
+```sh
+poetry install
+```
+
+The [pyproject.toml](pyproject.toml) contains the projects details and all of the necessary dependencies.
+If you wish, you can see the versions of the packages used in it.
+
 ## Getting Started
 
 ---

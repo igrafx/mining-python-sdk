@@ -1,5 +1,6 @@
 # Apache License 2.0, Copyright 2020 Logpickr
 # https://gitlab.com/logpickr/logpickr-sdk/-/blob/master/LICENSE
+from pathlib import Path
 
 from igrafx_mining_sdk import Project, FileStructure, FileType
 from igrafx_mining_sdk.column_mapping import Column, ColumnType, ColumnMapping
@@ -96,8 +97,10 @@ class TestProject:
             Column('End Date', 3, ColumnType.TIME, time_format='%d/%m/%Y %H:%M'),
         ]
         column_mapping = ColumnMapping(column_list)
+        base_dir = Path(__file__).resolve().parent
+        file_path = base_dir / 'data' / 'tables' / 'testdata.csv'
         assert p.add_column_mapping(filestructure, column_mapping)
-        assert p.add_file("data/tables/testdata.csv")
+        assert p.add_file(str(file_path))
 
     def test_add_xlsx_file(self, API, AUTH):
         """Test that an xlsx file can be added to a project."""
@@ -116,8 +119,10 @@ class TestProject:
             Column('Ressource', 4, ColumnType.DIMENSION),
         ]
         column_mapping = ColumnMapping(column_list)
+        base_dir = Path(__file__).resolve().parent
+        file_path = base_dir / 'data' / 'tables' / 'p2pShortExcel.xlsx'
         assert p.add_column_mapping(filestructure, column_mapping)
-        assert p.add_file("data/tables//p2pShortExcel.xlsx")
+        assert p.add_file(str(file_path))
 
     def test_add_xls_file(self, API, AUTH):
         """Test that an xls file can be added to a project."""
@@ -136,5 +141,7 @@ class TestProject:
             Column('Ressource', 4, ColumnType.DIMENSION),
         ]
         column_mapping = ColumnMapping(column_list)
+        base_dir = Path(__file__).resolve().parent
+        file_path = base_dir / 'data' / 'tables' / 'p2pShortExcel.xls'
         assert p.add_column_mapping(filestructure, column_mapping)
-        assert p.add_file("data/tables//p2pShortExcel.xls")
+        assert p.add_file(str(file_path))

@@ -84,7 +84,6 @@ class TestDatasource:
         assert connection is not None
 
         # close cursor and connection then check that they are none again
-        print(type(ds))
         ds.close()
         assert ds._cursor is None
         assert ds._connection is None
