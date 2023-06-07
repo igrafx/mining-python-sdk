@@ -1,6 +1,7 @@
-graphviz
 requests
 pydruid
 sqlalchemy
 pandas
 pytest
+networkx
+pytest-dependency
