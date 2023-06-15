@@ -1,5 +1,6 @@
 from setuptools import setup
 import toml
+import re
 
 # Parse pyproject.toml file
 with open('../pyproject.toml', 'r') as f:
@@ -7,9 +8,10 @@ with open('../pyproject.toml', 'r') as f:
 
 # Extract package information
 package_infos = {
-    "__author__": pyproject_data['tool']['poetry']['authors'][0],
+    "__author__": pyproject_data['tool']['poetry']['authors'][0].split('<')[0].rstrip(),
     "__version__": pyproject_data['tool']['poetry']['version'],
-    "__doc__": pyproject_data['tool']['poetry']['description']
+    "__doc__": pyproject_data['tool']['poetry']['description'],
+    "__email__": re.findall("[0-9a-zA-z]+@[0-9a-zA-z]+\.[0-9a-zA-z]+", pyproject_data['tool']['poetry']['authors'][0])[0]
 }
 
 # Extract requirements
@@ -23,6 +25,5 @@ setup(
     author=package_infos['__author__'],
     author_email=package_infos['__email__'],
     packages=["igrafx_mining_sdk"],
-    install_requires=requirements,
     licence="Apache License 2.0"
 )

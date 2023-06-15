@@ -1,3 +1,6 @@
+# MIT License, Copyright 2023 iGrafx
+# https://github.com/igrafx/mining-python-sdk/blob/dev/LICENSE
+
 from enum import Enum
 from typing import List, Union
 
@@ -63,6 +66,12 @@ class DimensionAggregation(Enum):
     DISTINCT = "DISTINCT"
 
 
+class GroupedTasksDimensionAggregation(Enum):
+    """Class GroupedTasksDimensionAggregation for the aggregation types used in column mapping"""
+    FIRST = "FIRST"
+    LAST = "LAST"
+
+
 class MetricAggregation(Enum):
     """Class MetricAggregation for the aggregation types used in column mapping"""
     FIRST = "FIRST"
@@ -86,7 +95,8 @@ class ColumnType(Enum):
 class Column:
     """A Column used in the column mapping"""
     def __init__(self, name: str, index: int, column_type: ColumnType, *, is_case_scope: bool = False,
-                 aggregation: Union[MetricAggregation, DimensionAggregation] = None,
+                 aggregation: Union[MetricAggregation, DimensionAggregation] = None, grouped_tasks_columns: [] = None,
+                 grouped_tasks_aggregation: Union[GroupedTasksDimensionAggregation, MetricAggregation] = None,
                  unit: str = None, time_format: str = None):
         """
         :param name: the name of the column
@@ -94,6 +104,8 @@ class Column:
         :param column_type: the type of the column, based on ColumnType
         :param is_case_scope: boolean to say if the column is a case scope column
         :param aggregation: the aggregation of the column
+        :param grouped_tasks_columns: list of columns indices that are grouped
+        :param grouped_tasks_aggregation: the aggregation of the grouped tasks
         :param unit: the unit of the column
         :param time_format: the time format of the column
         """
@@ -103,6 +115,8 @@ class Column:
         self.column_type = column_type
         self.is_case_scope = is_case_scope
         self.aggregation = aggregation
+        self.grouped_tasks_columns = grouped_tasks_columns
+        self.grouped_tasks_aggregation = grouped_tasks_aggregation
         self.unit = unit
         self.time_format = time_format
 
@@ -123,6 +137,16 @@ class Column:
         if self.column_type == ColumnType.DIMENSION and self.aggregation is not None and self.aggregation not in DimensionAggregation:
             raise ValueError("Aggregation of a 'dimension' column type must be a DimensionAggregation")
 
+        if self.column_type == ColumnType.METRIC and self.grouped_tasks_aggregation is not None and self.grouped_tasks_aggregation not in MetricAggregation:
+            raise ValueError("Grouped task aggregation of a 'METRIC' column type must be a MetricAggregation")
+
+        if self.column_type == ColumnType.DIMENSION and self.grouped_tasks_aggregation is not None and self.grouped_tasks_aggregation not in GroupedTasksDimensionAggregation:
+            raise ValueError(
+                "Grouped task aggregation of a 'DIMENSION' column type must be a GroupedTasksDimensionAggregation")
+
+        if self.grouped_tasks_columns is not None and self.column_type != ColumnType.TASK_NAME:
+            raise ValueError("Attribute 'grouped_tasks_columns' can only be used with 'TASK_NAME' column type")
+
     def to_dict(self):
         """Returns the JSON dictionary format of the Column"""
 
@@ -136,6 +160,10 @@ class Column:
         elif self.column_type in [ColumnType.METRIC, ColumnType.DIMENSION]:
             res['name'] = self.name
             res['isCaseScope'] = self.is_case_scope
+        if self.grouped_tasks_columns is not None:
+            res['groupedTasksColumns'] = self.grouped_tasks_columns
+        if self.grouped_tasks_aggregation is not None:
+            res['groupedTasksAggregation'] = self.grouped_tasks_aggregation
         return res
 
 
@@ -155,6 +183,30 @@ class ColumnMapping:
         self.time_columns = self.__get_columns_from_type(column_list, ColumnType.TIME, expected_num=[1, 2])
         self.metric_columns = self.__get_columns_from_type(column_list, ColumnType.METRIC)
         self.dimension_columns = self.__get_columns_from_type(column_list, ColumnType.DIMENSION)
+
+        if self.task_name_column.grouped_tasks_columns is not None:
+            if any(c.grouped_tasks_aggregation is None for c in self.metric_columns + self.dimension_columns):
+                raise ValueError('If using "grouped_tasks_columns" for "task_name_column", please provide "grouped_task_aggregations" for other columns')
+
+            if self.task_name_column.index not in self.task_name_column.grouped_tasks_columns:
+                raise ValueError(
+                    'The "grouped_tasks_columns" list must include at least an index of a column of type "TASK_NAME"')
+
+            if self.case_id_column.index in self.task_name_column.grouped_tasks_columns:
+                raise ValueError(
+                    'The "grouped_tasks_columns" list cannot contain the index of a column of type "CASE_ID"')
+
+            required_types = {ColumnType.METRIC, ColumnType.DIMENSION, ColumnType.TIME}
+            other_types = set(c.column_type for c in self.metric_columns + self.dimension_columns + self.time_columns)
+            # Check for the intersection of required_types and types of other columns.
+            # If there is no intersection (none of the required types are present), raise an error
+            if not required_types.intersection(other_types):
+                raise ValueError(
+                    'The "grouped_tasks_columns" list must contain the index of a column of type "METRIC", "DIMENSION", or "TIME"')
+
+        if self.task_name_column.grouped_tasks_columns is None:
+            if any(c.grouped_tasks_aggregation is not None for c in self.metric_columns + self.dimension_columns):
+                raise ValueError('If not using "grouped_tasks_columns" for "task_name_column", please do not provide "grouped_task_aggregations" for other columns')
 
     def __get_columns_from_type(self, column_list: List[Column], filter: ColumnType, *,
                                 expected_num: Union[int, List[int]] = None) -> List[Column]:

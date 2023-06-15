@@ -1,5 +1,5 @@
-# Apache License 2.0, Copyright 2022 Logpickr
-# https://gitlab.com/logpickr/logpickr-sdk/-/blob/master/LICENSE
+# MIT License, Copyright 2023 iGrafx
+# https://github.com/igrafx/mining-python-sdk/blob/dev/LICENSE
 
 import requests as req
 from igrafx_mining_sdk.project import Project
@@ -7,49 +7,55 @@ from igrafx_mining_sdk.api_connector import APIConnector
 
 
 class Workgroup:
-    """A Logpickr workgroup, which is used to log in and access projects"""
+    """A iGrafx P360 Live Mining workgroup, which is used to log in and access projects"""
 
     def __init__(self, w_id: str, w_key: str, apiurl: str, authurl: str, ssl_verify=True):
-        """ Creates a Logpickr Workgroup and automatically logs into the Logpickr API using the provided client id and
+        """ Creates a iGrafx P360 Live Mining Workgroup and automatically logs into the iMining Public API using the provided client id and
         secret key
 
-        :param w_id: the workgroup ID, which can be found in Process Explorer 360
-        :param w_key: the workgroup's secret key, used for authetication, also found in Process Explorer 360
-        :param apiurl: the URL of the api found in Process Explorer 360
-        :param authurl: the URL of the authentication found in Process Explorer 360
+        :param w_id: the workgroup ID, which can be found in iGrafx P360 Live Mining
+        :param w_key: the workgroup's secret key, used for authetication, also found in iGrafx P360 Live Mining
+        :param apiurl: the URL of the api found in iGrafx P360 Live Mining
+        :param authurl: the URL of the authentication found in iGrafx P360 Live Mining
         :param ssl_verify: verify SSL certificates
         """
         self.w_id = w_id
         self.w_key = w_key
-        self._projects = []
         self._datasources = []
         self.api_connector = APIConnector(w_id, w_key, apiurl, authurl, ssl_verify)
 
-    @property
-    def projects(self):
-        """Performs a REST request for projects, then gets project data for any projects that don't already exist
-        in the Workgroup"""
-        # Get list of project ids from api response
-        response_project_list = self.api_connector.get_request("projects").json()
+    def get_project_list(self):
+        """Returns a list of all projects in the workgroup"""
+        response_project_list = self.api_connector.get_request("/projects").json()
+        return response_project_list
 
-        # Remove any projects that no longer exist
-        self._projects = [p for p in self._projects if p.id in response_project_list]
+    def create_project(self, project_name: str, description: str = None):
+        """Creates a project within the workgroup"""
 
-        # Add new projects to the list
-        for pid in response_project_list:
-            if pid not in [p.id for p in self._projects]:
-                self._projects.append(Project(pid, self.api_connector))
-        return self._projects
+        params = {"name": project_name, "workgroupId": self.w_id}
+        if description is not None:
+            params["description"] = description
+
+        route = f"/project"
+        response_project_creation = self.api_connector.post_request(route, params=params)
+
+        if response_project_creation.status_code == 201:
+            created_project = Project(response_project_creation.json()["message"], self.api_connector)
+            return created_project
+        else:
+            raise ValueError(f"Failed to create project. Status code: {response_project_creation.status_code}")
 
     @property
     def datasources(self):
         """Requests and returns the list of datasources associated with the workgroup"""
         try:
             self._datasources = []
-            for p in self.projects:
-                self._datasources.append(p.nodes_datasource)
-                self._datasources.append(p.edges_datasource)
-                self._datasources.append(p.cases_datasource)
+            for p_id in self.get_project_list():
+                project = self.project_from_id(p_id)
+                if project:
+                    self._datasources.append(project.nodes_datasource)
+                    self._datasources.append(project.edges_datasource)
+                    self._datasources.append(project.cases_datasource)
 
         except req.HTTPError as error:
             print(f"HTTP Error occurred: {error}")

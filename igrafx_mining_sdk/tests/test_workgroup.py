@@ -1,33 +1,48 @@
-# Apache License 2.0, Copyright 2020 Logpickr
-# https://gitlab.com/logpickr/logpickr-sdk/-/blob/master/LICENSE
+# MIT License, Copyright 2023 iGrafx
+# https://github.com/igrafx/mining-python-sdk/blob/dev/LICENSE
 
 import pytest
 from igrafx_mining_sdk.workgroup import Workgroup
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from .env file
+load_dotenv()
+
+wg_id = os.environ["wg_id"]
+wg_key = os.environ["wg_key"]
+wg_url = os.environ["wg_url"]
+wg_auth = os.environ["wg_auth"]
+project_id = os.environ["project_id"]
 
 
 class TestWorkgroup:
     """Tests for Workgroup class.
-    ID, SECRET, API, AUTH and PROJECT_ID are pytest fixtures defined in conftest.py file.
+    Workgroup and project are pytest fixtures defined in conftest.py file.
     """
 
-    def test_create_workgroup(self, ID, SECRET, API, AUTH):
+    def test_create_workgroup(self, workgroup):
         """Test to create a workgroup."""
-        w = Workgroup(ID, SECRET, API, AUTH)
-        print(f"\nID is {ID}, \nSECRET is {SECRET}, \nAPI is {API}, \nAUTH is {AUTH}")
-        assert isinstance(w, Workgroup)
+        assert isinstance(workgroup, Workgroup)
 
     def test_wrong_login(self):
         """Test the login with wrong credentials."""
         with pytest.raises(Exception):
             assert Workgroup("a", "b")
 
-    def test_projects(self, ID, SECRET, API, AUTH):
+    def test_projects(self, workgroup):
         """Test that there are projects in the workgroup."""
-        w = Workgroup(ID, SECRET, API, AUTH)
-        print(f"\nID is {ID}, \nSECRET is {SECRET}, \nAPI is {API}, \nAUTH is {AUTH}")
-        assert len(w.projects) > 0  # Since there should be projects in the workgroup
+        assert len(workgroup.get_project_list()) > 0  # Since there should be projects in the workgroup
 
-    def test_tables(self, ID, SECRET, API, AUTH):
+    def test_project_list(self, workgroup):
+        """Test that the list of projects in a workgroup can be retrieved."""''
+        assert workgroup.get_project_list()
+
+    def test_project_from_id(self, workgroup):
+        """Test that the project ID can be retrieved."""
+        assert workgroup.project_from_id(project_id)
+
+    def test_tables(self):
         """Test that there are tables in the workgroup."""
-        w = Workgroup(ID, SECRET, API, AUTH)
-        assert len(w.datasources) > 0  # Since there should be tables in the workgroup
+        wg = Workgroup(wg_id, wg_key, wg_url, wg_auth)
+        assert len(wg.datasources) > 0  # Since there should be tables in the workgroup

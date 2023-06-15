@@ -1,3 +1,6 @@
+# MIT License, Copyright 2023 iGrafx
+# https://github.com/igrafx/mining-python-sdk/blob/dev/LICENSE
+
 import pandas
 from pydruid import db
 from igrafx_mining_sdk.api_connector import APIConnector

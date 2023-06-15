@@ -53,7 +53,10 @@ setup:
     # See https://peps.python.org/pep-0491/#file-name-convention
 
     # Get version number from init_file
-    - version=$(cat igrafx_mining_sdk/igrafx_mining_sdk/__init__.py | grep -Eo "__version__ *= *['\"]([^'\"]+)['\"]" | sed "s/__version__ *= *['\"]\([^'\"]*\)['\"]/\1/")
+    - source venv/bin/activate
+    - pip install --upgrade pip
+    - pip install toml
+    - version=$(python -c "import toml; pyproject = toml.load('pyproject.toml'); print(pyproject['tool']['poetry']['version'])")
     - wheel_filename="igrafx_mining_sdk-${version}-py3-none-any.whl"
     - echo "VERSION=${version}" >> build.env
     - echo "WHEEL_FILENAME=${wheel_filename}" >> build.env

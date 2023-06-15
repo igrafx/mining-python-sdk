@@ -1,14 +1,14 @@
-# Apache License 2.0, Copyright 2022 Logpickr
-# https://gitlab.com/logpickr/logpickr-sdk/-/blob/master/LICENSE
+# MIT License, Copyright 2023 iGrafx
+# https://github.com/igrafx/mining-python-sdk/blob/dev/LICENSE
 
 import json
 import networkx as nx
 
 
 class Graph(nx.DiGraph):
-    """A graph from a Logpickr project, created with the parent Project's ID, a list of nodes and a list of edges"""
+    """A graph from a iGrafx P360 Live Mining project, created with the parent Project's ID, a list of nodes and a list of edges"""
     def __init__(self, project_id: str, nodes_list: list, edges_list: list):
-        """Initializes a graph from a Logpickr project, created with the parent Project's ID'
+        """Initializes a graph from a Mining project, created with the parent Project's ID'
 
         :param project_id: the ID of the parent project
         :param nodes_list: the list of nodes
@@ -33,7 +33,7 @@ class Graph(nx.DiGraph):
 
     @staticmethod
     def from_json(project_id, path):
-        """Static method that creates a Graph based on the JSON returned by the Logpickr API
+        """Static method that creates a Graph based on the JSON returned by the iGrafx Mining Public API
 
         :param project_id: the ID of the project the graph is in
         :param path: the path to the JSON file we want to parse the graph from
@@ -44,7 +44,7 @@ class Graph(nx.DiGraph):
 
 
 class GraphInstance(Graph):
-    """A graph instance from a Logpickr project, created with the parent Project's ID,
+    """A graph instance from a iGrafx P360 Live Mining project, created with the parent Project's ID,
     a list of vertex instances and a list of edge instances
     """
     def __init__(self, project_id: str, nodes_list: list, edges_list: list, rework_total: int, concurrency_rate: float):

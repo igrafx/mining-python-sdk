@@ -1,37 +1,45 @@
+# MIT License, Copyright 2023 iGrafx
+# https://github.com/igrafx/mining-python-sdk/blob/dev/LICENSE
+
 import pytest
+from igrafx_mining_sdk import Workgroup
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from .env file
+load_dotenv()
 
 
-def pytest_addoption(parser):
-    parser.addoption("--id", action="store", default="ceb26b8b-d026-44ee-93a7-2e04ab03bea5")
-    parser.addoption("--key", action="store", default="63c1d566-580a-45fc-a4ef-cc4f71e10111")
-    parser.addoption("--project", action="store", default="8fe914fb-1f2f-4d0e-902e-6adfafb048bd")
-    parser.addoption("--apiurl", action="store", default="https://api.igfx-eastus-qa.logpickr.com")
-    parser.addoption("--authurl", action="store", default="https://auth-staging.igrafxcloud.com/realms/logpickr-api-qa")
+@pytest.fixture(scope="session")
+def workgroup():
+    """Fixture to create the workgroup instance."""
+    # Replace the placeholders with your actual values
+    workgroup_id = os.environ["wg_id"]
+    workgroup_key = os.environ["wg_key"]
+    api_url = os.environ["wg_url"]
+    auth_url = os.environ["wg_auth"]
+
+    # Create the workgroup instance
+    wg = Workgroup(workgroup_id, workgroup_key, api_url, auth_url)
+    yield wg
+
+    # Perform any necessary cleanup after the test session (if needed)
 
 
-"""All necessary fixtures, available to all pytest tests: """
+@pytest.fixture(scope="session")
+def project(request, workgroup):
+    """Fixture to create and delete the project for all tests in a session."""
+    # Replace the placeholders with your desired project name and description
+    project_name = "Test Project"
+    description = "This is a test project."
 
+    # Create the project
+    created_project = workgroup.create_project(project_name, description)
+    yield created_project
 
-@pytest.fixture()
-def ID(pytestconfig):
-    return pytestconfig.getoption("id")
+    # Delete the project after all tests in the session
+    def cleanup_project():
+        created_project.delete_project()
 
-
-@pytest.fixture()
-def SECRET(pytestconfig):
-    return pytestconfig.getoption("key")
-
-
-@pytest.fixture()
-def API(pytestconfig):
-    return pytestconfig.getoption("apiurl")
-
-
-@pytest.fixture()
-def AUTH(pytestconfig):
-    return pytestconfig.getoption("authurl")
-
-
-@pytest.fixture()
-def PROJECT_ID(pytestconfig):
-    return pytestconfig.getoption("project")
+    # Register the cleanup function to be called after all tests in the session
+    request.addfinalizer(cleanup_project)

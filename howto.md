@@ -102,9 +102,9 @@ wg = igx.Workgroup(w_id, w_key, api_url, auth_url)
 ```
 Once the workgroup is created, you can access the list of 
 [projects](https://igrafx.gitlab.io/logpickr/logpickr-sdk/moduledocs/workgroup.html#projects) associated 
-with the workgroup through the ``projects`` property:
+with the workgroup through the ``get_project_list()`` method:
 ```python    
-project_list = wg.projects
+project_list = wg.get_project_list()
 ```
 The list of project IDs associated with the workgroup can be accessed with:
 ```python
@@ -128,15 +128,46 @@ my_project = wg.project_from_id("<Your Project ID>")
 
 Once you have the project you want to use, several actions can be taken.
 
-You can check if the project ``exists``:
+You can check if the project ``exists``and get its ``name``:
 ````python
 my_project.exists
+my_project.get_project_name()
 ````
+Furthermore, the `mapping infos` of the project can be retrieved:
+````python
+my_project.get_mapping_infos()
+````
+
+The project can also be ``deleted``:
+````python
+my_project.delete_project()
+````
+
+Its ``variants`` and ``completed cases`` can also be retrieved:
+````python
+my_project.get_project_variants(<Page Index>, <Limit>, "<Search>" ) 
+my_project.get_project_completed_cases(<Page Index>, <Limit>, "<Search Case ID>")
+````
+Where `Page Index` is the page index for pagination, `Limit` is the maximum number of items to return per page,
+`Search` is the search query to filter variants by name (optional) and `Search Case ID` is the search
+query to filter cases by ID (also optional).
+
 
 Moreover, you can ``reset`` the project if needed:
 ````python
 my_project.reset
 ````
+Alternatively, if you wish to create your own project, you can do so as follows:
+````python
+w = Workgroup(w_id, w_key, api_url, auth_url)
+project_name = "<Your Project name>"
+project_description = "<Your Project description>"
+created_project = w.create_project(project_name, project_description)
+````
+Note that the description is optional. If not needed, you can do the following:
+```python
+created_project = w.create_project(project_name)
+```
 
 ## Sending Data
 ***
@@ -207,6 +238,30 @@ column_mapping = ColumnMapping(column_list)
 p.add_column_mapping(filestructure, column_mapping)
 p.add_file("ExcelExample.xlsx")
 ````
+
+Furthermore, grouped tasks can also be declared if needed.
+If a grouped task is created in a column, there must be grouped tasks declared in other columns as well as they cannot function individually:
+```` python
+column_list = [
+    Column('case_id', 0, ColumnType.CASE_ID),
+    Column('time', 1, ColumnType.TIME, time_format='%Y-%m-%dT%H:%M'),
+    Column('task_name', 2, ColumnType.TASK_NAME, grouped_tasks_columns=[1, 3]),
+    Column('country', 3, ColumnType.METRIC, grouped_tasks_aggregation=MetricAggregation.FIRST),
+    Column('price', 4, ColumnType.DIMENSION, grouped_tasks_aggregation=GroupedTasksDimensionAggregation.FIRST)
+]
+column_mapping = ColumnMapping(column_list)
+````
+The `grouped_tasks_columns` represent the list of column indices that must be grouped.
+If `grouped_tasks_columns` is declared, it has to at least have the index of a column of type `TASK_NAME`
+and the index of a column of type `METRIC`, `DIMENSION` or `TIME`. It must not have the index of a column of type `CASE_ID`.
+
+The `grouped_tasks_aggregation` represents the aggregation of the grouped tasks.
+
+Moreover, if a grouped task aggregation's column type is `METRIC`, then the grouped task's type must be of `MetricAggregation` type.
+Similarly, if a grouped task aggregation's column type is `DIMENSION`, then the grouped task's type must be of `GroupedTasksDimensionAggregation` type.
+Finally, if `grouped_tasks_columns` is declared, the column's type must be `TASK_NAME`.
+
+
 ## Graphs
 ***
 

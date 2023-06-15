@@ -6,7 +6,8 @@ RUN apt-get update && \
 	apt-get install ffmpeg libsm6 libxext6  -y && \
 	pip install --upgrade pip && \
 	pip install Pillow pandas anonympy dask && \
-	pip install --no-deps cape-privacy==0.3.0
+	pip install --no-deps cape-privacy==0.3.0 && \
+	pip install toml
 
 ADD logpickr_sdk /tmp/logpickr_sdk
 ADD ./setup.py /tmp/setup.py

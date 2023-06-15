@@ -1,3 +1,6 @@
+# MIT License, Copyright 2023 iGrafx
+# https://github.com/igrafx/mining-python-sdk/blob/dev/LICENSE
+
 import os
 import random
 from igrafx_mining_sdk.graph import Graph, GraphInstance
@@ -7,9 +10,9 @@ from igrafx_mining_sdk.api_connector import APIConnector
 
 
 class Project:
-    """A Logpickr project"""
+    """A iGrafx P360 Live Mining project"""
     def __init__(self, pid: str, api_connector: APIConnector):
-        """Create a Logpickr project from a project ID and the Workgroup it was created from
+        """Create a iGrafx P360 Live Mining project from a project ID and the Workgroup it was created from
 
         :param pid: the Project's ID
         :param api_connector: the APIConnector object
@@ -23,8 +26,18 @@ class Project:
     @property
     def exists(self):
         """Check if the project exists"""
-        response_project_list = self.api_connector.get_request("/projects").json()
-        return self.id in response_project_list
+        response_project_exist = self.api_connector.get_request(f"/project/{self.id}/exist").json()
+        return response_project_exist["exists"]
+
+    def delete_project(self):
+        """Deletes the project"""
+        response_project_delete = self.api_connector.delete_request(f"/project/{self.id}")
+        return response_project_delete
+
+    def get_project_name(self):
+        """Returns the name of the project"""
+        response_project_name = self.api_connector.get_request(f"/project/{self.id}/name").json()
+        return response_project_name["name"]
 
     def graph(self, gateways=False):
         """Performs a REST request for the project model graph if it hasn't already been retrieved.
@@ -85,6 +98,7 @@ class Project:
         """Returns datasource of type '_simplifiedEdge'"""
         return self.__get_datasource_by_name('_simplifiedEdge')
 
+
     @property
     def cases_datasource(self):
         """Returns datasource of type 'cases'"""
@@ -112,6 +126,37 @@ class Project:
             response_filtered["host"],
             response_filtered["port"],
             self.api_connector)
+
+    def get_project_variants(self, page_index: int, limit: int, search: str = None):
+        """Returns the project variants
+
+        :param page_index: the page index for pagination
+        :param limit: The maximum number of items to return per page
+        :param search: The search query to filter variants by name (optional)
+        """
+        params = {"projectId": self.id, "pageIndex": page_index, "limit": limit}
+        if search is not None:
+            params["search"] = search
+
+        route = f"/project/{self.id}/variants"
+        response_variants = self.api_connector.get_request(route, params=params)
+        return response_variants.json()
+
+    def get_project_completed_cases(self, page_index: int, limit: int, search_case_id: str = None):
+        """Returns the projects completed cases
+
+        :param page_index: the page index for pagination
+        :param limit: The maximum number of items to return per page
+        :param search: The search query to filter cases by ID (optional)
+
+        """
+        params = {"projectId": self.id, "pageIndex": page_index, "limit": limit}
+        if search_case_id is not None:
+            params["searchCaseId"] = search_case_id
+
+        route = f"/project/{self.id}/completedCases"
+        response_case_ids = self.api_connector.get_request(route, params=params)
+        return response_case_ids.json()
 
     @property
     def process_keys(self):
@@ -142,9 +187,11 @@ class Project:
         json_response = self.api_connector.get_request(f"/project/{self.id}/column-mapping-exists")
         return json_response.json()['exists']
 
-    def mapping_infos(self):
-        response_mapping_infos = self.api_connector.get_request(f"/project/{self.id}/mappingInfos")
-        return response_mapping_infos  # return respective columnmapping object
+    def get_mapping_infos(self):
+        """Returns the mapping infos of the project such as the column names"""
+
+        response_mapping_infos = self.api_connector.get_request(f"/project/{self.id}/mappingInfos").json()
+        return response_mapping_infos
 
     def reset(self):
         """Makes an API call to manually reset a project"""

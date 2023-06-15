@@ -18,3 +18,9 @@ venv
 igrafx_mining_sdk/test.py
 .idea
 pyvenv.cfg
+/dist
+/build
+/.pytest_cache
+/logpickr_sdk.egg-info
+igrafx_mining_sdk/tests/__pycache__
+.env
