@@ -607,7 +607,6 @@ In this section, documentation can be found for further reading.
 Support is available at the following address: [support@logpickr.com](mailto:support@logpickr.com)
 
 
-
 * [Workgroups, Projects and Mapping](https://igrafx.gitlab.io/logpickr/logpickr-sdk/index.html)
 * [iGrafx Help](https://fr.help.logpickr.com/)
 * [Druid SQL API](https://druid.apache.org/docs/latest/querying/sql-api.html)
