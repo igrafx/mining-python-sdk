@@ -24,3 +24,4 @@ pyvenv.cfg
 /logpickr_sdk.egg-info
 igrafx_mining_sdk/tests/__pycache__
 .env
+CONTRIBUTE.md

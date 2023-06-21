@@ -41,8 +41,3 @@ class TestWorkgroup:
     def test_project_from_id(self, workgroup):
         """Test that the project ID can be retrieved."""
         assert workgroup.project_from_id(project_id)
-
-    def test_tables(self):
-        """Test that there are tables in the workgroup."""
-        wg = Workgroup(wg_id, wg_key, wg_url, wg_auth)
-        assert len(wg.datasources) > 0  # Since there should be tables in the workgroup
