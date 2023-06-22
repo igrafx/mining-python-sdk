@@ -21,7 +21,13 @@ jobs:
     - uses: actions/stale@v5
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
-        stale-issue-message: 'Stale issue message'
-        stale-pr-message: 'Stale pull request message'
+        stale-issue-message: 'This issue has been inactive for a while. 
+        If you still need assistance or have any updates, please let us know. 
+        Otherwise, we may close this issue in the near future. 
+        Thank you for your understanding.'
+        stale-pr-message: 'This pull request has been inactive for a while. 
+        If you would like us to review your changes or have any updates, please let us know. 
+        Otherwise, we may close this pull request in the near future. 
+        Thank you for your contribution.'
         stale-issue-label: 'no-issue-activity'
         stale-pr-label: 'no-pr-activity'
