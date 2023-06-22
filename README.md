@@ -18,7 +18,7 @@
 ***
 
 ## Introduction
-***
+
 The **iGrafx P360 Live Mining SDK** is an open source application that can be used to manage your mining projects.
 It is a python implementation of the iGrafx P360 Live Mining API.
 
@@ -33,14 +33,13 @@ A detailed tutorial can be found in the [howto.md]() file.
 
 
 ## Requirements
-***
 
 This package requires python 3.6.8 or above. Get the latest version of [Python](https://www.python.org/).
 
 The required packages should be installed via the ```pyproject.toml``` when running the  ```poetry install``` command. 
 
 ## Installing
-***
+
 ### With pip:
 To install the current release of the iGrafx P360 Live Mining SDK with **pip**, simply navigate to the console and type the following command: 
 ````shell
@@ -60,12 +59,12 @@ import igrafx_mining_sdk as igx   # the 'as igx' is entirely optional, but it wi
 ```
 
 ## Documentation
-***
+
 The full documentation can be found in the ```howto.md``` file [here](https://github.com/igrafx/).
 Follow the instructions to try out the SDK.
 
 ## Download packages
-***
+
 Download the corresponding wheel package to the Mining platform version
 * [2.17.0 and above](https://gitlab.com/igrafx/logpickr/logpickr-sdk/-/jobs/artifacts/2.17.0/download?job=build_wheel)
 * [2.16.0 and above](https://gitlab.com/igrafx/logpickr/logpickr-sdk/-/jobs/artifacts/2.16.0/download?job=build_wheel)
@@ -77,7 +76,7 @@ Download the corresponding wheel package to the Mining platform version
 * [2.12.1 and below](https://gitlab.com/igrafx/logpickr/logpickr-sdk/-/jobs/artifacts/2.12.1/download?job=build_wheel)
 
 ## Contributing
-***
+
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 Please make sure to update tests as appropriate.
@@ -85,13 +84,13 @@ Please make sure to update tests as appropriate.
 For more information on how to contribute, please see the ````CONTRIBUTING.md```` file.
 
 ## Support
-***
+
 Support is available at the following address: [support@igrafx.com](mailto:support@igrafx.com).
 
 ## Notice
-***
+
 Your feedback and contributions are important to us. Don't hesitate to contribute to the project.
 
 ## License
-***
+
 This SDK is licensed under the MIT License. See the ````LICENSE```` file for more details.

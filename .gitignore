@@ -25,3 +25,4 @@ pyvenv.cfg
 igrafx_mining_sdk/tests/__pycache__
 .env
 CONTRIBUTE.md
+CHANGELOG.md

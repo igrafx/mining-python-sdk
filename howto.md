@@ -32,7 +32,7 @@ Please contact us to create an account.
 
 
 ## Installing
-___
+
 ### With pip:
 To install the current release of the iGrafx P360 Live Mining SDK with pip, simply navigate to the console 
 and type the following command: 
@@ -51,7 +51,7 @@ pip install igrafx_mining_sdk.whl
 
 ## Requirements
 
----
+
 The requirements of this SDK work with [Poetry](https://python-poetry.org/docs/).
 Please install it before proceeding further. Eventually, specify ``poetry env`` if you handle multiple python versions. The following commands could help you :
 ```sh
@@ -72,7 +72,6 @@ If you wish, you can see the versions of the packages used in it.
 
 ## Getting Started
 
----
 First, open up **Process Explorer 360**, and go to your 
 [workgroup](https://igrafx.gitlab.io/logpickr/logpickr-sdk/moduledocs/workgroup.html#workgroups) settings. 
 In the settings page, go to the **Public API** tab. There, you should see your **workgroup's ID** and **secret key**. 
@@ -88,8 +87,6 @@ Go ahead and **import** the package:
 import igrafx_mining_sdk as igx   # the 'as igx' is entirely optional, but it will make the rest of our code much more readable
 ```
 ## Workgroups and Projects
-
----
 
 The first step of using the iGrafx P360 Live Mining SDK will be to **create a workgroup**, 
 using the credentials you copied from **Process Explorer 360**:
@@ -170,7 +167,7 @@ created_project = w.create_project(project_name)
 ```
 
 ## Sending Data
-***
+
 To be able to add data, you must create a 
 [file structure](https://igrafx.gitlab.io/logpickr/logpickr-sdk/moduledocs/workgroup.html#filestructure) and add a 
 [column mapping](https://igrafx.gitlab.io/logpickr/logpickr-sdk/moduledocs/workgroup.html#columnmapping).
@@ -263,7 +260,7 @@ Finally, if `grouped_tasks_columns` is declared, the column's type must be `TASK
 
 
 ## Graphs
-***
+
 
 Additionally, you can access the project components: the model 
 [Graph](https://igrafx.gitlab.io/logpickr/logpickr-sdk/moduledocs/graph.html#graphs), 
@@ -306,7 +303,7 @@ nx.write_gml(g, 'graph_name.gml')
 ```
 
 ## Graph Instances
-***
+
 
 Moreover, the graph instances can be accessed as a list with:
 ```python
@@ -339,7 +336,7 @@ pk = process_key_list[0]
 gi = my_project.graph_instance_from_key(pk)
 ```
 ## Datasources
-***
+
 
 Each project is linked to **datasources**. Those datasources have 3 types: `vertex`, `simplifiedEdge` and `cases`. 
 To access those we can do:
@@ -376,7 +373,7 @@ ds.close()
 
 ## Using Pandas methods
 
-***
+
 The **[Pandas](https://pandas.pydata.org/docs/)** methods is the simplest option when it comes to handling your dataset 
 (compared to [SQL queries](#using-sql-queries)) but may be less performant.
 Pandas can also be used to easily plot graphs.
@@ -431,7 +428,6 @@ ds.cursor
 
 ## Using SQL Queries
 
-***
 
 In the last section, it was shown how to load the entire dataframe and do operations with **Pandas**. 
 With **SQL** you can load the dataframe and do the operations in the same query, hence why it is faster.
@@ -469,7 +465,7 @@ count = ds.request(f'SELECT COUNT(caseid), detail_7_lpkr_destination FROM \"{ds.
 ```
 
 ## Using the public API
-***
+
 
 **Workgroups and projects** can also be accessed with the **public API**. The documentation for the 
 *iGrafx P360 Live Mining API* can be found  [here](https://public-api.logpickr.com).
@@ -511,7 +507,6 @@ curl -X DELETE "http://localhost:8080/pub/train/<Your Project ID>" -H "accept: *
 
 ## Predictions
 
----
 
 Once you have your project, you can train it and run predictions on it. 
 For the [training](https://fr.help.logpickr.com/prediction/p2p/introduction/), the project has the `.launch_train()` 
@@ -540,7 +535,7 @@ case_list = ["<Case ID 1>", "<Case ID 2>", "<Case ID 3>"]
 prediction_data = my_project.prediction(case_list)
 ```
 ## Access Druid database via JDBC
-***
+
 The [Druid](https://druid.apache.org/blog/2014/04/15/intro-to-pydruid.html) database can be accessed via 
 [JDBC](https://www.javatpoint.com/java-jdbc). To do so, it is recommended to use 
 [Avatica JDBC driver](https://calcite.apache.org/avatica/downloads/).
@@ -569,7 +564,6 @@ try (Connection connection = DriverManager.getConnection(url, connectionProperti
 ```
 
 ## Access database via Druid Rest SQL queries
-***
 
 ### Sending a query:
 The database can also be accessed with Druid Rest SQL queries.
@@ -601,7 +595,6 @@ The result format of the query can be specified with ```"resultFormat"```:
 More information can be found in the section [Further documentation](#further-documentation).
 ## Further documentation
 
----
 In this section, documentation can be found for further reading.
 
 Support is available at the following address: [support@logpickr.com](mailto:support@logpickr.com)
