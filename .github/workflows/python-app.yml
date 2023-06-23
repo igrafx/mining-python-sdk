@@ -45,6 +45,13 @@ jobs:
     - name: Install pytest
       run: |
         poetry run pip install pytest
+    - name: Check if .env exists
+      run: |
+        if [ -f .env ]; then
+          echo ".env file exists."
+        else
+          echo ".env file does not exist."
+        fi
     - name: Load environment variables
       run: |
         poetry run python -m pytest
