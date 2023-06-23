@@ -236,15 +236,3 @@ class Project:
     def stop_train(self):
         """Makes an API call to manually stop the train of a project"""
         self.api_connector.delete_request(f"/train/{self.id}")
-
-    def prediction(self, case_ids):
-        """Queries the API to make a prediction for certain cases of the project
-
-        :param case_ids: list of the ids of the cases we want to make predictions on
-        """
-
-        self.api_connector.post_request(f"/project/{self.id}/prediction")
-        return
-
-        prediction_id = response.json()["resultUrl"].split("/")[-1]
-        self.get_request(f"/project/prediction/{prediction_id}")
