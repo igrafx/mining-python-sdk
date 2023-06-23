@@ -68,6 +68,9 @@ jobs:
       env:
         TEMP_ENV_FILE_PATH_SECRET: ${{ secrets.TEMP_ENV_FILE_PATH }}
 
+    - name: Print environment variables
+      run: env
+
     - name: Load environment variables
       run: |
         poetry run python -m pytest
