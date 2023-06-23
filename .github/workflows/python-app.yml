@@ -39,6 +39,9 @@ jobs:
     - name: Install project dependencies
       run: |
         poetry install --no-root --no-dev
+    - name: Install Flake8
+      run: |
+        poetry run pip install flake8
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
