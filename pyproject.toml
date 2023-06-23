@@ -19,6 +19,7 @@ SQLAlchemy = "2.0.12"
 networkx = "2.6.3"
 numpy = "1.21.6"
 toml = "0.10.2"
+python-dotenv = "0.19.2"
 
 [tool.poetry.group.test.dependencies]
 pytest = "7.3.1"
