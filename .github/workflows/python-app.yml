@@ -45,14 +45,27 @@ jobs:
     - name: Install pytest
       run: |
         poetry run pip install pytest
-    - name: Check if .env exists
+    - name: Use temporary credentials file
       run: |
-        if [ -f .env ]; then
-          echo ".env file exists."
-        else
-          echo ".env file does not exist."
-          exit 1
-        fi
+        # Read the temporary credentials file path from the workflow output
+        temp_env_file_path=$TEMP_ENV_FILE_PATH
+
+        # Use the temporary credentials file as needed in your script
+        # For example:
+        echo "Running tests with temporary credentials file: $temp_env_file_path"
+        pytest --env-file "$temp_env_file_path"
+      env:
+        WG_ID: ${{ secrets.WG_ID }}
+        WG_KEY: ${{ secrets.WG_KEY }}
+        WG_URL: ${{ secrets.WG_URL }}
+        WG_AUTH: ${{ secrets.WG_URL }}
+        PROJECT_ID: ${{ secrets.PROJECT_ID }}
+        NAME: ${{ secrets.NAME }}
+        TYPE: ${{ secrets.TYPE }}
+        HOST: ${{ secrets.HOST }}
+        PORT: ${{ secrets.PORT }}
+
+
     - name: Load environment variables
       run: |
         poetry run python -m pytest

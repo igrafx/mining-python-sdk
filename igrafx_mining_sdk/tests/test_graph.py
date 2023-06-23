@@ -6,17 +6,23 @@ import pytest
 from igrafx_mining_sdk import Project
 from igrafx_mining_sdk.workgroup import Workgroup
 from igrafx_mining_sdk.graph import Graph
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 import os
 
 # Load environment variables from .env file
-load_dotenv()
+# load_dotenv()
 
-wg_id = os.environ["wg_id"]
-wg_key = os.environ["wg_key"]
-wg_url = os.environ["wg_url"]
-wg_auth = os.environ["wg_auth"]
-project_id = os.environ["project_id"]
+# wg_id = os.environ["wg_id"]
+# wg_key = os.environ["wg_key"]
+# wg_url = os.environ["wg_url"]
+# wg_auth = os.environ["wg_auth"]
+# project_id = os.environ["project_id"]
+
+wg_id = os.environ.get('WG_ID')
+wg_key = os.environ.get('WG_KEY')
+wg_url = os.environ.get('WG_URL')
+wg_auth = os.environ.get('WG_AUTH')
+project_id = os.environ.get('PROJECT_ID')
 
 
 class TestGraph:
