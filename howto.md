@@ -77,9 +77,10 @@ First, open up **Process Explorer 360**, and go to your
 In the settings page, go to the **Public API** tab. There, you should see your **workgroup's ID** and **secret key**. 
 These are the values that will be used by the SDK to log in to the iGrafx P360 Live Mining API.
 
-![alt text][settings]
-
-[settings]: C:\Users\Dhruv.Maulloo\PycharmProjects\pythonProject1\settings.png "Public API tab"
+<picture>
+    <source media="(prefers-color-scheme: dark)" srcset="imgs/settings.png">
+    <img alt="Settings" src="imgs/settings.png" >
+</picture>
 
 ### To begin:
 Go ahead and **import** the package:
