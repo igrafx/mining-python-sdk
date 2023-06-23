@@ -42,9 +42,6 @@ jobs:
     - name: Install Flake8
       run: |
         poetry run pip install flake8
-    - name: Install python-dotenv
-      run: |
-        poetry run pip install python-dotenv
     - name: Install pytest
       run: |
         poetry run pip install pytest
