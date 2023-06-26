@@ -11,7 +11,7 @@ on:
   pull_request:
     branches:
     - dev
-    - release/**
+    - release/*
   schedule:
   - cron: "0 2 * * 1-5"
 
@@ -52,21 +52,18 @@ jobs:
       run: |
         poetry run pip install pytest
 
-    - name: Set temporary credentials file path
-      id: set_temp_env_file_path
+    - name: Set environment variables
       run: |
-        echo "::set-output name=temp_env_file_path::.env"  # Replace with the actual path to your temporary credentials file
+        echo "WG_ID=${{ secrets.WG_ID }}" >> $GITHUB_ENV
+        echo "WG_KEY=${{ secrets.WG_KEY }}" >> $GITHUB_ENV
+        echo "WG_AUTH=${{ secrets.WG_AUTH }}" >> $GITHUB_ENV
+        echo "WG_URL=${{ secrets.WG_URL }}" >> $GITHUB_ENV
+        echo "PROJECT_ID=${{ secrets.PROJECT_ID }}" >> $GITHUB_ENV
+        echo "NAME=${{ secrets.NAME }}" >> $GITHUB_ENV
+        echo "TYPE=${{ secrets.TYPE }}" >> $GITHUB_ENV
+        echo "HOST=${{ secrets.HOST }}" >> $GITHUB_ENV
+        echo "PORT=${{ secrets.PORT }}" >> $GITHUB_ENV
 
-    - name: Use temporary credentials file
-      run: |
-        # Retrieve the temporary credentials file path from GitHub secrets
-        temp_env_file_path=$TEMP_ENV_FILE_PATH_SECRET
-        
-        # Set the temporary credentials file path as an environment variable
-        echo "TEMP_ENV_FILE_PATH=$temp_env_file_path" >> $GITHUB_ENV
-
-      env:
-        TEMP_ENV_FILE_PATH_SECRET: ${{ secrets.TEMP_ENV_FILE_PATH }}
 
     - name: Print environment variables
       run: env
