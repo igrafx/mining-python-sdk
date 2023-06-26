@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 import os
 
 # Load environment variables from .env file
-# load_dotenv()
+load_dotenv()
 
 wg_id = os.environ.get('WG_ID')
 wg_key = os.environ.get('WG_KEY')

@@ -6,11 +6,11 @@ import pytest
 from igrafx_mining_sdk import Project
 from igrafx_mining_sdk.workgroup import Workgroup
 from igrafx_mining_sdk.graph import Graph
-# from dotenv import load_dotenv
+from dotenv import load_dotenv
 import os
 
 # Load environment variables from .env file
-# load_dotenv()
+load_dotenv()
 
 # wg_id = os.environ["wg_id"]
 # wg_key = os.environ["wg_key"]
