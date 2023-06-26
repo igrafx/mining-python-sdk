@@ -7,17 +7,17 @@ from dotenv import load_dotenv
 import os
 
 # Load environment variables from .env file
-load_dotenv()
+# load_dotenv()
 
 
 @pytest.fixture(scope="session")
 def workgroup():
     """Fixture to create the workgroup instance."""
     # Replace the placeholders with your actual values
-    workgroup_id = os.environ["wg_id"]
-    workgroup_key = os.environ["wg_key"]
-    api_url = os.environ["wg_url"]
-    auth_url = os.environ["wg_auth"]
+    workgroup_id = os.environ.get('WG_ID')
+    workgroup_key = os.environ.get('WG_KEY')
+    api_url = os.environ.get('WG_URL')
+    auth_url = os.environ.get('WG_AUTH')
 
     # Create the workgroup instance
     wg = Workgroup(workgroup_id, workgroup_key, api_url, auth_url)
