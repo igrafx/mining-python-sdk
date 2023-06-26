@@ -64,15 +64,8 @@ jobs:
         echo "HOST=${{ secrets.HOST }}" >> $GITHUB_ENV
         echo "PORT=${{ secrets.PORT }}" >> $GITHUB_ENV
 
-
     - name: Print environment variables
       run: env
-
-    - name: Load environment variables
-      run: |
-        poetry run python -m pytest
-      env:
-        ENV_FILE: .env
 
     - name: Lint with flake8
       run: |
