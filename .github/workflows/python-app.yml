@@ -86,7 +86,7 @@ jobs:
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         poetry run flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
-    - name: Set Environment Variables
+    - name: Set Environment Variables and Test with pytest
       env:
         WG_ID: ${{ secrets.WG_ID }}
         WG_KEY: ${{ secrets.WG_KEY }}
@@ -97,7 +97,5 @@ jobs:
         TYPE: ${{ secrets.TYPE }}
         HOST: ${{ secrets.HOST }}
         PORT: ${{ secrets.PORT }}
-
-    - name: Test with pytest
       run: |
         pytest
