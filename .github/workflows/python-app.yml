@@ -65,7 +65,8 @@ jobs:
         echo "PORT=${{ secrets.PORT }}" >> $GITHUB_ENV
 
     - name: Print environment variables
-      run: env
+      run: |
+        cat $GITHUB_ENV
 
     - name: Lint with flake8
       run: |
