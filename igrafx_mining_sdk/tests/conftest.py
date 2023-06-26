@@ -6,9 +6,6 @@ from igrafx_mining_sdk import Workgroup
 from dotenv import load_dotenv
 import os
 
-# Load environment variables from .env file
-# load_dotenv()
-
 
 @pytest.fixture(scope="session")
 def workgroup():
