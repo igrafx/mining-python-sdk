@@ -290,7 +290,7 @@ plt.show()
 ````
 
 It will give us a graph similar to the subsequent one:
-![Graph_for_howto.png](..%2F..%2FDocuments%2FSDK%2FSDK_graphs%2FGraph_for_howto.png)
+![Graph_for_howto.png](https://github.com/igrafx/mining-python-sdk/blob/dev/imgs/Graph_for_howto.png)
 
 The graph can then be saved as GEXF:
 ```python
