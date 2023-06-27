@@ -4,10 +4,10 @@
 
 
 [![PyPI pyversions](https://img.shields.io/pypi/pyversions/ansicolortags.svg)](https://pypi.python.org/pypi/ansicolortags/)
-![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/m/igrafx/mining-python-sdk)
+![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/m/igrafx/mining-python-sdk?color=orange)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/igrafx/mining-python-sdk/blob/main/LICENSE)
 [![GitHub forks](https://badgen.net/github/forks/igrafx/mining-python-sdk)](https://github.com/igrafx/mining-python-sdk/forks)
-![GitHub issues](https://img.shields.io/github/issues/igrafx/mining-python-sdk)
+![GitHub issues](https://img.shields.io/github/issues/igrafx/mining-python-sdk?color=)
 [![Project Status](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/igrafx/mining-python-sdk?color=purple)
 ![GitHub repo file count (file type)](https://img.shields.io/github/directory-file-count/igrafx/mining-python-sdk?color=pink)
