@@ -4,14 +4,13 @@
 
 
 [![PyPI pyversions](https://img.shields.io/pypi/pyversions/ansicolortags.svg)](https://pypi.python.org/pypi/ansicolortags/)
-[![PyPi version](https://badgen.net/pypi/v/pip/)](https://pypi.org/project/pip)
-[![PyPI download month](https://img.shields.io/pypi/dm/ansicolortags.svg)](https://pypi.python.org/pypi/ansicolortags/)
-[![Downloads](https://img.shields.io/github/downloads/igrafx/mining-python-sdk/)](https://github.com/igrafx/mining-python-sdk)
+![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/m/igrafx/mining-python-sdk)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/igrafx/mining-python-sdk/blob/main/LICENSE)
 [![GitHub forks](https://badgen.net/github/forks/igrafx/mining-python-sdk)](https://github.com/igrafx/mining-python-sdk/forks)
-[![Issues](https://img.shields.io/github/issues/{username}/{repo-name}.svg)](github issues link)
+![GitHub issues](https://img.shields.io/github/issues/igrafx/mining-python-sdk)
 [![Project Status](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
-[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Naereen/StrapDown.js/graphs/commit-activity)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/igrafx/mining-python-sdk?color=purple)
+![GitHub repo file count (file type)](https://img.shields.io/github/directory-file-count/igrafx/mining-python-sdk?color=pink)
 [![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
 [![Open Source Love svg2](https://badges.frapsoft.com/os/v2/open-source.svg?v=103)](https://github.com/ellerbrock/open-source-badges/)
 
