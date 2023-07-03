@@ -28,7 +28,7 @@ Please note that you must have an iGrafx account in order to be able to use the 
 
 The iGrafx P360 Live Mining SDK uses Python.
 
-A detailed tutorial can be found in the [howto.md]() file.
+A detailed tutorial can be found in the [howto.md](https://github.com/igrafx/mining-python-sdk/blob/dev/howto.md) file.
 
 
 ## Requirements
@@ -47,7 +47,7 @@ pip install igrafx_mining_sdk
 
 ### From Wheel:
 
-Download the latest version of the wheel [here](https://gitlab.com/igrafx/logpickr/logpickr-sdk). Then, navigate to your download folder and run: 
+Download the latest version of the wheel. Then, navigate to your download folder and run: 
 ```shell
 pip install igrafx_mining_sdk.whl
 ```
@@ -59,20 +59,9 @@ import igrafx_mining_sdk as igx   # the 'as igx' is entirely optional, but it wi
 
 ## Documentation
 
-The full documentation can be found in the ```howto.md``` file [here](https://github.com/igrafx/).
+The full documentation can be found in the ```howto.md``` file [here](https://github.com/igrafx/mining-python-sdk/blob/dev/howto.md).
 Follow the instructions to try out the SDK.
 
-## Download packages
-
-Download the corresponding wheel package to the Mining platform version
-* [2.17.0 and above](https://gitlab.com/igrafx/logpickr/logpickr-sdk/-/jobs/artifacts/2.17.0/download?job=build_wheel)
-* [2.16.0 and above](https://gitlab.com/igrafx/logpickr/logpickr-sdk/-/jobs/artifacts/2.16.0/download?job=build_wheel)
-* [2.15.1 and above](https://gitlab.com/igrafx/logpickr/logpickr-sdk/-/jobs/artifacts/2.15.1/download?job=build_wheel)
-* [2.15.0 and above](https://gitlab.com/igrafx/logpickr/logpickr-sdk/-/jobs/artifacts/2.15.0/download?job=build_wheel)
-* [2.14.0 and above](https://gitlab.com/igrafx/logpickr/logpickr-sdk/-/jobs/artifacts/2.14.0/download?job=build_wheel)
-* [2.13.1 and above](https://gitlab.com/igrafx/logpickr/logpickr-sdk/-/jobs/artifacts/2.13.1/download?job=build_wheel)
-* [2.13.0](https://gitlab.com/igrafx/logpickr/logpickr-sdk/-/jobs/artifacts/2.13.0/download?job=build_wheel)
-* [2.12.1 and below](https://gitlab.com/igrafx/logpickr/logpickr-sdk/-/jobs/artifacts/2.12.1/download?job=build_wheel)
 
 ## Contributing
 
@@ -80,7 +69,7 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 
 Please make sure to update tests as appropriate.
 
-For more information on how to contribute, please see the ````CONTRIBUTING.md```` file.
+For more information on how to contribute, please see the [CONTRIBUTING.md](https://github.com/igrafx/mining-python-sdk/blob/dev/CONTRIBUTING.md) file.
 
 ## Support
 

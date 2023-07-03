@@ -232,7 +232,7 @@ Please keep them in mind when making contributions to this project.
 
 ## License
 
-By contributing to the iGrafx P360 Live Mining SDK, you agree that your contributions will be licensed under the [MIT License](LICENSE).
+By contributing to the iGrafx P360 Live Mining SDK, you agree that your contributions will be licensed under the [MIT License](https://github.com/igrafx/mining-python-sdk/blob/dev/LICENSE).
 
 If you have any questions or need further assistance, please contact us at [support@igrafx.com](mailto:support@igrafx.com).
 

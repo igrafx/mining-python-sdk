@@ -1,6 +1,6 @@
 FROM python:3.6.8-slim
 
-MAINTAINER Fabrice Baranski <fabrice.baranski@igrafx.com>
+MAINTAINER iGrafx <support@igrafx.com>
 
 RUN apt-get update && \
 	apt-get install ffmpeg libsm6 libxext6  -y && \

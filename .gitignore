@@ -5,13 +5,10 @@ sphinxdocs/_build/doctrees/moduledocs/*
 sphinxdocs/_static
 tiddelibits
 **/.pytest_cache
-**/.lpk_graphs
 igrafx_mining_sdk/.idea
-igrafx_mining_sdk/.lpk_graphs
 igrafx_mining_sdk/.pytest_cache
 igrafx_mining_sdk/dist
 igrafx_mining_sdk/build
-igrafx_mining_sdk/logpickr_sdk.egg-info
 igrafx_mining_sdk/igrafx_mining_sdk/__pycache__
 venv
 .DS_Store
@@ -21,7 +18,6 @@ pyvenv.cfg
 /dist
 /build
 /.pytest_cache
-/logpickr_sdk.egg-info
 igrafx_mining_sdk/tests/__pycache__
 .env
 CONTRIBUTE.md

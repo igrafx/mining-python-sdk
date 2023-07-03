@@ -43,7 +43,7 @@ pip install igrafx_mining_sdk
 
 ### From Wheel:
 
-Download the latest version of the wheel [here](https://gitlab.com/igrafx/logpickr/logpickr-sdk). 
+Download the latest version of the wheel. 
 Then, navigate to your download folder and run: 
 ```shell
 pip install igrafx_mining_sdk.whl
@@ -62,18 +62,18 @@ poetry env use ~/.pyenv/pyenv-win/versions/your/version
 You must also make sure you add Poetry to your ``PATH``.
 
 Afterwards, you can install the dependencies in the `.venv` virtual environment.
-This command produces a [poetry.lock](poetry.lock) file that is not versioned to Git.
+This command produces a [poetry.lock](https://github.com/igrafx/mining-python-sdk/blob/dev/poetry.lock) file that is not versioned to Git.
 ```sh
 poetry install
 ```
 
-The [pyproject.toml](pyproject.toml) contains the projects details and all of the necessary dependencies.
+The [pyproject.toml](https://github.com/igrafx/mining-python-sdk/blob/dev/pyproject.toml) contains the projects details and all of the necessary dependencies.
 If you wish, you can see the versions of the packages used in it.
 
 ## Getting Started
 
 First, open up **Process Explorer 360**, and go to your 
-[workgroup](https://igrafx.gitlab.io/logpickr/logpickr-sdk/moduledocs/workgroup.html#workgroups) settings. 
+[workgroup](https://github.com/igrafx/mining-python-sdk/wiki/4.-Workgroups-and-Projects) settings. 
 In the settings page, go to the **Public API** tab. There, you should see your **workgroup's ID** and **secret key**. 
 These are the values that will be used by the SDK to log in to the iGrafx P360 Live Mining API.
 
@@ -97,7 +97,7 @@ auth_url = "https://dev-auth.logpickr.com/realms/logpickr-api-qa"
 wg = igx.Workgroup(w_id, w_key, api_url, auth_url)
 ```
 Once the workgroup is created, you can access the list of 
-[projects](https://igrafx.gitlab.io/logpickr/logpickr-sdk/moduledocs/workgroup.html#projects) associated 
+[projects](https://github.com/igrafx/mining-python-sdk/wiki/4.-Workgroups-and-Projects) associated 
 with the workgroup through the ``get_project_list()`` method:
 ```python    
 project_list = wg.get_project_list()
@@ -168,8 +168,8 @@ created_project = w.create_project(project_name)
 ## Sending Data
 
 To be able to add data, you must create a 
-[file structure](https://igrafx.gitlab.io/logpickr/logpickr-sdk/moduledocs/workgroup.html#filestructure) and add a 
-[column mapping](https://igrafx.gitlab.io/logpickr/logpickr-sdk/moduledocs/workgroup.html#columnmapping).
+[file structure](https://github.com/igrafx/mining-python-sdk/wiki/5.-Sending-Data#filestructure) and add a 
+[column mapping](https://github.com/igrafx/mining-python-sdk/wiki/5.-Sending-Data#column-mapping).
 A column mapping is a list of columns describing a document(.CSV, .XLSX, .XLS).
 
 To add a column mapping, you must first define the file structure:
@@ -262,9 +262,9 @@ Finally, if `grouped_tasks_columns` is declared, the column's type must be `TASK
 
 
 Additionally, you can access the project components: the model 
-[Graph](https://igrafx.gitlab.io/logpickr/logpickr-sdk/moduledocs/graph.html#graphs), 
-the [Graph Instances](https://igrafx.gitlab.io/logpickr/logpickr-sdk/moduledocs/graph.html#graph-instances), 
-and the [datasources](https://igrafx.gitlab.io/logpickr/logpickr-sdk/moduledocs/workgroup.html#datasources).
+[Graph](https://github.com/igrafx/mining-python-sdk/wiki/6.-Graphs-and-Graph-Instances), 
+the [Graph Instances](https://github.com/igrafx/mining-python-sdk/wiki/6.-Graphs-and-Graph-Instances), 
+and the [datasources](https://github.com/igrafx/mining-python-sdk/wiki/7.-Datasources).
 
 The model graph is accessed through the `.graph()` function:
 ```python
@@ -374,7 +374,7 @@ ds.close()
 
 
 The **[Pandas](https://pandas.pydata.org/docs/)** methods is the simplest option when it comes to handling your dataset 
-(compared to [SQL queries](#using-sql-queries)) but may be less performant.
+(compared to [SQL queries](https://github.com/igrafx/mining-python-sdk/blob/dev/howto.md#using-sql-queries)) but may be less performant.
 Pandas can also be used to easily plot graphs.
 
 If you want to see the structure of the datasource, you can use the `.columns` method:
@@ -591,7 +591,7 @@ The result format of the query can be specified with ```"resultFormat"```:
   "resultFormat": "array"
 }
 ````
-More information can be found in the section [Further documentation](#further-documentation).
+More information can be found in the section [Further documentation](https://github.com/igrafx/mining-python-sdk/blob/dev/howto.md#further-documentation).
 ## Further documentation
 
 In this section, documentation can be found for further reading.
