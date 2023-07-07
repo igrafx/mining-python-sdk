@@ -14,7 +14,7 @@ import importlib
 def extract_metadata():
     metadata = dict()
     try:
-        root_dir = Path(__file__).parent.parent.parent
+        root_dir = Path(__file__).parent.parent
         with open(
             root_dir / "pyproject.toml", encoding="utf-8"
         ) as f:
