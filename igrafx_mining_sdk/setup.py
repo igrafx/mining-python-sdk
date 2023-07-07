@@ -21,7 +21,7 @@ setup(
     name="igrafx_mining_sdk",
     version=package_infos['__version__'],
     description=package_infos['__doc__'],
-    url="logpickr.com",
+    url="https://www.logpickr.com/fr/accueil.html",
     author=package_infos['__author__'],
     author_email=package_infos['__email__'],
     packages=["igrafx_mining_sdk"],
