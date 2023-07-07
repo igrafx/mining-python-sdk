@@ -3,7 +3,7 @@ import toml
 import re
 
 # Parse pyproject.toml file
-with open('pyproject.toml', 'r') as f:
+with open('../pyproject.toml', 'r') as f:
     pyproject_data = toml.load(f)
 
 # Extract package information
