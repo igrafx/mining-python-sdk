@@ -19,7 +19,7 @@ requirements = list(pyproject_data['tool']['poetry']['dependencies'].values())
 
 setup(
     name="igrafx_mining_sdk",
-    version=package_infos['__version__'],
+    version='{{VERSION_PLACEHOLDER}}',
     description=package_infos['__doc__'],
     long_description=open("README.md", 'r').read(),
     long_description_content_type='text/markdown',
