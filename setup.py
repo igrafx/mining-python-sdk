@@ -21,6 +21,8 @@ setup(
     name="igrafx_mining_sdk",
     version=package_infos['__version__'],
     description=package_infos['__doc__'],
+    long_description=open("README.md", 'r').read(),
+    long_description_content_type='text/markdown',
     url="https://www.logpickr.com/fr/accueil.html",
     author=package_infos['__author__'],
     author_email=package_infos['__email__'],
