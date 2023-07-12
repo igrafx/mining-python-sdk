@@ -2,8 +2,8 @@
 # https://github.com/igrafx/mining-python-sdk/blob/dev/LICENSE
 
 from pathlib import Path
-from igrafx_mining_sdk import Project, FileStructure, FileType
-from igrafx_mining_sdk.column_mapping import Column, ColumnType, ColumnMapping
+from igrafx_mining_sdk.project import Project, FileStructure
+from igrafx_mining_sdk.column_mapping import Column, ColumnType, ColumnMapping, FileType
 from igrafx_mining_sdk.datasource import Datasource
 from igrafx_mining_sdk.workgroup import Workgroup
 import pytest
@@ -11,7 +11,8 @@ from dotenv import load_dotenv
 import os
 
 # Load environment variables from .env file
-load_dotenv()
+dotenv_path = Path(__file__).parent.parent / '.env'
+load_dotenv(dotenv_path)
 
 wg_id = os.environ.get('WG_ID')
 wg_key = os.environ.get('WG_KEY')

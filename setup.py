@@ -1,9 +1,9 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 import toml
 import re
 
 # Parse pyproject.toml file
-with open('../pyproject.toml', 'r') as f:
+with open('./pyproject.toml', 'r') as f:
     pyproject_data = toml.load(f)
 
 # Extract package information
@@ -24,6 +24,6 @@ setup(
     url="https://www.logpickr.com/fr/accueil.html",
     author=package_infos['__author__'],
     author_email=package_infos['__email__'],
-    packages=["igrafx_mining_sdk"],
+    packages=find_packages(),
     licence="Apache License 2.0"
 )

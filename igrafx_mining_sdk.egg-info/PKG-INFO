@@ -1,0 +1,9 @@
+Metadata-Version: 2.1
+Name: igrafx-mining-sdk
+Version: 2.24.2
+Summary: The iGrafx P360 Live Mining SDK is an open source application that can be used to manage your mining projects.
+Home-page: https://www.logpickr.com/fr/accueil.html
+Author: iGrafx
+Author-email: contact@igrafx.com
+License: Apache License 2.0
+License-File: LICENSE

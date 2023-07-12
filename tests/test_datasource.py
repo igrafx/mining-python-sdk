@@ -1,15 +1,16 @@
 # MIT License, Copyright 2023 iGrafx
 # https://github.com/igrafx/mining-python-sdk/blob/dev/LICENSE
-
+from pathlib import Path
 import pytest
-from igrafx_mining_sdk import Project
+from igrafx_mining_sdk.project import Project
 from igrafx_mining_sdk.datasource import Datasource
 from igrafx_mining_sdk.workgroup import Workgroup
 from dotenv import load_dotenv
 import os
 
 # Load environment variables from .env file
-load_dotenv()
+dotenv_path = Path(__file__).parent.parent / '.env'
+load_dotenv(dotenv_path)
 
 NAME = os.environ.get('NAME')
 TYPE = os.environ.get('TYPE')
@@ -33,7 +34,7 @@ class TestDatasource:
         ds = Datasource(NAME, TYPE, HOST, PORT, workgroup.api_connector)
         assert isinstance(ds, Datasource)
 
-    def test_columns(self, workgroup, project):
+    def test_columns(self):
         """Test the columns of a Datasource"""
 
         w = Workgroup(wg_id, wg_key, wg_url, wg_auth)

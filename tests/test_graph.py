@@ -3,14 +3,15 @@
 
 from pathlib import Path
 import pytest
-from igrafx_mining_sdk import Project
+from igrafx_mining_sdk.project import Project
 from igrafx_mining_sdk.workgroup import Workgroup
 from igrafx_mining_sdk.graph import Graph
 from dotenv import load_dotenv
 import os
 
 # Load environment variables from .env file
-load_dotenv()
+dotenv_path = Path(__file__).parent.parent / '.env'
+load_dotenv(dotenv_path)
 
 wg_id = os.environ.get('WG_ID')
 wg_key = os.environ.get('WG_KEY')

@@ -18,7 +18,9 @@ pyvenv.cfg
 /dist
 /build
 /.pytest_cache
-igrafx_mining_sdk/tests/__pycache__
+tests/__pycache__
 .env
 CONTRIBUTE.md
 CHANGELOG.md
+igrafx_mining_sdk.egg-info/
+dist/

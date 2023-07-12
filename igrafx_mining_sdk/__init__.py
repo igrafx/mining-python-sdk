@@ -6,6 +6,7 @@ from igrafx_mining_sdk.datasource import Datasource
 from igrafx_mining_sdk.workgroup import Workgroup
 from igrafx_mining_sdk.project import Project
 from igrafx_mining_sdk.graph import Graph, GraphInstance
+
 import toml
 from pathlib import Path
 import importlib

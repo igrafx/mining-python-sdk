@@ -1,5 +1,6 @@
 # MIT License, Copyright 2023 iGrafx
 # https://github.com/igrafx/mining-python-sdk/blob/dev/LICENSE
+from pathlib import Path
 
 import pytest
 from igrafx_mining_sdk.workgroup import Workgroup
@@ -7,7 +8,8 @@ from dotenv import load_dotenv
 import os
 
 # Load environment variables from .env file
-load_dotenv()
+dotenv_path = Path(__file__).parent.parent / '.env'
+load_dotenv(dotenv_path)
 
 wg_id = os.environ.get('WG_ID')
 wg_key = os.environ.get('WG_KEY')
