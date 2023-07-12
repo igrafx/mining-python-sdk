@@ -41,14 +41,6 @@ pip install igrafx_mining_sdk
 ````
 
 
-### From Wheel:
-
-Download the latest version of the wheel. 
-Then, navigate to your download folder and run: 
-```shell
-pip install igrafx_mining_sdk.whl
-```
-
 ## Requirements
 
 
