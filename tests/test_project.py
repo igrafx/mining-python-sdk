@@ -55,7 +55,7 @@ class TestProject:
         column_list = [
             Column('case_id', 0, ColumnType.CASE_ID),
             Column('task_name', 1, ColumnType.TASK_NAME),
-            Column('time', 2, ColumnType.TIME, time_format='%Y-%m-%dT%H:%M')
+            Column('time', 2, ColumnType.TIME, time_format="yyyy-MM-dd'T'HH:mm")
         ]
         column_mapping = ColumnMapping(column_list)
         assert project.add_column_mapping(filestructure, column_mapping)
@@ -77,8 +77,8 @@ class TestProject:
         column_list = [
             Column('Case ID', 0, ColumnType.CASE_ID),
             Column('Activity', 1, ColumnType.TASK_NAME),
-            Column('Start Date', 2, ColumnType.TIME, time_format='%d/%m/%Y %H:%M'),
-            Column('End Date', 3, ColumnType.TIME, time_format='%d/%m/%Y %H:%M'),
+            Column('Start Date', 2, ColumnType.TIME, time_format='dd/MM/yyyy HH:mm'),
+            Column('End Date', 3, ColumnType.TIME, time_format='dd/MM/yyyy HH:mm'),
         ]
         column_mapping = ColumnMapping(column_list)
         base_dir = Path(__file__).resolve().parent
@@ -95,8 +95,8 @@ class TestProject:
         )
         column_list = [
             Column('Case ID', 0, ColumnType.CASE_ID),
-            Column('Start Timestamp', 1, ColumnType.TIME, time_format='%Y/%m/%d %H:%M:%S.%f'),
-            Column('Complete Timestamp', 2, ColumnType.TIME, time_format='%Y/%m/%d %H:%M:%S.%f'),
+            Column('Start Timestamp', 1, ColumnType.TIME, time_format='yyyy/MM/dd HH:mm:ss.SSS'),
+            Column('Complete Timestamp', 2, ColumnType.TIME, time_format='yyyy/MM/dd HH:mm:ss.SSS'),
             Column('Activity', 3, ColumnType.TASK_NAME),
             Column('Ressource', 4, ColumnType.DIMENSION),
         ]
@@ -115,8 +115,8 @@ class TestProject:
         )
         column_list = [
             Column('Case ID', 0, ColumnType.CASE_ID),
-            Column('Start Timestamp', 1, ColumnType.TIME, time_format='%Y/%m/%d %H:%M:%S.%f'),
-            Column('Complete Timestamp', 2, ColumnType.TIME, time_format='%Y/%m/%d %H:%M:%S.%f'),
+            Column('Start Timestamp', 1, ColumnType.TIME, time_format='yyyy/MM/dd HH:mm:ss.SSS'),
+            Column('Complete Timestamp', 2, ColumnType.TIME, time_format='yyyy/MM/dd HH:mm:ss.SSS'),
             Column('Activity', 3, ColumnType.TASK_NAME),
             Column('Ressource', 4, ColumnType.DIMENSION),
         ]
