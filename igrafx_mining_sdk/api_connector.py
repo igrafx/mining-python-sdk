@@ -47,7 +47,6 @@ class APIConnector:
     def __login(self):
         """Logs into the Mining Public API with the Workgroup's credentials and retrieves a token for later requests"""
 
-        # authurl now contains the realm /realm/logpickr
         login_url = f"{self._authurl}/protocol/openid-connect/token"
         login_data = {
             "grant_type": "client_credentials",

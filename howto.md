@@ -84,8 +84,8 @@ using the credentials you copied from **Process Explorer 360**:
 ```python
 w_id = "<Your Workgroup ID>"
 w_key = "<Your Workgroup KEY>"
-api_url = "https://dev-api.logpickr.com"
-auth_url = "https://dev-auth.logpickr.com/realms/logpickr-api-qa"
+api_url = "<Your Mining Platform API URL>"
+auth_url = "<Your Mining Platform Auth URL>"
 wg = igx.Workgroup(w_id, w_key, api_url, auth_url)
 ```
 Once the workgroup is created, you can access the list of 
@@ -106,7 +106,7 @@ project_id_list[0]
 
 The project ID can also be found in the URL:
 ```URL
-https://igfx-eastus-qa.logpickr.com/workgroups/<Workgroup ID>/projects/<Project ID>/data
+https://<Mining Platform URL>>/workgroups/<Workgroup ID>/projects/<Project ID>/data
 ```
 
 On top of that, if you already know the ID of the project you want to work with you can use:
@@ -465,34 +465,34 @@ To do so, we use ``curl``.
 
 For instance, we can use the `GET` HTTP method to access the list of available projects:
 ````commandline
-curl -X GET "http://localhost:8080/pub/projects" -H "accept: application/json"
+curl -X GET "https://<Mining Platform URL>>/pub/projects" -H "accept: application/json"
 ````
 
 With the same method, we can **access** a project graph model:
 ````commandline
-curl -X GET "http://localhost:8080/pub/project/<Your Project ID>/graph" -H "accept: application/json" 
+curl -X GET "https://<Mining Platform URL>/pub/project/<Your Project ID>/graph" -H "accept: application/json" 
 ````
 
 In a similar manner, the projects' **datasources** are returned by:
 ````commandline
-curl -X GET "http://localhost:8080/pub/datasources?id=<Your Project ID>" -H "accept: application/json"
+curl -X GET "https://<Mining Platform URL>/pub/datasources?id=<Your Project ID>" -H "accept: application/json"
 ````
 
 Furthermore, with the HTTP method `POST`, several actions can be done.
 
 The project's **column mapping** cant be posted:
 ````commandline
-curl -X POST "http://localhost:8080/pub/project/<Your Project ID>/column-mapping" -H "accept: */*" -H "Content-Type: application/json" -d "{\"fileStructure\":{\"charset\":\"UTF-8\",\"delimiter\":\";\",\"quoteChar\":\"\\\"\",\"escapeChar\":\"\\\\\",\"eolChar\":\"\\\\",\"header\":true,\"commentChar\":\"#\",\"fileType\":\"csv\",\"sheetName\":\"string\"},\"columnMapping\":{\"caseIdMapping\":{\"columnIndex\":0},\"activityMapping\":{\"columnIndex\":0},\"timeMappings\":[{\"columnIndex\":0,\"format\":\"string\"}],\"dimensionsMappings\":[{\"name\":\"Activity\",\"columnIndex\":0,\"isCaseScope\":true,\"aggregation\":\"FIRST\"}],\"metricsMappings\":[{\"name\":\"Activity\",\"columnIndex\":0,\"unit\":\"string\",\"isCaseScope\":true,\"aggregation\":\"FIRST\"}]}}"
+curl -X POST "https://<Mining Platform URL>/pub/project/<Your Project ID>/column-mapping" -H "accept: */*" -H "Content-Type: application/json" -d "{\"fileStructure\":{\"charset\":\"UTF-8\",\"delimiter\":\";\",\"quoteChar\":\"\\\"\",\"escapeChar\":\"\\\\\",\"eolChar\":\"\\\\",\"header\":true,\"commentChar\":\"#\",\"fileType\":\"csv\",\"sheetName\":\"string\"},\"columnMapping\":{\"caseIdMapping\":{\"columnIndex\":0},\"activityMapping\":{\"columnIndex\":0},\"timeMappings\":[{\"columnIndex\":0,\"format\":\"string\"}],\"dimensionsMappings\":[{\"name\":\"Activity\",\"columnIndex\":0,\"isCaseScope\":true,\"aggregation\":\"FIRST\"}],\"metricsMappings\":[{\"name\":\"Activity\",\"columnIndex\":0,\"unit\":\"string\",\"isCaseScope\":true,\"aggregation\":\"FIRST\"}]}}"
 ````
 Additionally, to **reset** all project data except it's name, description and user rights, we can use the subsequent `curl` command:
 ````commandline
-curl -X POST "http://localhost:8080/pub/project/<Your Project ID>/reset" -H "accept: */*"
+curl -X POST "https://<Mining Platform URL>/pub/project/<Your Project ID>/reset" -H "accept: */*"
 ````
 Finally, `DELETE` methods can be used.
 
 For instance, we can use that method to **stop** the train task for a project:
 ````commandline
-curl -X DELETE "http://localhost:8080/pub/train/<Your Project ID>" -H "accept: */*"
+curl -X DELETE "https://<Mining Platform URL>/pub/train/<Your Project ID>" -H "accept: */*"
 ````
 
 
@@ -530,13 +530,13 @@ prediction_data = my_project.prediction(case_list)
 The [Druid](https://druid.apache.org/blog/2014/04/15/intro-to-pydruid.html) database can be accessed via 
 [JDBC](https://www.javatpoint.com/java-jdbc). To do so, it is recommended to use 
 [Avatica JDBC driver](https://calcite.apache.org/avatica/downloads/).
-We then use the connect string ``jdbc:avatica:remote:url=http://BROKER:8082/druid/v2/sql/avatica/``.
+We then use the connect string ``jdbc:avatica:remote:url=https://<Mining Platform Data URL>/druid/v2/sql/avatica/``.
 
 Please note that **JDBC uses Java**.
 Thus, we can use the subsequent code to connect to Druid:
 ```java
 // Connect to /druid/v2/sql/avatica/ on your Broker.
-String url = "jdbc:avatica:remote:url=http://localhost:8082/druid/v2/sql/avatica/";
+String url = "jdbc:avatica:remote:url=https://<Mining Platform Data URL>/druid/v2/sql/avatica/";
 
 // Set any connection context parameters you need here
 // Or leave empty for default behavior.
@@ -562,7 +562,7 @@ The database can also be accessed with Druid Rest SQL queries.
 To do so, first of all, using a ``POST`` method, send your query to the Router.
 `Curl` can be used to send SQL queries from the command-line:
 ````commandline
-curl  -X POST -H "Content-Type: application/json" -u druid_system:igfx-eastus-qa__<Your Process ID> http://api.igfx-eastus-demo.logpickr.com:8008/druid/v2/sql/ --data-raw '{"query": "SELECT * FROM <ds.name> "}'
+curl  -X POST -H "Content-Type: application/json" -u <Your Workgroup ID>:<Your Workgroup KEY> https://<Your Mining Platform URL>/druid/v2/sql/ --data-raw '{"query": "SELECT * FROM <ds.name> "}'
 ````
 The query must be specified after ``"query"``, in `--data-raw`.
 
@@ -573,7 +573,7 @@ Alternatively, SQL queries can also be sent as follows:
 ````
 
 ````commandline
-curl  -X POST -H "Content-Type: application/json" -u druid_system:igfx-eastus-qa__<Your Process ID>  http://api.igfx-eastus-demo.logpickr.com:8008/druid/v2/sql/ --data-raw @query.json
+curl  -X POST -H "Content-Type: application/json" -u <Your Workgroup ID>:<Your Workgroup KEY> https://<Your Mining Platform URL>/druid/v2/sql/ --data-raw @query.json
 ````
 ### Responses:
 The result format of the query can be specified with ```"resultFormat"```:
@@ -588,10 +588,9 @@ More information can be found in the section [Further documentation](https://git
 
 In this section, documentation can be found for further reading.
 
-Support is available at the following address: [support@logpickr.com](mailto:support@logpickr.com)
+Support is available at the following address: [support@igrafx.com](mailto:support@igrafx.com)
 
 
-* [Workgroups, Projects and Mapping](https://igrafx.gitlab.io/logpickr/logpickr-sdk/index.html)
 * [iGrafx Help](https://fr.help.logpickr.com/)
 * [Druid SQL API](https://druid.apache.org/docs/latest/querying/sql-api.html)
 * [iGrafx P360 Live Mining API](https://public-api.logpickr.com/#/)
