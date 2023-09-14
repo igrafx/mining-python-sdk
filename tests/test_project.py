@@ -135,8 +135,8 @@ class TestProject:
         w = Workgroup(wg_id, wg_key, wg_url, wg_auth)
         project = Project(project_id, w.api_connector)
         print(project_id)
-        assert len(project.get_graph_instances(limit=3, shuffle=False)) == 2
-        assert len(project.get_graph_instances(limit=3, shuffle=True)) == 2
+        assert len(project.get_graph_instances(limit=3, shuffle=False)) == 3
+        assert len(project.get_graph_instances(limit=3, shuffle=True)) == 3
 
     def test_datasources_types(self):
         """Test the types of the datasources"""
