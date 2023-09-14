@@ -23,7 +23,7 @@ setup(
     description=package_infos['__doc__'],
     long_description=open("README.md", 'r').read(),
     long_description_content_type='text/markdown',
-    url="https://www.logpickr.com/fr/accueil.html",
+    url="https://www.igrafx.com",
     author=package_infos['__author__'],
     author_email=package_infos['__email__'],
     packages=find_packages(),

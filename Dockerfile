@@ -9,7 +9,7 @@ RUN apt-get update && \
 	pip install --no-deps cape-privacy==0.3.0 && \
 	pip install toml
 
-ADD logpickr_sdk /tmp/logpickr_sdk
+ADD igrafx_mining_sdk /tmp/igrafx_mining_sdk
 ADD ./setup.py /tmp/setup.py
 
 RUN cd /tmp/ && \

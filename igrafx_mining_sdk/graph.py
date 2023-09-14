@@ -65,7 +65,7 @@ class GraphInstance(Graph):
 
     @staticmethod
     def from_json(project_id, path):
-        """Static method that creates a GraphInstance based on the json representation returned by the Logpickr API
+        """Static method that creates a GraphInstance based on the json representation returned by the iGrafx Mining API
 
         :param project_id: the ID of the project the graph is in
         :param path: the path to the JSON file we want to parse the graph from"""
