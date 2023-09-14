@@ -582,7 +582,7 @@ The result format of the query can be specified with ```"resultFormat"```:
   "query": "SELECT * FROM <ds.name>",
   "resultFormat": "array"
 }
-````
+```` 
 More information can be found in the section [Further documentation](https://github.com/igrafx/mining-python-sdk/blob/dev/howto.md#further-documentation).
 ## Further documentation
 
