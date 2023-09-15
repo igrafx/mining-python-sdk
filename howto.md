@@ -489,13 +489,19 @@ Furthermore, with the HTTP method `POST`, several actions can be done.
 
 You can create a project:
 ````commandline
-curl -X POST "https://<Your API URL>/pub/project?name=<Your project name>&workgroupId=<Your Workgroup ID>>" -H 'accept: application/json' -H 'Authorization: Bearer <Your generated Token> -d
+curl -X POST "https://<Your API URL>/pub/project?name=<Your project name>&workgroupId=<Your Workgroup ID>" -H 'accept: application/json' -H 'Authorization: Bearer <Your generated Token> -d
 ````
 
 The project's **column mapping** can be posted:
 ````commandline
 curl -X POST "https://<Your API URL>/pub/project/<Your Project ID>/column-mapping" -H "accept: */*" -H 'Authorization: Bearer <Your generated Token> -H "Content-Type: application/json" -d "{\"fileStructure\":{\"charset\":\"UTF-8\",\"delimiter\":\";\",\"quoteChar\":\"\\\"\",\"escapeChar\":\"\\\\\",\"eolChar\":\"\\\\",\"header\":true,\"commentChar\":\"#\",\"fileType\":\"csv\",\"sheetName\":\"string\"},\"columnMapping\":{\"caseIdMapping\":{\"columnIndex\":0},\"activityMapping\":{\"columnIndex\":0},\"timeMappings\":[{\"columnIndex\":0,\"format\":\"string\"}],\"dimensionsMappings\":[{\"name\":\"Activity\",\"columnIndex\":0,\"isCaseScope\":true,\"aggregation\":\"FIRST\"}],\"metricsMappings\":[{\"name\":\"Activity\",\"columnIndex\":0,\"unit\":\"string\",\"isCaseScope\":true,\"aggregation\":\"FIRST\"}]}}"
 ````
+
+A file can then be added: 
+````commandline
+curl -X POST "https://<Your API URL>/pub/project/<Your Project ID>/file?teamId=<Your Workgroup ID>" -H 'accept: application/json' -H 'Authorization: Bearer <Your generated Token> -H 'Content-Type: multipart/form-data' -F 'file=@output.csv;type=text/csv
+````
+
 Additionally, to **reset** all project data except it's name, description and user rights, we can use the subsequent `curl` command:
 ````commandline
 curl -X POST "https://<Your API URL>/pub/project/<Your Project ID>/reset" -H "accept: */*" -H 'Authorization: Bearer <Your generated Token>
