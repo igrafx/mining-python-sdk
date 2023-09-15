@@ -492,7 +492,7 @@ You can create a project:
 curl -X POST "https://<Your API URL>/pub/project?name=<Your project name>&workgroupId=<Your Workgroup ID>>" -H 'accept: application/json' -H 'Authorization: Bearer <Your generated Token> -d
 ````
 
-The project's **column mapping** cant be posted:
+The project's **column mapping** can be posted:
 ````commandline
 curl -X POST "https://<Your API URL>/pub/project/<Your Project ID>/column-mapping" -H "accept: */*" -H 'Authorization: Bearer <Your generated Token> -H "Content-Type: application/json" -d "{\"fileStructure\":{\"charset\":\"UTF-8\",\"delimiter\":\";\",\"quoteChar\":\"\\\"\",\"escapeChar\":\"\\\\\",\"eolChar\":\"\\\\",\"header\":true,\"commentChar\":\"#\",\"fileType\":\"csv\",\"sheetName\":\"string\"},\"columnMapping\":{\"caseIdMapping\":{\"columnIndex\":0},\"activityMapping\":{\"columnIndex\":0},\"timeMappings\":[{\"columnIndex\":0,\"format\":\"string\"}],\"dimensionsMappings\":[{\"name\":\"Activity\",\"columnIndex\":0,\"isCaseScope\":true,\"aggregation\":\"FIRST\"}],\"metricsMappings\":[{\"name\":\"Activity\",\"columnIndex\":0,\"unit\":\"string\",\"isCaseScope\":true,\"aggregation\":\"FIRST\"}]}}"
 ````
