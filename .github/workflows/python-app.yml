@@ -89,6 +89,23 @@ jobs:
     - name: Debug Contents
       run: ls -R
 
+    - name: Debug Workflow Directory
+      run: |
+        pwd
+        ls -al
+
+    - name: Debug Mining-Python-SDK Directory
+      run: |
+        cd mining-python-sdk
+        pwd
+        ls -al
+
+    - name: Debug igrafx_mining_sdk Directory
+      run: |
+        cd mining-python-sdk/igrafx_mining_sdk
+        pwd
+        ls -al
+
 
     - name: Set Environment Variables and Test with pytest
       env:
