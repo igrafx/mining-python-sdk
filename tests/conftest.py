@@ -2,8 +2,7 @@
 # https://github.com/igrafx/mining-python-sdk/blob/dev/LICENSE
 
 import pytest
-from mining-python-sdk.igrafx_mining_sdk.workgroup import Workgroup
-# from igrafx_mining_sdk.workgroup import Workgroup
+from igrafx_mining_sdk.workgroup import Workgroup
 import os
 
 
