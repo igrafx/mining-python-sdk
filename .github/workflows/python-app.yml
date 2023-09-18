@@ -89,11 +89,6 @@ jobs:
     - name: Debug Contents
       run: ls -R
 
-    - name: Debug Workflow Directory
-      run: |
-        pwd
-        ls -al
-
     - name: Debug Mining-Python-SDK Directory
       run: |
         ls -al ./igrafx_mining_sdk
