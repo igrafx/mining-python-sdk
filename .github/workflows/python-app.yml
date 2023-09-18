@@ -96,9 +96,7 @@ jobs:
 
     - name: Debug Mining-Python-SDK Directory
       run: |
-        cd mining-python-sdk
-        pwd
-        ls -al
+        ls -al mining-python-sdk
 
     - name: Debug igrafx_mining_sdk Directory
       run: |
