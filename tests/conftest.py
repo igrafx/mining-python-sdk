@@ -4,6 +4,9 @@
 import pytest
 from igrafx_mining_sdk.workgroup import Workgroup
 import os
+import sys
+print(sys.path)
+
 
 
 @pytest.fixture(scope="session")
