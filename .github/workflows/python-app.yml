@@ -86,6 +86,14 @@ jobs:
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         poetry run flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
+    - name: Debug Contents
+      run: ls -R
+
+    - name: Debug Mining-Python-SDK Directory
+      run: |
+        ls -al ./igrafx_mining_sdk
+
+
     - name: Set Environment Variables and Test with pytest
       env:
         WG_ID: ${{ secrets.WG_ID }}
@@ -98,4 +106,4 @@ jobs:
         HOST: ${{ secrets.HOST }}
         PORT: ${{ secrets.PORT }}
       run: |
-        pytest
+        python -m pytest
