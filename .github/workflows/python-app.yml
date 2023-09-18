@@ -111,4 +111,4 @@ jobs:
         HOST: ${{ secrets.HOST }}
         PORT: ${{ secrets.PORT }}
       run: |
-        pytest
+        python -m pytest
