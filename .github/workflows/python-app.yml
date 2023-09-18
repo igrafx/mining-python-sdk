@@ -98,12 +98,6 @@ jobs:
       run: |
         ls -al ./igrafx_mining_sdk
 
-    - name: Debug igrafx_mining_sdk Directory
-      run: |
-        cd mining-python-sdk/igrafx_mining_sdk
-        pwd
-        ls -al
-
 
     - name: Set Environment Variables and Test with pytest
       env:
