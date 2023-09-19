@@ -470,47 +470,49 @@ are not working anymore, simply regenerate the tokens.
 curl -X POST   <Your authentication URL>/protocol/openid-connect/token   --data "grant_type=client_credentials"   --data "client_id=<Your workgroup ID>"   --data "client_secret=<Your workgroup Key>" | jq
 ````
 
+Note that the `| jq ` is optional but it will be easier to read the result if you include it.
+
 Then, we can use the `GET` HTTP method to access the list of available projects. Don't forget to use the token:
 ````commandline
-curl -X GET "https://<Your API URL>/pub/projects" -H "accept: application/json" -H 'Authorization: Bearer <Your generated Token>
+curl -X "GET" "https://<Your API URL>/pub/projects" -H "accept: application/json" -H "Authorization: Bearer <Your generated Token>"
 ````
 
 With the same method, we can **access** a project graph model:
 ````commandline
-curl -X GET "https://<Your API URL>/pub/project/<Your Project ID>/graph?mode=gateways" -H "accept: application/json" -H 'Authorization: Bearer <Your generated Token>
+curl -X GET "https://<Your API URL>/pub/project/<Your Project ID>/graph?mode=gateways" -H "accept: application/json" -H "Authorization: Bearer <Your generated Token>"
 ````
 
 In a similar manner, the projects' **datasources** are returned by:
 ````commandline
-curl -X GET "https://<Your API URL>/pub/datasources?id=<Your Project ID>" -H "accept: application/json" -H 'Authorization: Bearer <Your generated Token>
+curl -X GET "https://<Your API URL>/pub/datasources?id=<Your Project ID>" -H "accept: application/json" -H "Authorization: Bearer <Your generated Token>"
 ````
 
 Furthermore, with the HTTP method `POST`, several actions can be done.
 
 You can create a project:
 ````commandline
-curl -X POST "https://<Your API URL>/pub/project?name=<Your project name>&workgroupId=<Your Workgroup ID>" -H 'accept: application/json' -H 'Authorization: Bearer <Your generated Token> -d
+curl -X POST "https://<Your API URL>/pub/project?name=<Your project name>&workgroupId=<Your Workgroup ID>" -H "accept: application/json" -H "Authorization: Bearer <Your generated Token>" -d ""
 ````
 
 The project's **column mapping** can be posted:
 ````commandline
-curl -X POST "https://<Your API URL>/pub/project/<Your Project ID>/column-mapping" -H "accept: */*" -H 'Authorization: Bearer <Your generated Token> -H "Content-Type: application/json" -d "{\"fileStructure\":{\"charset\":\"UTF-8\",\"delimiter\":\";\",\"quoteChar\":\"\\\"\",\"escapeChar\":\"\\\\\",\"eolChar\":\"\\\\",\"header\":true,\"commentChar\":\"#\",\"fileType\":\"csv\",\"sheetName\":\"string\"},\"columnMapping\":{\"caseIdMapping\":{\"columnIndex\":0},\"activityMapping\":{\"columnIndex\":0},\"timeMappings\":[{\"columnIndex\":0,\"format\":\"string\"}],\"dimensionsMappings\":[{\"name\":\"Activity\",\"columnIndex\":0,\"isCaseScope\":true,\"aggregation\":\"FIRST\"}],\"metricsMappings\":[{\"name\":\"Activity\",\"columnIndex\":0,\"unit\":\"string\",\"isCaseScope\":true,\"aggregation\":\"FIRST\"}]}}"
+curl -X POST "https://<Your API URL>/pub/project/<Your Project ID>/column-mapping" -H "accept: */*" -H "Authorization: Bearer <Your generated Token>" -H "Content-Type: application/json" -d '{\"fileStructure\":{\"charset\":\"UTF-8\",\"delimiter\":\";\",\"quoteChar\":\"\\\"\",\"escapeChar\":\"\\\\\",\"eolChar\":\"\\\\",\"header\":true,\"commentChar\":\"#\",\"fileType\":\"csv\",\"sheetName\":\"string\"},\"columnMapping\":{\"caseIdMapping\":{\"columnIndex\":0},\"activityMapping\":{\"columnIndex\":0},\"timeMappings\":[{\"columnIndex\":0,\"format\":\"string\"}],\"dimensionsMappings\":[{\"name\":\"Activity\",\"columnIndex\":0,\"isCaseScope\":true,\"aggregation\":\"FIRST\"}],\"metricsMappings\":[{\"name\":\"Activity\",\"columnIndex\":0,\"unit\":\"string\",\"isCaseScope\":true,\"aggregation\":\"FIRST\"}]}}'
 ````
 
 A file can then be added: 
 ````commandline
-curl -X POST "https://<Your API URL>/pub/project/<Your Project ID>/file?teamId=<Your Workgroup ID>" -H 'accept: application/json' -H 'Authorization: Bearer <Your generated Token> -H 'Content-Type: multipart/form-data' -F 'file=@output.csv;type=text/csv
+curl -X POST "https://<Your API URL>/pub/project/<Your Project ID>/file?teamId=<Your Workgroup ID>" -H "accept: application/json" -H "Authorization: Bearer <Your generated Token>" -H "Content-Type: multipart/form-data" -F "file=@output.csv;type=text/csv"
 ````
 
 Additionally, to **reset** all project data except it's name, description and user rights, we can use the subsequent `curl` command:
 ````commandline
-curl -X POST "https://<Your API URL>/pub/project/<Your Project ID>/reset" -H "accept: */*" -H 'Authorization: Bearer <Your generated Token>
+curl -X POST "https://<Your API URL>/pub/project/<Your Project ID>/reset" -H "accept: */*" -H "Authorization: Bearer <Your generated Token>"
 ````
 Finally, `DELETE` methods can be used.
 
 For instance, we can use that method to **stop** the train task for a project:
 ````commandline
-curl -X DELETE "https://<Your API URL>/pub/train/<Your Project ID>" -H "accept: */*" -H 'Authorization: Bearer <Your generated Token>
+curl -X DELETE "https://<Your API URL>/pub/train/<Your Project ID>" -H "accept: */*" -H "Authorization: Bearer <Your generated Token>"
 ````
 
 
