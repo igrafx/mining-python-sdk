@@ -1,5 +1,6 @@
 # MIT License, Copyright 2023 iGrafx
 # https://github.com/igrafx/mining-python-sdk/blob/dev/LICENSE
+import json
 
 import pytest
 from igrafx_mining_sdk.column_mapping import ColumnType, Column, ColumnMapping, GroupedTasksDimensionAggregation, \
@@ -163,3 +164,68 @@ class TestColumnMapping:
                 Column('task_name', 0, ColumnType.TASK_NAME),
                 Column('time', 1, ColumnType.TIME, time_format='%Y-%m-%dT%H:%M')
             ])
+
+    def test_create_column_from_json(self):
+        json_str = '{"name": "test", "columnIndex": "1", "columnType": "CASE_ID"}'
+        column = Column.from_json(json_str)
+        assert isinstance(column, Column)
+
+    def test_create_column_with_aggregation_from_json(self):
+        json_str = '{"name": "test", "columnIndex": "1", "columnType": "METRIC", "aggregation": "MAX"}'
+        column = Column.from_json(json_str)
+        assert isinstance(column, Column)
+
+    def test_exception_invalid_column_type(self):
+        """ Test to define an invalid column mapping with duplicate column indices"""
+        with pytest.raises(ValueError):
+            json_str = '{"name": "test", "columnIndex": "1", "columnType": "INVALID_TYPE"}'
+            Column.from_json(json_str)
+
+    def test_exception_aggregation_on_non_metric_or_dimension_column(self):
+        """ Test to define an invalid column mapping with duplicate column indices"""
+        with pytest.raises(ValueError):
+            json_str = '{"name": "test", "columnIndex": "1", "columnType": "CASE_ID", "aggregation": "MAX"}'
+            Column.from_json(json_str)
+
+    def test_exception_invalid_aggregation(self):
+        """ Test to define an invalid column mapping with duplicate column indices"""
+        with pytest.raises(ValueError):
+            json_str = '{"name": "test", "columnIndex": "1", "columnType": "DIMENSION", "aggregation": "MAX"}'
+            Column.from_json(json_str)
+
+    def test_column_to_dict_from_json(self):
+        column = Column('test', 0, ColumnType.CASE_ID)
+        json_str = json.dumps(column.to_dict())
+        column = Column.from_json(json_str)
+        assert isinstance(column, Column)
+
+    def test_create_column_mapping_from_json_dict(self):
+        column_dict = '''{
+        "col1": {"name": "case_id", "columnIndex": "0", "columnType": "CASE_ID"},
+        "col2": {"name": "task_name", "columnIndex": "1", "columnType": "TASK_NAME"},
+        "col3": {"name": "time", "columnIndex": "2", "columnType": "TIME", "time_format": "%Y-%m-%dT%H:%M"}
+        }'''
+        column_mapping = ColumnMapping.from_json(column_dict)
+        assert isinstance(column_mapping, ColumnMapping)
+
+    def test_create_column_mapping_from_json_list(self):
+        column_list = '''[
+        {"name": "case_id", "columnIndex": "0", "columnType": "CASE_ID"},
+        {"name": "task_name", "columnIndex": "1", "columnType": "TASK_NAME"},
+        {"name": "time", "columnIndex": "2", "columnType": "TIME", "time_format": "%Y-%m-%dT%H:%M"}
+        ]'''
+        column_mapping = ColumnMapping.from_json(column_list)
+        assert isinstance(column_mapping, ColumnMapping)
+
+    def test_column_mapping_to_dict_from_json(self):
+        column_list = [
+            Column('case_id', 0, ColumnType.CASE_ID),
+            Column('task_name', 1, ColumnType.TASK_NAME),
+            Column('time', 2, ColumnType.TIME, time_format='%Y-%m-%dT%H:%M')
+        ]
+        column_mapping = ColumnMapping(column_list)
+        json_str = json.dumps(column_mapping.to_dict())
+        column_mapping = ColumnMapping.from_json(json_str)
+        assert isinstance(column_mapping, ColumnMapping)
+
+
