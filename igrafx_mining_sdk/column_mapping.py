@@ -1,6 +1,6 @@
 # MIT License, Copyright 2023 iGrafx
 # https://github.com/igrafx/mining-python-sdk/blob/dev/LICENSE
-
+import json
 from enum import Enum
 from typing import List, Union
 
@@ -10,7 +10,6 @@ class FileType(str, Enum):
     csv = "csv"
     xls = "xls"
     xlsx = "xlsx"
-
 
 class FileStructure:
     """ A FileStructure used to create a column mapping"""
@@ -58,6 +57,39 @@ class FileStructure:
             res['sheetName'] = self.sheet_name
         return res
 
+    @classmethod
+    def from_json(cls, json_str):
+        # Convert JSON string to dict
+        data = json.loads(json_str)
+
+        # Extract files from json dictionary
+        file_type = data.get('fileType')
+        if file_type is None:
+            raise KeyError('FileStructure JSON must contain a "fileType" field.')
+        try:
+            file_type = FileType[file_type]
+        except Exception as e:
+            valid_file_types = [x.name for x in FileType]
+            raise KeyError(f'Invalid fileType, must be one of following: {", ".join(valid_file_types)}.') from e
+        charset = data.get('charset', 'UTF-8')
+        delimiter = data.get('delimiter', ',')
+        quote_char = data.get('quoteChar', '"')
+        escape_char = data.get('escapeChar', '\\')
+        eol_char = data.get('eolChar', '\\r\\n')
+        comment_char = data.get('commentChar', '#')
+        sheet_name = data.get('sheetName')
+        header = data.get('header', True)
+
+        return cls(
+            file_type,
+            charset,
+            delimiter,
+            quote_char,
+            escape_char,
+            eol_char,
+            comment_char,
+            sheet_name,
+            bool(header))
 
 class DimensionAggregation(Enum):
     """Class DimensionAggregation for the aggregation types used in column mapping"""
@@ -85,11 +117,11 @@ class MetricAggregation(Enum):
 
 class ColumnType(Enum):
     """Class ColumnType for the column types used in column mapping"""
-    CASE_ID = "case_id"
-    TASK_NAME = "task_name"
-    TIME = "time"
-    METRIC = "metric"
-    DIMENSION = "dimension"
+    CASE_ID = "CASE_ID"
+    TASK_NAME = "TASK_NAME"
+    TIME = "TIME"
+    METRIC = "METRIC"
+    DIMENSION = "DIMENSION"
 
 
 class Column:
@@ -129,7 +161,7 @@ class Column:
 
         if any(p is not None for p in [self.aggregation, self.unit]) and self.column_type not in [
             ColumnType.METRIC, ColumnType.DIMENSION]:
-            raise ValueError(f"Aggregation and unit parameters are not allowed for {self.column_type.value} columns")
+            raise ValueError(f"Aggregation and unit parameters are not allowed for {self.column_type} columns")
 
         if self.column_type == ColumnType.METRIC and self.aggregation is not None and self.aggregation not in MetricAggregation:
             raise ValueError("Aggregation of a 'metric' column type must be a MetricAggregation")
@@ -150,7 +182,7 @@ class Column:
     def to_dict(self):
         """Returns the JSON dictionary format of the Column"""
 
-        res = {'columnIndex': self.index}
+        res = {'name': self.name, 'columnIndex': self.index, 'columnType': self.column_type.value}
         if self.aggregation is not None:
             res['aggregation'] = self.aggregation.value
         if self.unit is not None:
@@ -158,13 +190,75 @@ class Column:
         if self.column_type == ColumnType.TIME:
             res['format'] = self.time_format
         elif self.column_type in [ColumnType.METRIC, ColumnType.DIMENSION]:
-            res['name'] = self.name
             res['isCaseScope'] = self.is_case_scope
         if self.grouped_tasks_columns is not None:
             res['groupedTasksColumns'] = self.grouped_tasks_columns
         if self.grouped_tasks_aggregation is not None:
             res['groupedTasksAggregation'] = self.grouped_tasks_aggregation
         return res
+
+    @classmethod
+    def from_json(cls, json_str):
+        # Convert JSON string to dict
+        data = json.loads(json_str)
+
+        # Extract column parameters from the JSON dictionary
+        name = data.get('name')
+        if name is None:
+            raise KeyError('Column JSON must contain a "name" field.')
+
+        index = data.get('columnIndex')
+        if index is None:
+            raise KeyError('Column JSON must contain a "columnIndex" field.')
+
+        column_type = data.get('columnType')
+        if column_type is None:
+            raise KeyError('Column JSON must contain a "columnType" field.')
+        valid_column_types = [x.name for x in ColumnType]
+        if column_type not in valid_column_types:
+            raise ValueError(f'Invalid columnType, must be one of the following: {", ".join(valid_column_types)}.')
+        column_type = ColumnType[column_type]
+        is_case_scope = data.get('isCaseScope', False)
+        aggregation = data.get('aggregation')
+        if aggregation is not None:
+            if column_type == ColumnType.METRIC:
+                supported_aggregations = MetricAggregation
+            elif column_type == ColumnType.DIMENSION:
+                supported_aggregations = DimensionAggregation
+            else:
+                raise ValueError('Aggregation field should only be fill for columns of type metric or dimension')
+            valid_aggregations = [x.name for x in supported_aggregations]
+            if aggregation not in valid_aggregations:
+                raise ValueError(f'Invalid aggregation, must be one of the following: {", ".join(valid_aggregations)}.')
+            aggregation = supported_aggregations[aggregation]
+
+        grouped_tasks_columns = data.get('groupedTasksColumns')
+        grouped_tasks_aggregation = data.get('groupedTasksAggregation')
+
+        if grouped_tasks_aggregation is not None:
+            if column_type == ColumnType.METRIC.value:
+                supported_aggregations = MetricAggregation
+            elif column_type == ColumnType.DIMENSION.value:
+                supported_aggregations = GroupedTasksDimensionAggregation
+            else:
+                raise ValueError('groupedTasksAggregation field should only be fill for columns of type metric or dimension')
+            valid_aggregations = [x.name for x in supported_aggregations]
+            if grouped_tasks_aggregation not in valid_aggregations:
+                raise ValueError(f'Invalid groupedTasksAggregation, must be one of the following: {", ".join(valid_aggregations)}.')
+            grouped_tasks_aggregation = supported_aggregations[grouped_tasks_aggregation]
+        unit = data.get('unit')
+        time_format = data.get('format')
+
+        return cls(
+            name,
+            int(index),
+            column_type,
+            is_case_scope=bool(is_case_scope),
+            aggregation=aggregation,
+            grouped_tasks_columns=grouped_tasks_columns,
+            grouped_tasks_aggregation=grouped_tasks_aggregation,
+            unit=unit,
+            time_format=time_format)
 
 
 class ColumnMapping:
@@ -236,3 +330,33 @@ class ColumnMapping:
             'dimensionsMappings': [c.to_dict() for c in self.dimension_columns],
             'metricsMappings': [c.to_dict() for c in self.metric_columns],
         }
+
+    @classmethod
+    def from_json(cls, json_str):
+        # Load json to get dictionary of columns dicts
+        columns_dict_collection = json.loads(json_str)
+
+        # if collection is dict format, only
+
+        # If collection of columns is dict format, only keep values and make it list
+        if type(columns_dict_collection) is dict:
+            columns_dict_collection = columns_dict_collection.values()
+
+        columns_dict_list = []
+        for element in columns_dict_collection:
+            # Nested list of columns_dicts encountered, so we use extend method
+            if type(element) is list:
+                columns_dict_list.extend(element)
+            # Otherwise we assume the element to be a column_dict ready to be converted into Column object
+            else:
+                columns_dict_list.append(element)
+
+        # Convert each column dict to a json so that we can call Column's from_json method
+        columns_json_list = [json.dumps(c_dict) for c_dict in columns_dict_list]
+
+        # Convert each column json to Column object
+        columns_list = [Column.from_json(json_str) for json_str in columns_json_list]
+
+        # Call constructor with column_list
+        return cls(columns_list)
+

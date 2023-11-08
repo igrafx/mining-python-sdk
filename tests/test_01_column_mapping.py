@@ -1,5 +1,6 @@
 # MIT License, Copyright 2023 iGrafx
 # https://github.com/igrafx/mining-python-sdk/blob/dev/LICENSE
+import json
 
 import pytest
 from igrafx_mining_sdk.column_mapping import ColumnType, Column, ColumnMapping, GroupedTasksDimensionAggregation, \
@@ -7,6 +8,7 @@ from igrafx_mining_sdk.column_mapping import ColumnType, Column, ColumnMapping, 
 
 
 class TestColumnMapping:
+    @pytest.mark.dependency(name='case_id_column', scope='session')
     def test_create_case_id_column(self):
         """ Test to create a case id column"""
         column = Column('test', 0, ColumnType.CASE_ID)
@@ -39,7 +41,8 @@ class TestColumnMapping:
 
     def test_create_dimension_grouped_tasks(self):
         """ Test to create a dimension column with a grouped task aggregation"""
-        column = Column('test', 0, ColumnType.DIMENSION, grouped_tasks_aggregation=GroupedTasksDimensionAggregation.FIRST)
+        column = Column('test', 0, ColumnType.DIMENSION,
+                        grouped_tasks_aggregation=GroupedTasksDimensionAggregation.FIRST)
         assert isinstance(column, Column)
 
     def test_exception_dimension_type_group_tasks(self):
@@ -57,13 +60,13 @@ class TestColumnMapping:
         with pytest.raises(ValueError):
             Column('test', 0, ColumnType.METRIC, grouped_tasks_columns=[1, 3])
 
-    @pytest.mark.dependency()
+    @pytest.mark.dependency(name='column_mapping', depends=["case_id_column"], scope='session')
     def test_column_mapping_creation(self):
         """ Test to create a column mapping with columns"""
         column_list = [
             Column('case_id', 0, ColumnType.CASE_ID),
             Column('task_name', 1, ColumnType.TASK_NAME),
-            Column('time', 2, ColumnType.TIME, time_format='%Y-%m-%dT%H:%M')
+            Column('time', 2, ColumnType.TIME, time_format="yyyy-MM-dd'T'HH:mm")
         ]
         column_mapping = ColumnMapping(column_list)
         assert isinstance(column_mapping, ColumnMapping)
@@ -76,6 +79,7 @@ class TestColumnMapping:
                 Column('task_name', 1, ColumnType.TASK_NAME)
             ])
 
+    @pytest.mark.dependency(depends=["column_mapping"])
     def test_column_mapping_with_grouped_tasks_columns(self):
         """ Test to define a valid column mapping with grouped_tasks_columns and grouped_tasks_aggregation"""
         column_list = [
@@ -96,7 +100,8 @@ class TestColumnMapping:
                 Column('time', 1, ColumnType.TIME, time_format='%Y-%m-%dT%H:%M'),
                 Column('task_name', 2, ColumnType.TASK_NAME, grouped_tasks_columns=[2, 0]),
                 Column('country', 3, ColumnType.METRIC, grouped_tasks_aggregation=MetricAggregation.FIRST),
-                Column('price', 4, ColumnType.DIMENSION, grouped_tasks_aggregation=GroupedTasksDimensionAggregation.FIRST)
+                Column('price', 4, ColumnType.DIMENSION,
+                       grouped_tasks_aggregation=GroupedTasksDimensionAggregation.FIRST)
             ])
 
     def test_column_mapping_with_grouped_tasks_columns_task_name_exception(self):
@@ -107,7 +112,8 @@ class TestColumnMapping:
                 Column('time', 1, ColumnType.TIME, time_format='%Y-%m-%dT%H:%M'),
                 Column('task_name', 2, ColumnType.TASK_NAME, grouped_tasks_columns=[1, 3]),
                 Column('country', 3, ColumnType.METRIC, grouped_tasks_aggregation=MetricAggregation.FIRST),
-                Column('price', 4, ColumnType.DIMENSION, grouped_tasks_aggregation=GroupedTasksDimensionAggregation.FIRST)
+                Column('price', 4, ColumnType.DIMENSION,
+                       grouped_tasks_aggregation=GroupedTasksDimensionAggregation.FIRST)
             ])
 
     def test_column_mapping_with_grouped_tasks_columns_type_exception(self):
@@ -132,7 +138,8 @@ class TestColumnMapping:
                 Column('time', 1, ColumnType.TIME, time_format='%Y-%m-%dT%H:%M'),
                 Column('task_name', 2, ColumnType.TASK_NAME, grouped_tasks_columns=[2, 3]),
                 Column('country', 3, ColumnType.METRIC),
-                Column('price', 4, ColumnType.DIMENSION, grouped_tasks_aggregation=GroupedTasksDimensionAggregation.FIRST)
+                Column('price', 4, ColumnType.DIMENSION,
+                       grouped_tasks_aggregation=GroupedTasksDimensionAggregation.FIRST)
             ])
 
     def test_exception_column_mapping_without_grouped_tasks_columns(self):
@@ -163,3 +170,71 @@ class TestColumnMapping:
                 Column('task_name', 0, ColumnType.TASK_NAME),
                 Column('time', 1, ColumnType.TIME, time_format='%Y-%m-%dT%H:%M')
             ])
+
+    @pytest.mark.dependency(name='create_column_from_json', depends=['case_id_column'])
+    def test_create_column_from_json(self):
+        json_str = '{"name": "test", "columnIndex": "1", "columnType": "CASE_ID"}'
+        column = Column.from_json(json_str)
+        assert isinstance(column, Column)
+
+    def test_create_column_with_aggregation_from_json(self):
+        json_str = '{"name": "test", "columnIndex": "1", "columnType": "METRIC", "aggregation": "MAX"}'
+        column = Column.from_json(json_str)
+        assert isinstance(column, Column)
+
+    def test_exception_invalid_column_type(self):
+        """ Test to define an invalid column mapping with duplicate column indices"""
+        with pytest.raises(ValueError):
+            json_str = '{"name": "test", "columnIndex": "1", "columnType": "INVALID_TYPE"}'
+            Column.from_json(json_str)
+
+    def test_exception_aggregation_on_non_metric_or_dimension_column(self):
+        """ Test to define an invalid column mapping with duplicate column indices"""
+        with pytest.raises(ValueError):
+            json_str = '{"name": "test", "columnIndex": "1", "columnType": "CASE_ID", "aggregation": "MAX"}'
+            Column.from_json(json_str)
+
+    def test_exception_invalid_aggregation(self):
+        """ Test to define an invalid column mapping with duplicate column indices"""
+        with pytest.raises(ValueError):
+            json_str = '{"name": "test", "columnIndex": "1", "columnType": "DIMENSION", "aggregation": "MAX"}'
+            Column.from_json(json_str)
+
+    @pytest.mark.dependency(name='column_to_dict_from_json', depends=["create_column_from_json"])
+    def test_column_to_dict_from_json(self):
+        column = Column('test', 0, ColumnType.CASE_ID)
+        json_str = json.dumps(column.to_dict())
+        column = Column.from_json(json_str)
+        assert isinstance(column, Column)
+
+    @pytest.mark.dependency(depends=['create_column_from_json', 'column_mapping'])
+    def test_create_column_mapping_from_json_dict(self):
+        column_dict = '''{
+        "col1": {"name": "case_id", "columnIndex": "0", "columnType": "CASE_ID"},
+        "col2": {"name": "task_name", "columnIndex": "1", "columnType": "TASK_NAME"},
+        "col3": {"name": "time", "columnIndex": "2", "columnType": "TIME", "format": "%Y-%m-%dT%H:%M"}
+        }'''
+        column_mapping = ColumnMapping.from_json(column_dict)
+        assert isinstance(column_mapping, ColumnMapping)
+
+    @pytest.mark.dependency(depends=['create_column_from_json', 'column_mapping'])
+    def test_create_column_mapping_from_json_list(self):
+        column_list = '''[
+        {"name": "case_id", "columnIndex": "0", "columnType": "CASE_ID"},
+        {"name": "task_name", "columnIndex": "1", "columnType": "TASK_NAME"},
+        {"name": "time", "columnIndex": "2", "columnType": "TIME", "format": "%Y-%m-%dT%H:%M"}
+        ]'''
+        column_mapping = ColumnMapping.from_json(column_list)
+        assert isinstance(column_mapping, ColumnMapping)
+
+    @pytest.mark.dependency(depends=['column_to_dict_from_json'])
+    def test_column_mapping_to_dict_from_json(self):
+        column_list = [
+            Column('case_id', 0, ColumnType.CASE_ID),
+            Column('task_name', 1, ColumnType.TASK_NAME),
+            Column('time', 2, ColumnType.TIME, time_format='%Y-%m-%dT%H:%M')
+        ]
+        column_mapping = ColumnMapping(column_list)
+        json_str = json.dumps(column_mapping.to_dict())
+        column_mapping = ColumnMapping.from_json(json_str)
+        assert isinstance(column_mapping, ColumnMapping)

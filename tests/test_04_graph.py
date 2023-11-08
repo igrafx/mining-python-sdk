@@ -3,42 +3,27 @@
 
 from pathlib import Path
 import pytest
-from igrafx_mining_sdk.project import Project
-from igrafx_mining_sdk.workgroup import Workgroup
 from igrafx_mining_sdk.graph import Graph
-from dotenv import load_dotenv
-import os
-
-# Load environment variables from .env file
-dotenv_path = Path(__file__).parent.parent / '.env'
-load_dotenv(dotenv_path)
-
-wg_id = os.environ.get('WG_ID')
-wg_key = os.environ.get('WG_KEY')
-wg_url = os.environ.get('WG_URL')
-wg_auth = os.environ.get('WG_AUTH')
-project_id = os.environ.get('PROJECT_ID')
-
 
 class TestGraph:
     """Tests for the Graph class.
     Workgroup and project are pytest fixtures defined in conftest.py file.
     """
-    def test_graph_creation(self, workgroup, project):
+    @pytest.mark.dependency(depends=['project_contains_data'], scope='session')
+    def test_graph_creation(self):
         """Test the creation of a Graph object."""
-        w = Workgroup(wg_id, wg_key, wg_url, wg_auth)
-        project = Project(project_id, w.api_connector)
-        g = project.graph()
+        g = pytest.project.graph()
         assert isinstance(g, Graph)
 
+    @pytest.mark.dependency(depends=['project_contains_data'], scope='session')
     def test_graph_instance(self):
         """Test the creation of a Graph object."""
-        # Test with another project because indexation time returns error
-        w = Workgroup(wg_id, wg_key, wg_url, wg_auth)
-        project = Project(project_id, w.api_connector)
-        g = project.get_graph_instances(limit=1)[0]
-        assert g.rework_total is not None
-        assert g.concurrency_rate is not None
+        list1 = pytest.project.get_graph_instances(limit=10, shuffle=False)
+        list2 = pytest.project.get_graph_instances(limit=10, shuffle=True)
+        assert len(list1) == len(list2)
+        graph_instance = list1[0]
+        assert graph_instance.rework_total is not None
+        assert graph_instance.concurrency_rate is not None
 
     def test_graph_with_bad_edges(self):
         """Test a graph that has bad edges."""
