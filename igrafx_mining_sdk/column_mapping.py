@@ -188,7 +188,7 @@ class Column:
         if self.unit is not None:
             res['unit'] = self.unit
         if self.column_type == ColumnType.TIME:
-            res['time_format'] = self.time_format
+            res['format'] = self.time_format
         elif self.column_type in [ColumnType.METRIC, ColumnType.DIMENSION]:
             res['isCaseScope'] = self.is_case_scope
         if self.grouped_tasks_columns is not None:
@@ -247,7 +247,7 @@ class Column:
                 raise ValueError(f'Invalid groupedTasksAggregation, must be one of the following: {", ".join(valid_aggregations)}.')
             grouped_tasks_aggregation = supported_aggregations[grouped_tasks_aggregation]
         unit = data.get('unit')
-        time_format = data.get('time_format')
+        time_format = data.get('format')
 
         return cls(
             name,

@@ -86,7 +86,7 @@ class Project:
         """Request datasources associated with the project"""
 
         response_datasource = self.api_connector.get_request(f"/datasources/{self.id}")
-        return response_datasource.json()
+        return response_datasource
 
     @property
     def nodes_datasource(self):
@@ -109,23 +109,28 @@ class Project:
 
         :param ds_type: The type of datasource. Can be 'cases', '_simplifiedEdge' or '_vertex'
         """
-        self._ds_response = self.__datasource_request() if self._ds_response is None else self._ds_response
+        if self._ds_response is None or self._ds_response.status_code == 404:
+            self._ds_response = self.__datasource_request()
 
-        for item in self._ds_response:
-            if "_simplifiedEdge" in item["name"]:
-                item["type"] = "_simplifiedEdge"
-            elif "_vertex" in item["name"]:
-                item["type"] = "_vertex"
-            else:
-                item["type"] = "cases"
+        if self._ds_response.status_code == 200:
+            json_response = self._ds_response.json()
+            for item in json_response:
+                if "_simplifiedEdge" in item["name"]:
+                    item["type"] = "_simplifiedEdge"
+                elif "_vertex" in item["name"]:
+                    item["type"] = "_vertex"
+                else:
+                    item["type"] = "cases"
 
-        response_filtered = [d for d in self._ds_response if d['type'] == ds_type][0]
-        return Datasource(
-            response_filtered["name"],
-            response_filtered["type"],
-            response_filtered["host"],
-            response_filtered["port"],
-            self.api_connector)
+            response_filtered = [d for d in json_response if d['type'] == ds_type][0]
+            return Datasource(
+                response_filtered["name"],
+                response_filtered["type"],
+                response_filtered["host"],
+                response_filtered["port"],
+                self.api_connector)
+        else:
+            return None
 
     def get_project_variants(self, page_index: int, limit: int, search: str = None):
         """Returns the project variants
