@@ -59,7 +59,7 @@ class FileStructure:
 
     @classmethod
     def from_json(cls, json_str):
-        # Convert JSON string to dict
+        """Convert JSON string to dictionary"""
         data = json.loads(json_str)
 
         # Extract files from json dictionary
@@ -199,7 +199,7 @@ class Column:
 
     @classmethod
     def from_json(cls, json_str):
-        # Convert JSON string to dict
+        """Convert JSON string to dictionary"""
         data = json.loads(json_str)
 
         # Extract column parameters from the JSON dictionary
@@ -333,6 +333,7 @@ class ColumnMapping:
 
     @classmethod
     def from_json(cls, json_str):
+        """Convert JSON string to dictionary"""
         # Load json to get dictionary of columns dicts
         columns_dict_collection = json.loads(json_str)
 
