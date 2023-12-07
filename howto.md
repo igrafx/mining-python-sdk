@@ -200,8 +200,47 @@ It is also possible to check whether a column mapping exists or not:
 ```python
 my_project.column_mapping_exists
 ```
+Furthermore, a column can also be created from a JSON.
+```python
+json_str = '{"name": "test", "columnIndex": "1", "columnType": "CASE_ID"}'
+column = Column.from_json(json_str)
+```
+Therefore, a Column Mapping can also be created from a JSON column dictionary. For example:
+```python
+column_dict = '''{
+"col1": {"name": "case_id", "columnIndex": "0", "columnType": "CASE_ID"},
+"col2": {"name": "task_name", "columnIndex": "1", "columnType": "TASK_NAME"},
+"col3": {"name": "time", "columnIndex": "2", "columnType": "TIME", "format": "%Y-%m-%dT%H:%M"}
+}'''
+column_mapping = ColumnMapping.from_json(column_dict)
+```
 
-Afterwards, the column mapping can be added:
+The Column Mapping can also be created from a JSON column list.
+The major difference between the list and the dictionary is that in the dictionary you have to enunciate the column number before giving the other informations. 
+```python
+column_list = '''[
+{"name": "case_id", "columnIndex": "0", "columnType": "CASE_ID"},
+{"name": "task_name", "columnIndex": "1", "columnType": "TASK_NAME"},
+{"name": "time", "columnIndex": "2", "columnType": "TIME", "format": "%Y-%m-%dT%H:%M"}
+]'''
+column_mapping = ColumnMapping.from_json(column_list)
+```
+Moreover, it is possible to return the JSON dictionary format of the Column with the `to_dict()` method.
+By doing that, we can then create a Column Mapping with the `from_json()` method.
+The `json.dumps()` function will convert a subset of Python objects into a JSON string.
+
+```python
+column_list = [
+    Column('case_id', 0, ColumnType.CASE_ID),
+    Column('task_name', 1, ColumnType.TASK_NAME),
+    Column('time', 2, ColumnType.TIME, time_format='%Y-%m-%dT%H:%M')
+]
+column_mapping = ColumnMapping(column_list)
+json_str = json.dumps(column_mapping.to_dict())
+column_mapping = ColumnMapping.from_json(json_str)
+```
+
+After creating it, the column mapping can be added:
 ```` python
 my_project.add_column_mapping(filestructure, column_mapping)
 ````

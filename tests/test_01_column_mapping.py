@@ -173,35 +173,38 @@ class TestColumnMapping:
 
     @pytest.mark.dependency(name='create_column_from_json', depends=['case_id_column'])
     def test_create_column_from_json(self):
+        """ Test to define a valid column from json"""
         json_str = '{"name": "test", "columnIndex": "1", "columnType": "CASE_ID"}'
         column = Column.from_json(json_str)
         assert isinstance(column, Column)
 
     def test_create_column_with_aggregation_from_json(self):
+        """ Test to define a valid column with aggregation  from json"""
         json_str = '{"name": "test", "columnIndex": "1", "columnType": "METRIC", "aggregation": "MAX"}'
         column = Column.from_json(json_str)
         assert isinstance(column, Column)
 
     def test_exception_invalid_column_type(self):
-        """ Test to define an invalid column mapping with duplicate column indices"""
+        """ Test to define an invalid column type from json"""
         with pytest.raises(ValueError):
             json_str = '{"name": "test", "columnIndex": "1", "columnType": "INVALID_TYPE"}'
             Column.from_json(json_str)
 
     def test_exception_aggregation_on_non_metric_or_dimension_column(self):
-        """ Test to define an invalid column mapping with duplicate column indices"""
+        """ Test exception aggregation on non metric or dimension column"""
         with pytest.raises(ValueError):
             json_str = '{"name": "test", "columnIndex": "1", "columnType": "CASE_ID", "aggregation": "MAX"}'
             Column.from_json(json_str)
 
     def test_exception_invalid_aggregation(self):
-        """ Test to define an invalid column mapping with duplicate column indices"""
+        """ Test exception for an invalid aggregation whn creating a column from json"""
         with pytest.raises(ValueError):
             json_str = '{"name": "test", "columnIndex": "1", "columnType": "DIMENSION", "aggregation": "MAX"}'
             Column.from_json(json_str)
 
     @pytest.mark.dependency(name='column_to_dict_from_json', depends=["create_column_from_json"])
     def test_column_to_dict_from_json(self):
+        """ Test to define a valid column , convert it to JSON string and back"""
         column = Column('test', 0, ColumnType.CASE_ID)
         json_str = json.dumps(column.to_dict())
         column = Column.from_json(json_str)
@@ -209,6 +212,7 @@ class TestColumnMapping:
 
     @pytest.mark.dependency(depends=['create_column_from_json', 'column_mapping'])
     def test_create_column_mapping_from_json_dict(self):
+        """ Test to define a valid column mapping from a column dictionary json"""
         column_dict = '''{
         "col1": {"name": "case_id", "columnIndex": "0", "columnType": "CASE_ID"},
         "col2": {"name": "task_name", "columnIndex": "1", "columnType": "TASK_NAME"},
@@ -219,6 +223,7 @@ class TestColumnMapping:
 
     @pytest.mark.dependency(depends=['create_column_from_json', 'column_mapping'])
     def test_create_column_mapping_from_json_list(self):
+        """ Test to define a valid column mapping from a column list json"""
         column_list = '''[
         {"name": "case_id", "columnIndex": "0", "columnType": "CASE_ID"},
         {"name": "task_name", "columnIndex": "1", "columnType": "TASK_NAME"},
@@ -229,6 +234,7 @@ class TestColumnMapping:
 
     @pytest.mark.dependency(depends=['column_to_dict_from_json'])
     def test_column_mapping_to_dict_from_json(self):
+        """ Test to define a valid column mapping from column list , convert it to JSON string and back"""
         column_list = [
             Column('case_id', 0, ColumnType.CASE_ID),
             Column('task_name', 1, ColumnType.TASK_NAME),
