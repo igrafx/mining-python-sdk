@@ -14,10 +14,10 @@ keywords = ["process mining"]
 python = "^3.7.1,<3.11"
 requests = "2.29.0"
 pydruid = "0.6.5"
-pandas = "1.3.5"
+pandas = "^1.3.5"
 SQLAlchemy = "2.0.12"
 networkx = "2.6.3"
-numpy = "1.21.6"
+numpy = "^1.21.6"
 toml = "0.10.2"
 python-dotenv = "0.19.2"
 
