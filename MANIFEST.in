@@ -1,1 +1,2 @@
 include tests/*
+recursive-include tests/data *
