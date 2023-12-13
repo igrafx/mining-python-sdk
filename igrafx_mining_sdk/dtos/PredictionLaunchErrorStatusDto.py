@@ -1,6 +1,8 @@
 from enum import Enum
 
 class PredictionLaunchErrorStatusDto(Enum):
+    """Class PredictionLaunchErrorStatusDto for the prediction launching failures possibilities"""
+
     PREDICTION_SERVICE_FAILURE = "PREDICTION_SERVICE_FAILURE"
     NON_ACTIVATED_PREDICTION = "NON_ACTIVATED_PREDICTION"
     FORBIDDEN = "FORBIDDEN"

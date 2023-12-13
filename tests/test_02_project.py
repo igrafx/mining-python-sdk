@@ -160,25 +160,32 @@ class TestProject:
 
     @pytest.mark.dependency(depends=['project_contains_data'])
     def test_prediction_possibility_no_end_case_rule(self):
+        """Test that the project prediction can not be launched because no end case rule created."""
         assert pytest.project.prediction_possibility() == PredictionPossibilityDto.NO_END_CASE_RULE
 
     @pytest.mark.dependency(depends=['project_contains_data'])
     def test_prediction_status_no_end_case_rule(self):
+        """Test that the project prediction history is empty as no prediction has been launched."""
         assert len(pytest.project.predictions_status()) == 0
 
     @pytest.mark.dependency(depends=['project_contains_data'])
     def test_prediction_not_exists(self):
+        """Test that the project has no prediction ready."""
         assert pytest.project.is_ready_prediction_exists() == False
 
     @pytest.mark.dependency(depends=['project_contains_data'])
     def test_prediction_launch_impossible(self):
+        """Test that the project prediction can not be launched."""
         assert pytest.project.launch_prediction() == PredictionLaunchErrorStatusDto.NOTHING_TO_PREDICT
 
     @pytest.mark.dependency(depends=['project_contains_data'])
     def test_predictions_delete(self):
+        """Test that the project prediction history deletion do not fail and correctly handle response."""
         assert pytest.project.delete_predictions() is None
 
     def test_prediction_possibility_success(self, mocker):
+        """Test, via mocking, that the project prediction_possibility method correctly handle CAN_LAUNCH_PREDICTION return from API call."""
+
         api_connector = APIConnector(wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c', wg_key='83de1a05-06ad-4757-9855-926ef696463f', apiurl='https://truc.com', authurl='https://truc.com/realms/realm/', ssl_verify=False)
 
         project = Project(pid = str(uuid.uuid4()), api_connector = api_connector)
@@ -196,6 +203,8 @@ class TestProject:
         assert result == PredictionPossibilityDto.CAN_LAUNCH_PREDICTION
 
     def test_prediction_possibility_invalid_response(self, mocker):
+        """Test, via mocking, that the project prediction_possibility method correctly handle invalid isPredictionLaunchPossible value return from API call."""
+
         api_connector = APIConnector(wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c', wg_key='83de1a05-06ad-4757-9855-926ef696463f', apiurl='https://truc.com', authurl='https://truc.com/realms/realm/', ssl_verify=False)
 
         project = Project(pid = str(uuid.uuid4()), api_connector = api_connector)
@@ -213,6 +222,8 @@ class TestProject:
         assert result == PredictionPossibilityDto.INVALID_RESPONSE
 
     def test_prediction_possibility_unreadable_response(self, mocker):
+        """Test, via mocking, that the project prediction_possibility method correctly handle invalid argument name in return from API call."""
+
         api_connector = APIConnector(wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c', wg_key='83de1a05-06ad-4757-9855-926ef696463f', apiurl='https://truc.com', authurl='https://truc.com/realms/realm/', ssl_verify=False)
 
         project = Project(pid = str(uuid.uuid4()), api_connector = api_connector)
@@ -230,6 +241,8 @@ class TestProject:
         assert result == PredictionPossibilityDto.INVALID_RESPONSE
 
     def test_prediction_non_activated(self, mocker):
+        """Test, via mocking, that the project prediction_possibility method correctly handle a 402 return from API call."""
+
         api_connector = APIConnector(wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c', wg_key='83de1a05-06ad-4757-9855-926ef696463f', apiurl='https://truc.com', authurl='https://truc.com/realms/realm/', ssl_verify=False)
 
         project = Project(pid = str(uuid.uuid4()), api_connector = api_connector)
@@ -244,6 +257,8 @@ class TestProject:
         assert result == PredictionPossibilityDto.NON_ACTIVATED_PREDICTION
 
     def test_prediction_forbidden(self, mocker):
+        """Test, via mocking, that the project prediction_possibility method correctly handle a 403 return from API call."""
+
         api_connector = APIConnector(wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c', wg_key='83de1a05-06ad-4757-9855-926ef696463f', apiurl='https://truc.com', authurl='https://truc.com/realms/realm/', ssl_verify=False)
 
         project = Project(pid = str(uuid.uuid4()), api_connector = api_connector)
@@ -258,6 +273,8 @@ class TestProject:
         assert result == PredictionPossibilityDto.FORBIDDEN
 
     def test_prediction_unknown_error(self, mocker):
+        """Test, via mocking, that the project prediction_possibility method correctly handle a 500 return from API call."""
+
         api_connector = APIConnector(wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c', wg_key='83de1a05-06ad-4757-9855-926ef696463f', apiurl='https://truc.com', authurl='https://truc.com/realms/realm/', ssl_verify=False)
 
         project = Project(pid = str(uuid.uuid4()), api_connector = api_connector)
@@ -272,6 +289,8 @@ class TestProject:
         assert result == PredictionPossibilityDto.UNKNOWN_ERROR
 
     def test_predictions_status_success(self, mocker):
+        """Test, via mocking, that the project predictions_status method correctly handle a expected JSON return from API call."""
+
         api_connector = APIConnector(wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c', wg_key='83de1a05-06ad-4757-9855-926ef696463f', apiurl='https://truc.com', authurl='https://truc.com/realms/realm/', ssl_verify=False)
 
         project = Project(pid = str(uuid.uuid4()), api_connector = api_connector)
@@ -307,6 +326,8 @@ class TestProject:
         assert result[0] == expected_result
 
     def test_predictions_status_success_no_end_date(self, mocker):
+        """Test, via mocking, that the project predictions_status method correctly handle a expected JSON with no end date return from API call."""
+
         api_connector = APIConnector(wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c', wg_key='83de1a05-06ad-4757-9855-926ef696463f', apiurl='https://truc.com', authurl='https://truc.com/realms/realm/', ssl_verify=False)
 
         project = Project(pid = str(uuid.uuid4()), api_connector = api_connector)
@@ -340,7 +361,8 @@ class TestProject:
         assert result[0] == expected_result
 
     def test_predictions_status_invalid_response_if_one_invalid_field(self, mocker):
-        """Test successful prediction status."""
+        """Test, via mocking, that the project predictions_status method correctly respond INVALID_RESPONSE if any of elements returned from API call has invalid field."""
+
         api_connector = APIConnector(wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c', wg_key='83de1a05-06ad-4757-9855-926ef696463f', apiurl='https://truc.com', authurl='https://truc.com/realms/realm/', ssl_verify=False)
 
         project = Project(pid = str(uuid.uuid4()), api_connector = api_connector)
@@ -375,7 +397,8 @@ class TestProject:
         assert result == PredictionErrorStatusDto.INVALID_RESPONSE
 
     def test_predictions_status_empty_response(self, mocker):
-        """Test successful prediction status."""
+        """Test, via mocking, that the project predictions_status method correctly respond no elements returned from API call."""
+
         api_connector = APIConnector(wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c', wg_key='83de1a05-06ad-4757-9855-926ef696463f', apiurl='https://truc.com', authurl='https://truc.com/realms/realm/', ssl_verify=False)
 
         project = Project(pid = str(uuid.uuid4()), api_connector = api_connector)
@@ -393,6 +416,8 @@ class TestProject:
         assert len(result) == 0
 
     def test_predictions_status_non_active(self, mocker):
+        """Test, via mocking, that the project predictions_status method correctly handle 402 response from API call."""
+
         api_connector = APIConnector(wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c', wg_key='83de1a05-06ad-4757-9855-926ef696463f', apiurl='https://truc.com', authurl='https://truc.com/realms/realm/', ssl_verify=False)
 
         project = Project(pid = str(uuid.uuid4()), api_connector = api_connector)
@@ -407,6 +432,8 @@ class TestProject:
         assert result == PredictionErrorStatusDto.NON_ACTIVATED_PREDICTION
 
     def test_predictions_status_forbidden(self, mocker):
+        """Test, via mocking, that the project predictions_status method correctly handle 403 response from API call."""
+
         api_connector = APIConnector(wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c', wg_key='83de1a05-06ad-4757-9855-926ef696463f', apiurl='https://truc.com', authurl='https://truc.com/realms/realm/', ssl_verify=False)
 
         project = Project(pid = str(uuid.uuid4()), api_connector = api_connector)
@@ -421,6 +448,8 @@ class TestProject:
         assert result == PredictionErrorStatusDto.FORBIDDEN
 
     def test_predictions_status_failure(self, mocker):
+        """Test, via mocking, that the project predictions_status method correctly handle 424 response from API call."""
+
         api_connector = APIConnector(wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c', wg_key='83de1a05-06ad-4757-9855-926ef696463f', apiurl='https://truc.com', authurl='https://truc.com/realms/realm/', ssl_verify=False)
 
         project = Project(pid = str(uuid.uuid4()), api_connector = api_connector)
@@ -435,6 +464,8 @@ class TestProject:
         assert result == PredictionErrorStatusDto.PREDICTION_SERVICE_FAILURE
 
     def test_predictions_status_unkown_failure(self, mocker):
+        """Test, via mocking, that the project predictions_status method correctly handle 500 response from API call."""
+
         api_connector = APIConnector(wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c', wg_key='83de1a05-06ad-4757-9855-926ef696463f', apiurl='https://truc.com', authurl='https://truc.com/realms/realm/', ssl_verify=False)
 
         project = Project(pid = str(uuid.uuid4()), api_connector = api_connector)
@@ -449,6 +480,8 @@ class TestProject:
         assert result == PredictionErrorStatusDto.UNKNOWN_ERROR
 
     def test_ready_prediction_exists(self, mocker):
+        """Test, via mocking, that the project is_ready_prediction_exists method correctly handle expected response True from API call."""
+
         api_connector = APIConnector(wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c', wg_key='83de1a05-06ad-4757-9855-926ef696463f', apiurl='https://truc.com', authurl='https://truc.com/realms/realm/', ssl_verify=False)
 
         project = Project(pid = str(uuid.uuid4()), api_connector = api_connector)
@@ -466,6 +499,8 @@ class TestProject:
         assert result == True
 
     def test_ready_prediction_not_exists(self, mocker):
+        """Test, via mocking, that the project is_ready_prediction_exists method correctly handle expected response False from API call."""
+
         api_connector = APIConnector(wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c', wg_key='83de1a05-06ad-4757-9855-926ef696463f', apiurl='https://truc.com', authurl='https://truc.com/realms/realm/', ssl_verify=False)
 
         project = Project(pid = str(uuid.uuid4()), api_connector = api_connector)
@@ -483,6 +518,8 @@ class TestProject:
         assert result == False
 
     def test_ready_prediction_exists_invalid_result(self, mocker):
+        """Test, via mocking, that the project is_ready_prediction_exists method correctly handle unexpected non boolean response from API call to INVALID_RESPONSE result."""
+
         api_connector = APIConnector(wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c', wg_key='83de1a05-06ad-4757-9855-926ef696463f', apiurl='https://truc.com', authurl='https://truc.com/realms/realm/', ssl_verify=False)
 
         project = Project(pid = str(uuid.uuid4()), api_connector = api_connector)
@@ -500,6 +537,8 @@ class TestProject:
         assert result == PredictionErrorStatusDto.INVALID_RESPONSE
 
     def test_ready_prediction_exists_invalid_response(self, mocker):
+        """Test, via mocking, that the project is_ready_prediction_exists method correctly handle response with unexpected field from API call to INVALID_RESPONSE result."""
+
         api_connector = APIConnector(wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c', wg_key='83de1a05-06ad-4757-9855-926ef696463f', apiurl='https://truc.com', authurl='https://truc.com/realms/realm/', ssl_verify=False)
 
         project = Project(pid = str(uuid.uuid4()), api_connector = api_connector)
@@ -517,6 +556,8 @@ class TestProject:
         assert result == PredictionErrorStatusDto.INVALID_RESPONSE
 
     def test_ready_prediction_exists_non_active_prediction(self, mocker):
+        """Test, via mocking, that the project is_ready_prediction_exists method correctly handle 402 response from API call."""
+
         api_connector = APIConnector(wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c', wg_key='83de1a05-06ad-4757-9855-926ef696463f', apiurl='https://truc.com', authurl='https://truc.com/realms/realm/', ssl_verify=False)
 
         project = Project(pid = str(uuid.uuid4()), api_connector = api_connector)
@@ -531,6 +572,8 @@ class TestProject:
         assert result == PredictionErrorStatusDto.NON_ACTIVATED_PREDICTION
 
     def test_ready_prediction_exists_forbidden(self, mocker):
+        """Test, via mocking, that the project is_ready_prediction_exists method correctly handle 403 response from API call."""
+
         api_connector = APIConnector(wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c', wg_key='83de1a05-06ad-4757-9855-926ef696463f', apiurl='https://truc.com', authurl='https://truc.com/realms/realm/', ssl_verify=False)
 
         project = Project(pid = str(uuid.uuid4()), api_connector = api_connector)
@@ -546,6 +589,8 @@ class TestProject:
 
 
     def test_ready_prediction_exists_forbidden(self, mocker):
+        """Test, via mocking, that the project is_ready_prediction_exists method correctly handle 500 response from API call."""
+
         api_connector = APIConnector(wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c', wg_key='83de1a05-06ad-4757-9855-926ef696463f', apiurl='https://truc.com', authurl='https://truc.com/realms/realm/', ssl_verify=False)
 
         project = Project(pid = str(uuid.uuid4()), api_connector = api_connector)
@@ -560,6 +605,8 @@ class TestProject:
         assert result == PredictionErrorStatusDto.UNKNOWN_ERROR
 
     def test_launch_prediction_success(self, mocker):
+        """Test, via mocking, that the project launch_prediction method correctly handle expected response from API call."""
+
         api_connector = APIConnector(wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c', wg_key='83de1a05-06ad-4757-9855-926ef696463f', apiurl='https://truc.com', authurl='https://truc.com/realms/realm/', ssl_verify=False)
 
         project = Project(pid = str(uuid.uuid4()), api_connector = api_connector)
@@ -577,6 +624,8 @@ class TestProject:
         assert result == uuid.UUID("3fa85f64-5717-4562-b3fc-2c963f66afa6")
 
     def test_launch_prediction_bad_response_uuid(self, mocker):
+        """Test, via mocking, that the project launch_prediction method correctly handle response with invalid value in JSON from API call."""
+
         api_connector = APIConnector(wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c', wg_key='83de1a05-06ad-4757-9855-926ef696463f', apiurl='https://truc.com', authurl='https://truc.com/realms/realm/', ssl_verify=False)
 
         project = Project(pid = str(uuid.uuid4()), api_connector = api_connector)
@@ -594,6 +643,8 @@ class TestProject:
         assert result == PredictionLaunchErrorStatusDto.INVALID_RESPONSE
 
     def test_launch_prediction_bad_response_field(self, mocker):
+        """Test, via mocking, that the project launch_prediction method correctly handle response with invalid field in JSON from API call."""
+
         api_connector = APIConnector(wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c', wg_key='83de1a05-06ad-4757-9855-926ef696463f', apiurl='https://truc.com', authurl='https://truc.com/realms/realm/', ssl_verify=False)
 
         project = Project(pid = str(uuid.uuid4()), api_connector = api_connector)
@@ -611,6 +662,8 @@ class TestProject:
         assert result == PredictionLaunchErrorStatusDto.INVALID_RESPONSE
 
     def test_launch_prediction_non_active(self, mocker):
+        """Test, via mocking, that the project launch_prediction method correctly handle 402 response from API call."""
+
         api_connector = APIConnector(wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c', wg_key='83de1a05-06ad-4757-9855-926ef696463f', apiurl='https://truc.com', authurl='https://truc.com/realms/realm/', ssl_verify=False)
 
         project = Project(pid = str(uuid.uuid4()), api_connector = api_connector)
@@ -625,6 +678,8 @@ class TestProject:
         assert result == PredictionLaunchErrorStatusDto.NON_ACTIVATED_PREDICTION
 
     def test_launch_prediction_forbidden(self, mocker):
+        """Test, via mocking, that the project launch_prediction method correctly handle 403 response from API call."""
+
         api_connector = APIConnector(wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c', wg_key='83de1a05-06ad-4757-9855-926ef696463f', apiurl='https://truc.com', authurl='https://truc.com/realms/realm/', ssl_verify=False)
 
         project = Project(pid = str(uuid.uuid4()), api_connector = api_connector)
@@ -639,6 +694,8 @@ class TestProject:
         assert result == PredictionLaunchErrorStatusDto.FORBIDDEN
 
     def test_launch_prediction_impossible(self, mocker):
+        """Test, via mocking, that the project launch_prediction method correctly handle 409 response from API call."""
+
         api_connector = APIConnector(wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c', wg_key='83de1a05-06ad-4757-9855-926ef696463f', apiurl='https://truc.com', authurl='https://truc.com/realms/realm/', ssl_verify=False)
 
         project = Project(pid = str(uuid.uuid4()), api_connector = api_connector)
@@ -653,6 +710,8 @@ class TestProject:
         assert result == PredictionLaunchErrorStatusDto.NOTHING_TO_PREDICT
 
     def test_launch_prediction_failure(self, mocker):
+        """Test, via mocking, that the project launch_prediction method correctly handle 424 response from API call."""
+
         api_connector = APIConnector(wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c', wg_key='83de1a05-06ad-4757-9855-926ef696463f', apiurl='https://truc.com', authurl='https://truc.com/realms/realm/', ssl_verify=False)
 
         project = Project(pid = str(uuid.uuid4()), api_connector = api_connector)
@@ -667,6 +726,8 @@ class TestProject:
         assert result == PredictionLaunchErrorStatusDto.PREDICTION_SERVICE_FAILURE
 
     def test_launch_prediction_unknown_failure(self, mocker):
+        """Test, via mocking, that the project launch_prediction method correctly handle 500 response from API call."""
+
         api_connector = APIConnector(wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c', wg_key='83de1a05-06ad-4757-9855-926ef696463f', apiurl='https://truc.com', authurl='https://truc.com/realms/realm/', ssl_verify=False)
 
         project = Project(pid = str(uuid.uuid4()), api_connector = api_connector)
@@ -681,6 +742,8 @@ class TestProject:
         assert result == PredictionLaunchErrorStatusDto.UNKNOWN_ERROR
 
     def test_delete_predictions_success(self, mocker):
+        """Test, via mocking, that the project delete_predictions method correctly handle expected response from API call."""
+
         api_connector = APIConnector(wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c', wg_key='83de1a05-06ad-4757-9855-926ef696463f', apiurl='https://truc.com', authurl='https://truc.com/realms/realm/', ssl_verify=False)
 
         project = Project(pid = str(uuid.uuid4()), api_connector = api_connector)
@@ -695,6 +758,8 @@ class TestProject:
         assert result is None
 
     def test_delete_predictions_non_active(self, mocker):
+        """Test, via mocking, that the project delete_predictions method correctly handle 402 response from API call."""
+
         api_connector = APIConnector(wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c', wg_key='83de1a05-06ad-4757-9855-926ef696463f', apiurl='https://truc.com', authurl='https://truc.com/realms/realm/', ssl_verify=False)
 
         project = Project(pid = str(uuid.uuid4()), api_connector = api_connector)
@@ -709,6 +774,8 @@ class TestProject:
         assert result == PredictionErrorStatusDto.NON_ACTIVATED_PREDICTION
 
     def test_delete_predictions_forbidden(self, mocker):
+        """Test, via mocking, that the project delete_predictions method correctly handle 403 response from API call."""
+
         api_connector = APIConnector(wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c', wg_key='83de1a05-06ad-4757-9855-926ef696463f', apiurl='https://truc.com', authurl='https://truc.com/realms/realm/', ssl_verify=False)
 
         project = Project(pid = str(uuid.uuid4()), api_connector = api_connector)
@@ -723,6 +790,8 @@ class TestProject:
         assert result == PredictionErrorStatusDto.FORBIDDEN
 
     def test_delete_predictions_fails(self, mocker):
+        """Test, via mocking, that the project delete_predictions method correctly handle 424 response from API call."""
+
         api_connector = APIConnector(wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c', wg_key='83de1a05-06ad-4757-9855-926ef696463f', apiurl='https://truc.com', authurl='https://truc.com/realms/realm/', ssl_verify=False)
 
         project = Project(pid = str(uuid.uuid4()), api_connector = api_connector)
@@ -737,6 +806,8 @@ class TestProject:
         assert result == PredictionErrorStatusDto.PREDICTION_SERVICE_FAILURE
 
     def test_delete_predictions_fails(self, mocker):
+        """Test, via mocking, that the project delete_predictions method correctly handle 500 response from API call."""
+
         api_connector = APIConnector(wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c', wg_key='83de1a05-06ad-4757-9855-926ef696463f', apiurl='https://truc.com', authurl='https://truc.com/realms/realm/', ssl_verify=False)
 
         project = Project(pid = str(uuid.uuid4()), api_connector = api_connector)

@@ -238,6 +238,8 @@ class Project:
         return response_add_file.status_code == 201
 
     def prediction_possibility(self) -> PredictionPossibilityDto:
+        """Makes an API call to get information on possibility to launch prediction on a project, or on why it can not be launched on the project"""
+
         json_response = self.api_connector.get_request(f"/projects/{self.id}/predictions/trains/possible")
 
         if json_response.status_code == 200:
@@ -265,6 +267,8 @@ class Project:
             return PredictionPossibilityDto.UNKNOWN_ERROR
 
     def predictions_status(self) -> List[WorkflowStatusDto] | PredictionErrorStatusDto:
+        """Makes an API call to get project's predictions history"""
+
         json_response = self.api_connector.get_request(f"/projects/{self.id}/predictions/trains/status")
 
         if json_response.status_code == 200:
@@ -289,6 +293,8 @@ class Project:
             return PredictionErrorStatusDto.UNKNOWN_ERROR
 
     def is_ready_prediction_exists(self) -> bool | PredictionErrorStatusDto:
+        """Makes an API call to check if a prediction is ready on the project"""
+
         response = self.api_connector.get_request(f"/projects/{self.id}/predictions/exists")
 
         if response.status_code == 200:
@@ -310,6 +316,8 @@ class Project:
             return PredictionErrorStatusDto.UNKNOWN_ERROR
 
     def launch_prediction(self) -> uuid.UUID | PredictionLaunchErrorStatusDto:
+        """Makes an API call to launch a prediction computation on the project"""
+
         response = self.api_connector.post_request(f"/projects/{self.id}/predictions/trains/launch")
 
         if response.status_code == 200:
@@ -340,6 +348,8 @@ class Project:
             return PredictionLaunchErrorStatusDto.UNKNOWN_ERROR
 
     def delete_predictions(self) -> None | PredictionErrorStatusDto:
+        """Makes an API call to delete project's current prediction results and predictions history"""
+
         response = self.api_connector.delete_request(f"/projects/{self.id}/predictions")
 
         if response.status_code == 204:
@@ -358,6 +368,8 @@ class Project:
             return PredictionErrorStatusDto.UNKNOWN_ERROR
 
     def _parse_workflow_status(self, item: Dict[str, str]) -> WorkflowStatusDto | PredictionErrorStatusDto:
+        """Parses the prediction status object to a business class WorkflowStatusDto"""
+
         prediction_id = self._cast_string_to_uuid_or_none(item.get('workflowId'))
         project_id = self._cast_string_to_uuid_or_none(item.get('projectId'))
         status = self._get_enum_value_or_none(item.get('status'), PredictionStatusDto)
@@ -382,12 +394,16 @@ class Project:
                 return PredictionErrorStatusDto.INVALID_RESPONSE
 
     def _get_enum_value_or_none(self, value_str: str, enum_type: Enum) -> Optional[Enum]:
+        """Parses the value_str string to the given enum_type or None if does not match"""
+
         try:
             return enum_type(value_str)
         except ValueError:
             return None
 
     def _cast_string_to_uuid_or_none(self, string_value: str) -> Optional[uuid.UUID]:
+        """Parses the string_value string to a UUID class or None if does not match to a UUID"""
+
         try:
             if string_value is None:
                 return None
