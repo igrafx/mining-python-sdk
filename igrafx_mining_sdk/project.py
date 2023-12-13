@@ -7,7 +7,16 @@ from igrafx_mining_sdk.graph import Graph, GraphInstance
 from igrafx_mining_sdk.column_mapping import FileStructure, ColumnMapping
 from igrafx_mining_sdk.datasource import Datasource
 from igrafx_mining_sdk.api_connector import APIConnector
-
+from igrafx_mining_sdk.dtos.PredictionStatusDto import PredictionStatusDto
+from igrafx_mining_sdk.dtos.PredictionTaskTypeDto import PredictionTaskTypeDto
+from igrafx_mining_sdk.dtos.PredictionLaunchErrorStatusDto import PredictionLaunchErrorStatusDto
+from igrafx_mining_sdk.dtos.PredictionPossibilityDto import PredictionPossibilityDto
+from igrafx_mining_sdk.dtos.PredictionErrorStatusDto import PredictionErrorStatusDto
+from igrafx_mining_sdk.dtos.WorkflowStatusDto import WorkflowStatusDto
+import uuid
+from enum import Enum
+from datetime import datetime
+from typing import List, Optional, Dict
 
 class Project:
     """A iGrafx P360 Live Mining project"""
@@ -228,16 +237,177 @@ class Project:
         print(response_add_file)
         return response_add_file.status_code == 201
 
-    @property
-    def train_status(self):
-        """Returns True if the train is currently running, False otherwise"""
-        json_response = self.api_connector.get_request(f"/train/{self.id}")
-        return json_response["isTrainRunning"]
+    def prediction_possibility(self) -> PredictionPossibilityDto:
+        """Makes an API call to get information on possibility to launch prediction on a project, or on why it can not be launched on the project"""
 
-    def launch_train(self):
-        """Makes an API call to manually launch the train of a project"""
-        self.api_connector.post_request(f"/train/{self.id}/launch")
+        json_response = self.api_connector.get_request(f"/projects/{self.id}/predictions/trains/possible")
 
-    def stop_train(self):
-        """Makes an API call to manually stop the train of a project"""
-        self.api_connector.delete_request(f"/train/{self.id}")
+        if json_response.status_code == 200:
+            json_content = json_response.json()
+            if 'isPredictionLaunchPossible' in json_content:
+                response_value = json_content['isPredictionLaunchPossible']
+                value_as_enum = self._get_enum_value_or_none(response_value, PredictionPossibilityDto)
+                if value_as_enum == None:
+                    print(f"Tried to get prediction possibility but invalid response value on project {self.id}. Response: {json_content}")
+                    return PredictionPossibilityDto.INVALID_RESPONSE
+                else:
+                    return value_as_enum
+            else:
+                print(f"Tried to get prediction possibility but invalid response format on project {self.id}. Response: {json_content}")
+                return PredictionPossibilityDto.INVALID_RESPONSE
+        elif json_response.status_code == 402:
+            print(f"Tried to get prediction possibility but non activated on project {self.id}. Response: {json_response}")
+            return PredictionPossibilityDto.NON_ACTIVATED_PREDICTION
+        elif json_response.status_code == 403:
+            print(f"Tried to get prediction possibility but forbidden on project {self.id}. Response: {json_response}")
+            return PredictionPossibilityDto.FORBIDDEN
+        else:
+            # Handle errors or unexpected responses
+            print(f"Failed to check prediction possibility on project {self.id}. Response: {json_response}")
+            return PredictionPossibilityDto.UNKNOWN_ERROR
+
+    def predictions_status(self) -> List[WorkflowStatusDto] | PredictionErrorStatusDto:
+        """Makes an API call to get project's predictions history"""
+
+        json_response = self.api_connector.get_request(f"/projects/{self.id}/predictions/trains/status")
+
+        if json_response.status_code == 200:
+            json_content = json_response.json()
+            workflows_status = [self._parse_workflow_status(item) for item in json_content]
+            if any(isinstance(workflow_status, PredictionErrorStatusDto) for workflow_status in workflows_status):
+                print(f"Tried to get predictions status but invalid response format on project {self.id}. Response: {json_content}")
+                return PredictionErrorStatusDto.INVALID_RESPONSE
+            else:
+                return workflows_status
+        elif json_response.status_code == 402:
+            print(f"Tried to get predictions status but non activated on project {self.id}. Response: {json_response}")
+            return PredictionErrorStatusDto.NON_ACTIVATED_PREDICTION
+        elif json_response.status_code == 403:
+            print(f"Tried to get predictions status but forbidden on project {self.id}. Response: {json_response}")
+            return PredictionErrorStatusDto.FORBIDDEN
+        elif json_response.status_code == 424:
+            print(f"Tried to get predictions status but service failed on project {self.id}. Response: {json_response}")
+            return PredictionErrorStatusDto.PREDICTION_SERVICE_FAILURE
+        else:
+            print(f"Failed to check predictions status on project {self.id}. Response: {json_response}")
+            return PredictionErrorStatusDto.UNKNOWN_ERROR
+
+    def is_ready_prediction_exists(self) -> bool | PredictionErrorStatusDto:
+        """Makes an API call to check if a prediction is ready on the project"""
+
+        response = self.api_connector.get_request(f"/projects/{self.id}/predictions/exists")
+
+        if response.status_code == 200:
+            json_content = response.json()
+            is_prediction_ready = json_content.get('isPredictionReady')
+            if is_prediction_ready is not None and isinstance(is_prediction_ready, bool):
+                return is_prediction_ready
+            else:
+                print(f"Tried to get prediction existence but invalid response format on project {self.id}. Response: {json_content}")
+                return PredictionErrorStatusDto.INVALID_RESPONSE
+        elif response.status_code == 402:
+            print(f"Tried to get prediction existence but non activated on project {self.id}. Response: {response}")
+            return PredictionErrorStatusDto.NON_ACTIVATED_PREDICTION
+        elif response.status_code == 403:
+            print(f"Tried to get prediction existence but forbidden on project {self.id}. Response: {response}")
+            return PredictionErrorStatusDto.FORBIDDEN
+        else:
+            print(f"Failed to check prediction existence on project {self.id}. Response: {response}")
+            return PredictionErrorStatusDto.UNKNOWN_ERROR
+
+    def launch_prediction(self) -> uuid.UUID | PredictionLaunchErrorStatusDto:
+        """Makes an API call to launch a prediction computation on the project"""
+
+        response = self.api_connector.post_request(f"/projects/{self.id}/predictions/trains/launch")
+
+        if response.status_code == 200:
+            json_content = response.json()
+            prediction_train_id = json_content.get('predictionTrainId')
+            if (prediction_train_id is not None):
+                try:
+                    return uuid.UUID(prediction_train_id)
+                except ValueError:
+                    print(f"Invalid train id on launch train for project {self.id}. Train id: {prediction_train_id}")
+                    return PredictionLaunchErrorStatusDto.INVALID_RESPONSE
+            else:
+                print(f"Invalid response on launch train on project {self.id}. Response: {json_content}")
+                return PredictionLaunchErrorStatusDto.INVALID_RESPONSE
+        elif response.status_code == 402:
+            print(f"Tried to launch prediction but non activated on project {self.id}. Response: {response}")
+            return PredictionLaunchErrorStatusDto.NON_ACTIVATED_PREDICTION
+        elif response.status_code == 403:
+            print(f"Tried to launch prediction but forbidden on project {self.id}. Response: {response}")
+            return PredictionLaunchErrorStatusDto.FORBIDDEN
+        elif response.status_code == 409:
+            return PredictionLaunchErrorStatusDto.NOTHING_TO_PREDICT
+        elif response.status_code == 424:
+            print(f"Tried to launch prediction but service failed on project {self.id}. Response: {response}")
+            return PredictionLaunchErrorStatusDto.PREDICTION_SERVICE_FAILURE
+        else:
+            print(f"Failed to launch prediction on project {self.id}. Response: {response}")
+            return PredictionLaunchErrorStatusDto.UNKNOWN_ERROR
+
+    def delete_predictions(self) -> None | PredictionErrorStatusDto:
+        """Makes an API call to delete project's current prediction results and predictions history"""
+
+        response = self.api_connector.delete_request(f"/projects/{self.id}/predictions")
+
+        if response.status_code == 204:
+            return None
+        elif response.status_code == 402:
+            print(f"Tried to delete predictions but non activated on project {self.id}. Response: {response}")
+            return PredictionErrorStatusDto.NON_ACTIVATED_PREDICTION
+        elif response.status_code == 403:
+            print(f"Tried to delete predictions but forbidden on project {self.id}. Response: {response}")
+            return PredictionErrorStatusDto.FORBIDDEN
+        elif response.status_code == 424:
+            print(f"Tried to delete predictions but service failed on project {self.id}. Response: {response}")
+            return PredictionErrorStatusDto.PREDICTION_SERVICE_FAILURE
+        else:
+            print(f"Failed to delete predictions on project {self.id}. Response: {response}")
+            return PredictionErrorStatusDto.UNKNOWN_ERROR
+
+    def _parse_workflow_status(self, item: Dict[str, str]) -> WorkflowStatusDto | PredictionErrorStatusDto:
+        """Parses the prediction status object to a business class WorkflowStatusDto"""
+
+        prediction_id = self._cast_string_to_uuid_or_none(item.get('workflowId'))
+        project_id = self._cast_string_to_uuid_or_none(item.get('projectId'))
+        status = self._get_enum_value_or_none(item.get('status'), PredictionStatusDto)
+        start_time = item.get('startTime')
+        completed_tasks = [self._get_enum_value_or_none(task, PredictionTaskTypeDto) for task in item.get('completedTasks', [])]
+        end_time = item.get('endTime', None)
+
+        if None in (prediction_id, project_id, status, start_time, completed_tasks):
+            return PredictionErrorStatusDto.INVALID_RESPONSE
+        else:
+            try:
+                date_format = "%Y-%m-%dT%H:%M:%S.%fZ"
+                start_datetime = datetime.strptime(start_time, date_format)
+
+                if end_time is not None:
+                    end_datetime = datetime.strptime(end_time, date_format)
+                else:
+                    end_datetime = None
+
+                return WorkflowStatusDto(prediction_id, project_id, status, start_datetime, end_datetime, completed_tasks)
+            except ValueError:
+                return PredictionErrorStatusDto.INVALID_RESPONSE
+
+    def _get_enum_value_or_none(self, value_str: str, enum_type: Enum) -> Optional[Enum]:
+        """Parses the value_str string to the given enum_type or None if does not match"""
+
+        try:
+            return enum_type(value_str)
+        except ValueError:
+            return None
+
+    def _cast_string_to_uuid_or_none(self, string_value: str) -> Optional[uuid.UUID]:
+        """Parses the string_value string to a UUID class or None if does not match to a UUID"""
+
+        try:
+            if string_value is None:
+                return None
+            else:
+                return uuid.UUID(string_value)
+        except ValueError:
+            return None
