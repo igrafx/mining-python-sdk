@@ -549,41 +549,68 @@ curl -X POST "https://<Your API URL>/pub/project/<Your Project ID>/reset" -H "ac
 ````
 Finally, `DELETE` methods can be used.
 
-For instance, we can use that method to **stop** the train task for a project:
+For instance, we can use that method to **delete** the trains for a project:
 ````commandline
-curl -X DELETE "https://<Your API URL>/pub/train/<Your Project ID>" -H "accept: */*" -H "Authorization: Bearer <Your generated Token>"
+curl -X DELETE "https://<Your API URL>/pub/projects/<Your Project ID>/predictions" -H "accept: */*" -H "Authorization: Bearer <Your generated Token>"
 ````
 
 
 ## Predictions
 
+Once you have your project set up, you can manage and optimize the prediction models using a set of methods provided by the project interface.
+For the [training](https://fr.help.logpickr.com/prediction/p2p/introduction/), this documentation outlines key methods and their usage.
 
-Once you have your project, you can train it and run predictions on it. 
-For the [training](https://fr.help.logpickr.com/prediction/p2p/introduction/), the project has the `.launch_train()` 
-and `.stop_train()` methods, as well as the `.train_status property`, which can be used like so:
+### Check Prediction Possibility
+
+The `.prediction_possibility()` method checks whether it is possible to initiate a new training process on the project.
+It returns `CAN_LAUNCH_PREDICTION` if a prediction is possible.
+If not, the method provides information about why a prediction is not currently feasible.
+
+### Get Predictions Status
+
+The `.predictions_status()` method retrieves the status of all predictions that have been launched on the project.
+It returns a list containing details for each prediction, including the start date, end date (if ended), and the current status of the train (e.g., pending, running, failed, cancelled or success).
+
+### Check Ready Prediction Existence
+
+The `.is_ready_prediction_exists()` property returns a boolean value.
+It is `True` if a prediction has successfully completed and is ready for use in the project, and `False` otherwise.
+
+### Delete All Predictions history
+
+The `.delete_predictions()` method stops and deletes prediction currently associated with the project and the history of previous predictions launches.
+This is helpful before retraining the model to clean up obsolete predictions history.
+
+### Launch a New Prediction
+
+The `.launch_prediction()` method initiates a new training process on the project if it is currently possible.
+If the prediction cannot be launched, the method returns an error.
+
+Example:
 ```python
 my_project = wg.project_from_id("<Your Project ID>")
 
-my_project.train_status
-False
+# Delete previous predictions and predictions history
+print(my_project.delete_predictions)
 
-my_project.lauch_train()
-my_project.train_status
-True
+# Check if ready prediction exists
+print(my_project.is_ready_prediction_exists)  # False
 
-my_project.stop_train()
-my_project.train_status
-False
+# Launch a new train
+print(my_project.launch_train())  # the identifier of the prediction, on UUID format.
+
+# Check the status of the prediction train
+predictions_status = my_project.predictions_status()
+print(f"Predictions Status: {predictions_status}") # you should have a single prediction that has the correct id, with status should be 'PENDING'.
+print(my_project.is_prediction_exists)  # False
+
+# Continue waiting until the status becomes 'RUNNING' and then 'SUCCESS'
+
+# Then check if ready prediction exists
+print(my_project.is_prediction_exists)  # True
 ```
-Once the train is complete, you can run predictions on the case IDs you want in your project:
-```python
-my_project = wg.project_from_id("<Your Project ID>")
-my_project.train_status # we can make sure the training is finished
-False
 
-case_list = ["<Case ID 1>", "<Case ID 2>", "<Case ID 3>"]
-prediction_data = my_project.prediction(case_list)
-```
+
 ## Access Druid database via JDBC
 
 The [Druid](https://druid.apache.org/blog/2014/04/15/intro-to-pydruid.html) database can be accessed via 
@@ -653,6 +680,3 @@ Support is available at the following address: [support@igrafx.com](mailto:suppo
 * [iGrafx Help](https://fr.help.logpickr.com/)
 * [Druid SQL API](https://druid.apache.org/docs/latest/querying/sql-api.html)
 * [iGrafx P360 Live Mining API](https://public-api.logpickr.com/#/)
-
-
-

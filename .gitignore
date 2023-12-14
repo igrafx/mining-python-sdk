@@ -9,6 +9,8 @@ igrafx_mining_sdk/.idea
 igrafx_mining_sdk/.pytest_cache
 igrafx_mining_sdk/dist
 igrafx_mining_sdk/build
+igrafx_mining_sdk/__pycache__
+igrafx_mining_sdk/dtos/__pycache__
 igrafx_mining_sdk/igrafx_mining_sdk/__pycache__
 venv
 .DS_Store
