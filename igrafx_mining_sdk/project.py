@@ -268,7 +268,7 @@ class Project:
             return PredictionPossibilityDto.UNKNOWN_ERROR
 
     def predictions_status(self) -> Union[List[WorkflowStatusDto], PredictionErrorStatusDto]:
-        """Makes an API call to get project's predictions history"""
+        """Makes an API call to get project's predictions history """
 
         json_response = self.api_connector.get_request(f"/projects/{self.id}/predictions/trains/status")
 
