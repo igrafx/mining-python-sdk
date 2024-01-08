@@ -16,7 +16,8 @@ from igrafx_mining_sdk.dtos.WorkflowStatusDto import WorkflowStatusDto
 import uuid
 from enum import Enum
 from datetime import datetime
-from typing import List, Optional, Dict
+from typing import List, Optional, Dict, Union
+
 
 class Project:
     """A iGrafx P360 Live Mining project"""
@@ -266,7 +267,7 @@ class Project:
             print(f"Failed to check prediction possibility on project {self.id}. Response: {json_response}")
             return PredictionPossibilityDto.UNKNOWN_ERROR
 
-    def predictions_status(self) -> List[WorkflowStatusDto] | PredictionErrorStatusDto:
+    def predictions_status(self) -> Union[List[WorkflowStatusDto], PredictionErrorStatusDto]:
         """Makes an API call to get project's predictions history"""
 
         json_response = self.api_connector.get_request(f"/projects/{self.id}/predictions/trains/status")
@@ -292,7 +293,7 @@ class Project:
             print(f"Failed to check predictions status on project {self.id}. Response: {json_response}")
             return PredictionErrorStatusDto.UNKNOWN_ERROR
 
-    def is_ready_prediction_exists(self) -> bool | PredictionErrorStatusDto:
+    def is_ready_prediction_exists(self) -> Union[bool, PredictionErrorStatusDto]:
         """Makes an API call to check if a prediction is ready on the project"""
 
         response = self.api_connector.get_request(f"/projects/{self.id}/predictions/exists")
@@ -315,7 +316,7 @@ class Project:
             print(f"Failed to check prediction existence on project {self.id}. Response: {response}")
             return PredictionErrorStatusDto.UNKNOWN_ERROR
 
-    def launch_prediction(self) -> uuid.UUID | PredictionLaunchErrorStatusDto:
+    def launch_prediction(self) -> Union[uuid.UUID, PredictionLaunchErrorStatusDto]:
         """Makes an API call to launch a prediction computation on the project"""
 
         response = self.api_connector.post_request(f"/projects/{self.id}/predictions/trains/launch")
@@ -347,7 +348,7 @@ class Project:
             print(f"Failed to launch prediction on project {self.id}. Response: {response}")
             return PredictionLaunchErrorStatusDto.UNKNOWN_ERROR
 
-    def delete_predictions(self) -> None | PredictionErrorStatusDto:
+    def delete_predictions(self) -> Union[None, PredictionErrorStatusDto]:
         """Makes an API call to delete project's current prediction results and predictions history"""
 
         response = self.api_connector.delete_request(f"/projects/{self.id}/predictions")
@@ -367,7 +368,7 @@ class Project:
             print(f"Failed to delete predictions on project {self.id}. Response: {response}")
             return PredictionErrorStatusDto.UNKNOWN_ERROR
 
-    def _parse_workflow_status(self, item: Dict[str, str]) -> WorkflowStatusDto | PredictionErrorStatusDto:
+    def _parse_workflow_status(self, item: Dict[str, str]) ->  Union[WorkflowStatusDto, PredictionErrorStatusDto]:
         """Parses the prediction status object to a business class WorkflowStatusDto"""
 
         prediction_id = self._cast_string_to_uuid_or_none(item.get('workflowId'))
@@ -411,3 +412,28 @@ class Project:
                 return uuid.UUID(string_value)
         except ValueError:
             return None
+
+    def get_project_predictions(self, case_ids: list):
+        """Returns predictions for a given project and case IDs
+
+        :param case_ids: List of case IDs to predict
+        """
+        if not case_ids or not all(isinstance(case_id, str) for case_id in case_ids):
+            raise ValueError("case_ids should be a non-empty list of strings")
+
+        params = {"projectId": self.id, "caseIds": case_ids}
+        route = f"/projects/{self.id}/predictions"
+        response = self.api_connector.get_request(route, params=params)
+
+        if response.status_code == 200:
+            return response.json()
+        elif response.status_code == 202:
+            return "No prediction available for the given case"
+        elif response.status_code == 402:
+            return "Prediction is not activated"
+        elif response.status_code == 403:
+            return "User does not have access to this project or Train API is forbidden for this license/version"
+        else:
+            return f"Unexpected status code: {response.status_code}. Failed to get predictions."
+
+
