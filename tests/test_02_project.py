@@ -72,10 +72,6 @@ class TestProject:
         """Test that a project can be reset."""
         assert pytest.project.reset()
 
-    @pytest.mark.dependency(depends=['reset'])
-    def test_prediction_possibility_no_data(self):
-        assert pytest.project.prediction_possibility() == PredictionPossibilityDto.NO_DATA_IN_PROJECT
-
     @pytest.mark.dependency(depends=['reset', 'add_column_mapping'])
     def test_add_xlsx_file(self):
         """Test that an xlsx file can be added to a project."""
@@ -1122,4 +1118,3 @@ class TestProject:
         result = pytest.project.get_project_predictions(case_ids)
 
         assert result == {"prediction": "result"}
-

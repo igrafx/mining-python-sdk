@@ -435,5 +435,3 @@ class Project:
             return "User does not have access to this project or Train API is forbidden for this license/version"
         else:
             return f"Unexpected status code: {response.status_code}. Failed to get predictions."
-
-
