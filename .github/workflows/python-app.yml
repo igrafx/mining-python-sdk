@@ -65,6 +65,10 @@ jobs:
       run: |
         poetry run pip install pytest
 
+    - name: Install mock
+      run: |
+        poetry run pip install mock
+
     - name: Set environment variables
       run: |
         echo "WG_ID=${{ secrets.WG_ID }}" >> $GITHUB_ENV
