@@ -196,6 +196,12 @@ column_list = [
 - ``Colulmn Type`` is the type of the column. It can be ``CASE_ID``, ``TASK_NAME``, ``TIME``, ``METRIC``
 (a numeric value) or ``DIMENSION``(can be a string).
 
+Please note that your time format must use the [Java SimpleDateFormat format](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html).
+
+This means you must mark the date by using the following letters (according to your date format):
+
+![date_format]()
+
 It is also possible to check whether a column mapping exists or not:
 ```python
 my_project.column_mapping_exists
