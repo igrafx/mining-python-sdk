@@ -57,7 +57,7 @@ class TestProject:
         column_list = [
             Column('case_id', 0, ColumnType.CASE_ID),
             Column('task_name', 1, ColumnType.TASK_NAME),
-            Column('time', 2, ColumnType.TIME, time_format='%Y-%m-%dT%H:%M')
+            Column('time', 2, ColumnType.TIME, time_format="yyyy-MM-dd'T'HH:mm")
         ]
         column_mapping = ColumnMapping(column_list)
         assert pytest.project.add_column_mapping(filestructure, column_mapping)
@@ -360,7 +360,7 @@ class TestProject:
         mocker.patch.object(api_connector, 'get_request', return_value=expected_response)
 
         result = project.predictions_status()
-        date_format = "%Y-%m-%dT%H:%M:%S.%fZ"
+        date_format = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
         expected_result = WorkflowStatusDto(
             uuid.UUID("3fa85f64-5717-4562-b3fc-2c963f66afa6"),
             uuid.UUID("3fa85f64-5717-4562-b3fc-2c963f66afa6"),
@@ -403,7 +403,7 @@ class TestProject:
         mocker.patch.object(api_connector, 'get_request', return_value= expected_response)
 
         result = project.predictions_status()
-        date_format = "%Y-%m-%dT%H:%M:%S.%fZ"
+        date_format = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
         expected_result = WorkflowStatusDto(
             uuid.UUID("3fa85f64-5717-4562-b3fc-2c963f66afa6"),
             uuid.UUID("3fa85f64-5717-4562-b3fc-2c963f66afa6"),
