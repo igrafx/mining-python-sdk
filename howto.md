@@ -207,6 +207,8 @@ For example, your date format may look like this:
 yyyy-MM-dd HH:mm:ss.SSSSSS
 ````
 
+In the following examples, do not forget to change the `time_format` before using the code.
+
 
 It is also possible to check whether a column mapping exists or not:
 ```python
