@@ -196,11 +196,17 @@ column_list = [
 - ``Colulmn Type`` is the type of the column. It can be ``CASE_ID``, ``TASK_NAME``, ``TIME``, ``METRIC``
 (a numeric value) or ``DIMENSION``(can be a string).
 
-Please note that your time format must use the [Java SimpleDateFormat format](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html).
+Please note that your **time format** must use the [Java SimpleDateFormat format](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html).
 
 This means you must mark the date by using the following letters (according to your date format):
 
-![date_format]()
+![date_format](https://github.com/igrafx/mining-python-sdk/blob/feat/PROC-3134_modify_date_format_in_doc/imgs/date_format.png)
+
+For example, your date format may look like this:
+````json
+yyyy-MM-dd HH:mm:ss.SSSSSS
+````
+
 
 It is also possible to check whether a column mapping exists or not:
 ```python
@@ -216,7 +222,7 @@ Therefore, a Column Mapping can also be created from a JSON column dictionary. F
 column_dict = '''{
 "col1": {"name": "case_id", "columnIndex": "0", "columnType": "CASE_ID"},
 "col2": {"name": "task_name", "columnIndex": "1", "columnType": "TASK_NAME"},
-"col3": {"name": "time", "columnIndex": "2", "columnType": "TIME", "format": "%Y-%m-%dT%H:%M"}
+"col3": {"name": "time", "columnIndex": "2", "columnType": "TIME", "format": "yyyy-MM-dd'T'HH:mm"}
 }'''
 column_mapping = ColumnMapping.from_json(column_dict)
 ```
@@ -227,7 +233,7 @@ The major difference between the list and the dictionary is that in the dictiona
 column_list = '''[
 {"name": "case_id", "columnIndex": "0", "columnType": "CASE_ID"},
 {"name": "task_name", "columnIndex": "1", "columnType": "TASK_NAME"},
-{"name": "time", "columnIndex": "2", "columnType": "TIME", "format": "%Y-%m-%dT%H:%M"}
+{"name": "time", "columnIndex": "2", "columnType": "TIME", "format": "yyyy-MM-dd'T'HH:mm"}
 ]'''
 column_mapping = ColumnMapping.from_json(column_list)
 ```
@@ -239,7 +245,7 @@ The `json.dumps()` function will convert a subset of Python objects into a JSON 
 column_list = [
     Column('case_id', 0, ColumnType.CASE_ID),
     Column('task_name', 1, ColumnType.TASK_NAME),
-    Column('time', 2, ColumnType.TIME, time_format='%Y-%m-%dT%H:%M')
+    Column('time', 2, ColumnType.TIME, time_format="yyy-MM-dd'T'HH:mm")
 ]
 column_mapping = ColumnMapping(column_list)
 json_str = json.dumps(column_mapping.to_dict())
@@ -262,8 +268,8 @@ filestructure = FileStructure(
 )
 column_list = [
     Column('Case ID', 0, ColumnType.CASE_ID),
-    Column('Start Timestamp', 1, ColumnType.TIME, time_format='%Y/%m/%d %H:%M:%S.%f'),
-    Column('Complete Timestamp', 2, ColumnType.TIME, time_format='%Y/%m/%d %H:%M:%S.%f'),
+    Column('Start Timestamp', 1, ColumnType.TIME, time_format="yyyy-MM-dd'T'HH:mm"),
+    Column('Complete Timestamp', 2, ColumnType.TIME, time_format="yyyy-MM-dd'T'HH:mm"),
     Column('Activity', 3, ColumnType.TASK_NAME),
     Column('Ressource', 4, ColumnType.DIMENSION),
 ]
@@ -277,7 +283,7 @@ If a grouped task is created in a column, there must be grouped tasks declared i
 ```` python
 column_list = [
     Column('case_id', 0, ColumnType.CASE_ID),
-    Column('time', 1, ColumnType.TIME, time_format='%Y-%m-%dT%H:%M'),
+    Column('time', 1, ColumnType.TIME, time_format="yyyy-MM-dd'T'HH:mm"),
     Column('task_name', 2, ColumnType.TASK_NAME, grouped_tasks_columns=[1, 3]),
     Column('country', 3, ColumnType.METRIC, grouped_tasks_aggregation=MetricAggregation.FIRST),
     Column('price', 4, ColumnType.DIMENSION, grouped_tasks_aggregation=GroupedTasksDimensionAggregation.FIRST)
