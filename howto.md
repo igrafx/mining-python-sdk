@@ -203,7 +203,7 @@ This means you must mark the date by using the following letters (according to y
 ![date_format](https://github.com/igrafx/mining-python-sdk/blob/feat/PROC-3134_modify_date_format_in_doc/imgs/date_format.png)
 
 For example, your date format may look like this:
-````json
+````
 yyyy-MM-dd HH:mm:ss.SSSSSS
 ````
 
