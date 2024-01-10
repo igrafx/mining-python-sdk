@@ -3,11 +3,13 @@
 
 import requests as req
 
+
 class InvalidRouteError(Exception):
-    "Raised when Login failed after a number of try to login"
+    """Raised when Login failed after a number of try to login"""
     def __init__(self, message="Unauthorized to use this route"):
         self.message = message
         super().__init__(self.message)
+
 
 class APIConnector:
     """Class to connect to the API. It allows us to log into the Mining Public API and retrive a token.
@@ -74,7 +76,8 @@ class APIConnector:
 
         :param route: The route of the request
         :param params: The parameters of the request
-        :param nbtries: The number of try of this route
+        :param nblasttries: The number of try of this route
+        :param maxtries: The maximum number of try
         """
 
         response = None
@@ -104,6 +107,8 @@ class APIConnector:
         :param json: A given JSON object
         :param files: Eventual files
         :param headers: Additional headers
+        :param nblasttries: The number of try of this route
+        :param maxtries: The maximum number of tries
         """
 
         response = None
@@ -132,6 +137,8 @@ class APIConnector:
         """Does an HTTP DELETE request to the Mining Public API by simply taking the route
 
         :param route: The route of the request
+        :param nblasttries: The number of try of this route
+        :param maxtries: The maximum number of tries
         """
 
         response = None

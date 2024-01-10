@@ -59,7 +59,9 @@ class FileStructure:
 
     @classmethod
     def from_json(cls, json_str):
-        """Convert JSON string to dictionary"""
+        """Convert JSON string to dictionary
+
+        :param json_str: JSON string"""
         data = json.loads(json_str)
 
         # Extract files from json dictionary
@@ -90,6 +92,7 @@ class FileStructure:
             comment_char,
             sheet_name,
             bool(header))
+
 
 class DimensionAggregation(Enum):
     """Class DimensionAggregation for the aggregation types used in column mapping"""
@@ -199,7 +202,9 @@ class Column:
 
     @classmethod
     def from_json(cls, json_str):
-        """Convert JSON string to dictionary"""
+        """Convert JSON string to dictionary
+
+        :param json_str: JSON string"""
         data = json.loads(json_str)
 
         # Extract column parameters from the JSON dictionary
@@ -333,7 +338,9 @@ class ColumnMapping:
 
     @classmethod
     def from_json(cls, json_str):
-        """Convert JSON string to dictionary"""
+        """Convert JSON string to dictionary
+
+        :param json_str: the JSON string"""
         # Load json to get dictionary of columns dicts
         columns_dict_collection = json.loads(json_str)
 

@@ -28,7 +28,8 @@ Please contact us to create an account.
 12. [Predictions](#predictions)
 13. [Access Druid database via JDBC](#access-druid-database-via-jdbc)
 14. [Access database via Druid Rest SQL queries](#access-database-via-druid-rest-sql-queries)
-15. [Further Documentation](#further-documentation)
+15. [Generating the Documentation with SphinxDocs](#generating-the-documentation-with-sphinxdocs)
+16. [Further Documentation](#further-documentation)
 
 
 ## Installing
@@ -657,6 +658,31 @@ The result format of the query can be specified with ```"resultFormat"```:
 }
 ```` 
 More information can be found in the section [Further documentation](https://github.com/igrafx/mining-python-sdk/blob/dev/howto.md#further-documentation).
+
+## Generating the Documentation with SphinxDocs
+
+You may generate documentation from the code using [Sphinx](https://www.sphinx-doc.org/en/master/index.html).
+
+To do this you must first install Sphinx by using the following command:
+````shell
+pip install -U sphinx
+````
+Afterwards, go to the `sphinx_docs` directory by doing:
+````shell
+cd sphinx_docs/
+````
+Now you can generate the documentation as follows:
+````shell
+make html
+````
+If you wish to clean the `build` directory, you may use this command:
+````shell
+make clean
+````
+
+The documentation has now been generated. To open it, go to the `build directory`, then into the `html` directory.
+Double click on the ``index.html`` to open it. Else, right click and click *open with* and pick a browser to open it with. 
+
 ## Further documentation
 
 In this section, documentation can be found for further reading.

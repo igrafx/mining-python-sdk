@@ -360,7 +360,7 @@ class TestProject:
         mocker.patch.object(api_connector, 'get_request', return_value=expected_response)
 
         result = project.predictions_status()
-        date_format = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+        date_format = "%Y-%m-%dT%H:%M:%S.%fZ"
         expected_result = WorkflowStatusDto(
             uuid.UUID("3fa85f64-5717-4562-b3fc-2c963f66afa6"),
             uuid.UUID("3fa85f64-5717-4562-b3fc-2c963f66afa6"),
@@ -403,7 +403,7 @@ class TestProject:
         mocker.patch.object(api_connector, 'get_request', return_value= expected_response)
 
         result = project.predictions_status()
-        date_format = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+        date_format = "%Y-%m-%dT%H:%M:%S.%fZ"
         expected_result = WorkflowStatusDto(
             uuid.UUID("3fa85f64-5717-4562-b3fc-2c963f66afa6"),
             uuid.UUID("3fa85f64-5717-4562-b3fc-2c963f66afa6"),
