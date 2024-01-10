@@ -17,11 +17,11 @@ class TestColumnMapping:
     def test_exception_case_id_column_with_time_format(self):
         """ Test case_id type column with time format"""
         with pytest.raises(ValueError):
-            Column('test', 0, ColumnType.CASE_ID, time_format='%Y-%m-%dT%H:%M')
+            Column('test', 0, ColumnType.CASE_ID, time_format="yyyy-MM-dd'T'HH:mm")
 
     def test_create_time_column(self):
         """ Test to create a time column"""
-        column = Column('test', 0, ColumnType.TIME, time_format='%Y-%m-%dT%H:%M')
+        column = Column('test', 0, ColumnType.TIME, time_format="yyyy-MM-dd'T'HH:mm")
         assert isinstance(column, Column)
 
     def test_exception_time_column_without_time_format(self):
@@ -84,7 +84,7 @@ class TestColumnMapping:
         """ Test to define a valid column mapping with grouped_tasks_columns and grouped_tasks_aggregation"""
         column_list = [
             Column('case_id', 0, ColumnType.CASE_ID),
-            Column('time', 1, ColumnType.TIME, time_format='%Y-%m-%dT%H:%M'),
+            Column('time', 1, ColumnType.TIME, time_format="yyyy-MM-dd'T'HH:mm"),
             Column('task_name', 2, ColumnType.TASK_NAME, grouped_tasks_columns=[2, 3]),
             Column('country', 3, ColumnType.METRIC, grouped_tasks_aggregation=MetricAggregation.FIRST),
             Column('price', 4, ColumnType.DIMENSION, grouped_tasks_aggregation=GroupedTasksDimensionAggregation.FIRST)
@@ -97,7 +97,7 @@ class TestColumnMapping:
         with pytest.raises(ValueError):
             ColumnMapping([
                 Column('case_id', 0, ColumnType.CASE_ID),
-                Column('time', 1, ColumnType.TIME, time_format='%Y-%m-%dT%H:%M'),
+                Column('time', 1, ColumnType.TIME, time_format="yyyy-MM-dd'T'HH:mm"),
                 Column('task_name', 2, ColumnType.TASK_NAME, grouped_tasks_columns=[2, 0]),
                 Column('country', 3, ColumnType.METRIC, grouped_tasks_aggregation=MetricAggregation.FIRST),
                 Column('price', 4, ColumnType.DIMENSION,
@@ -109,7 +109,7 @@ class TestColumnMapping:
         with pytest.raises(ValueError):
             ColumnMapping([
                 Column('case_id', 0, ColumnType.CASE_ID),
-                Column('time', 1, ColumnType.TIME, time_format='%Y-%m-%dT%H:%M'),
+                Column('time', 1, ColumnType.TIME, time_format="yyyy-MM-dd'T'HH:mm"),
                 Column('task_name', 2, ColumnType.TASK_NAME, grouped_tasks_columns=[1, 3]),
                 Column('country', 3, ColumnType.METRIC, grouped_tasks_aggregation=MetricAggregation.FIRST),
                 Column('price', 4, ColumnType.DIMENSION,
@@ -121,7 +121,7 @@ class TestColumnMapping:
             but having the index of a column of type METRIC, DIMENSION or TIME"""
         column_list = [
             Column('case_id', 0, ColumnType.CASE_ID),
-            Column('time', 1, ColumnType.TIME, time_format='%Y-%m-%dT%H:%M'),
+            Column('time', 1, ColumnType.TIME, time_format="yyyy-MM-dd'T'HH:mm"),
             Column('task_name', 2, ColumnType.TASK_NAME, grouped_tasks_columns=[3]),
             Column('country', 3, ColumnType.METRIC, grouped_tasks_aggregation=MetricAggregation.FIRST),
             Column('price', 4, ColumnType.DIMENSION, grouped_tasks_aggregation=GroupedTasksDimensionAggregation.FIRST)
@@ -135,7 +135,7 @@ class TestColumnMapping:
         with pytest.raises(ValueError):
             ColumnMapping([
                 Column('case_id', 0, ColumnType.CASE_ID),
-                Column('time', 1, ColumnType.TIME, time_format='%Y-%m-%dT%H:%M'),
+                Column('time', 1, ColumnType.TIME, time_format="yyyy-MM-dd'T'HH:mm"),
                 Column('task_name', 2, ColumnType.TASK_NAME, grouped_tasks_columns=[2, 3]),
                 Column('country', 3, ColumnType.METRIC),
                 Column('price', 4, ColumnType.DIMENSION,
@@ -147,7 +147,7 @@ class TestColumnMapping:
         with pytest.raises(ValueError):
             ColumnMapping([
                 Column('case_id', 0, ColumnType.CASE_ID),
-                Column('time', 1, ColumnType.TIME, time_format='%Y-%m-%dT%H:%M'),
+                Column('time', 1, ColumnType.TIME, time_format="yyyy-MM-dd'T'HH:mm"),
                 Column('task_name', 2, ColumnType.TASK_NAME),
                 Column('country', 3, ColumnType.METRIC, grouped_tasks_aggregation=MetricAggregation.FIRST),
             ])
@@ -159,7 +159,7 @@ class TestColumnMapping:
                 Column('case_id_1', 0, ColumnType.CASE_ID),
                 Column('case_id_2', 1, ColumnType.CASE_ID),
                 Column('task_name', 2, ColumnType.TASK_NAME),
-                Column('time', 3, ColumnType.TIME, time_format='%Y-%m-%dT%H:%M')
+                Column('time', 3, ColumnType.TIME, time_format="yyyy-MM-dd'T'HH:mm")
             ])
 
     def test_exception_duplicate_column_indices(self):
@@ -168,7 +168,7 @@ class TestColumnMapping:
             ColumnMapping([
                 Column('case_id', 0, ColumnType.CASE_ID),
                 Column('task_name', 0, ColumnType.TASK_NAME),
-                Column('time', 1, ColumnType.TIME, time_format='%Y-%m-%dT%H:%M')
+                Column('time', 1, ColumnType.TIME, time_format="yyyy-MM-dd'T'HH:mm")
             ])
 
     @pytest.mark.dependency(name='create_column_from_json', depends=['case_id_column'])
@@ -216,7 +216,7 @@ class TestColumnMapping:
         column_dict = '''{
         "col1": {"name": "case_id", "columnIndex": "0", "columnType": "CASE_ID"},
         "col2": {"name": "task_name", "columnIndex": "1", "columnType": "TASK_NAME"},
-        "col3": {"name": "time", "columnIndex": "2", "columnType": "TIME", "format": "%Y-%m-%dT%H:%M"}
+        "col3": {"name": "time", "columnIndex": "2", "columnType": "TIME", "format": "yyyy-MM-dd'T'HH:mm"}
         }'''
         column_mapping = ColumnMapping.from_json(column_dict)
         assert isinstance(column_mapping, ColumnMapping)
@@ -227,7 +227,7 @@ class TestColumnMapping:
         column_list = '''[
         {"name": "case_id", "columnIndex": "0", "columnType": "CASE_ID"},
         {"name": "task_name", "columnIndex": "1", "columnType": "TASK_NAME"},
-        {"name": "time", "columnIndex": "2", "columnType": "TIME", "format": "%Y-%m-%dT%H:%M"}
+        {"name": "time", "columnIndex": "2", "columnType": "TIME", "format": "yyyy-MM-dd'T'HH:mm"}
         ]'''
         column_mapping = ColumnMapping.from_json(column_list)
         assert isinstance(column_mapping, ColumnMapping)
@@ -238,7 +238,7 @@ class TestColumnMapping:
         column_list = [
             Column('case_id', 0, ColumnType.CASE_ID),
             Column('task_name', 1, ColumnType.TASK_NAME),
-            Column('time', 2, ColumnType.TIME, time_format='%Y-%m-%dT%H:%M')
+            Column('time', 2, ColumnType.TIME, time_format="yyyy-MM-dd'T'HH:mm")
         ]
         column_mapping = ColumnMapping(column_list)
         json_str = json.dumps(column_mapping.to_dict())

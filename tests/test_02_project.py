@@ -57,7 +57,7 @@ class TestProject:
         column_list = [
             Column('case_id', 0, ColumnType.CASE_ID),
             Column('task_name', 1, ColumnType.TASK_NAME),
-            Column('time', 2, ColumnType.TIME, time_format='%Y-%m-%dT%H:%M')
+            Column('time', 2, ColumnType.TIME, time_format="yyyy-MM-dd'T'HH:mm")
         ]
         column_mapping = ColumnMapping(column_list)
         assert pytest.project.add_column_mapping(filestructure, column_mapping)

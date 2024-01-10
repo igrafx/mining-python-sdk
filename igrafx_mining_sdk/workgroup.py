@@ -30,7 +30,11 @@ class Workgroup:
         return response_project_list
 
     def create_project(self, project_name: str, description: str = None):
-        """Creates a project within the workgroup"""
+        """Creates a project within the workgroup
+
+        :param project_name: The name of the project
+        :param description: The description of the project
+        """
 
         params = {"name": project_name, "workgroupId": self.w_id}
         if description is not None:
@@ -65,6 +69,6 @@ class Workgroup:
     def project_from_id(self, pid):
         """Returns a project based on its id, or None if no such project exists
 
-        :param pid: the id of the project"""
+        :param pid: The id of the project"""
         p = Project(pid, self.api_connector)
         return p if p.exists else None

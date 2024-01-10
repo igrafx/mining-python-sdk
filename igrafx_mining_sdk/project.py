@@ -162,7 +162,7 @@ class Project:
 
         :param page_index: the page index for pagination
         :param limit: The maximum number of items to return per page
-        :param search: The search query to filter cases by ID (optional)
+        :param search_case_id: The search query to filter cases by ID (optional)
 
         """
         params = {"projectId": self.id, "pageIndex": page_index, "limit": limit}
@@ -187,8 +187,8 @@ class Project:
     def add_column_mapping(self, filestructure: FileStructure, columnmapping: ColumnMapping):
         """Create a column mapping for the project
 
-        :param filestructure: the filestructure
-        :param columnmapping: the columnmapping
+        :param filestructure: The filestructure
+        :param columnmapping: The column mapping
         """
         route = f"/project/{self.id}/column-mapping"
         json = {'fileStructure': filestructure.to_dict(), 'columnMapping': columnmapping.to_dict()}
@@ -217,7 +217,7 @@ class Project:
     def add_file(self, path):
         """Adds a file to the project
 
-        :param path: the path to the file to add
+        :param path: The path to the file to add
         """
         route = f"/project/{self.id}/file?teamId={self.api_connector.wg_id}"
         file_extension = os.path.splitext(path)[-1].lower()
