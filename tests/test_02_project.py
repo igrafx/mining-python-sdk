@@ -979,21 +979,30 @@ class TestProject:
         that the project delete_predictions method correctly handle expected response from API call.
         """
 
-        api_connector = APIConnector(
-            wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c',
-            wg_key='83de1a05-06ad-4757-9855-926ef696463f',
-            apiurl='https://truc.com',
-            authurl='https://truc.com/realms/realm/',
-            ssl_verify=False)
+        # api_connector = APIConnector(
+        #     wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c',
+        #     wg_key='83de1a05-06ad-4757-9855-926ef696463f',
+        #     apiurl='https://truc.com',
+        #     authurl='https://truc.com/realms/realm/',
+        #     ssl_verify=False)
+        #
+        # project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
+        # # Set up the expected response
+        # expected_response = req.Response()
+        # expected_response.status_code = 204
+        #
+        # mocker.patch.object(api_connector, 'delete_request', return_value=expected_response)
+        #
+        # result = project.delete_predictions()
+        #
+        # assert result is None
 
-        project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
-        # Set up the expected response
-        expected_response = req.Response()
-        expected_response.status_code = 204
+        mock_response = mocker.Mock()
+        mock_response.status_code = 204
 
-        mocker.patch.object(api_connector, 'delete_request', return_value=expected_response)
+        mocker.patch.object(APIConnector, 'delete_request', return_value=mock_response)
 
-        result = project.delete_predictions()
+        result = pytest.project.delete_predictions()
 
         assert result is None
 
@@ -1002,78 +1011,114 @@ class TestProject:
         that the project delete_predictions method correctly handles 402 response from API call.
         """
 
-        project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
+        # project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
+        #
+        # # Set up the expected response
+        # expected_response = req.Response()
+        # expected_response.status_code = 402
+        #
+        # mocker.patch.object(api_connector, 'delete_request', return_value=expected_response)
+        #
+        # result = project.delete_predictions()
+        #
+        # assert result == PredictionErrorStatusDto.NON_ACTIVATED_PREDICTION
 
-        # Set up the expected response
-        expected_response = req.Response()
-        expected_response.status_code = 402
+        mock_response = mocker.Mock()
+        mock_response.status_code = 402
 
-        mocker.patch.object(api_connector, 'delete_request', return_value=expected_response)
+        mocker.patch.object(api_connector, 'delete_request', return_value=mock_response)
 
-        result = project.delete_predictions()
+        result = pytest.project.delete_predictions()
 
         assert result == PredictionErrorStatusDto.NON_ACTIVATED_PREDICTION
 
     def test_delete_predictions_forbidden(self, mocker):
         """Test, via mocking, that the project delete_predictions method correctly handle 403 response from API call."""
+        #
+        # api_connector = APIConnector(
+        #     wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c',
+        #     wg_key='83de1a05-06ad-4757-9855-926ef696463f',
+        #     apiurl='https://truc.com',
+        #     authurl='https://truc.com/realms/realm/',
+        #     ssl_verify=False)
+        #
+        # project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
+        # # Set up the expected response
+        # expected_response = req.Response()
+        # expected_response.status_code = 403
+        #
+        # mocker.patch.object(api_connector, 'delete_request', return_value=expected_response)
+        #
+        # result = project.delete_predictions()
+        #
+        # assert result == PredictionErrorStatusDto.FORBIDDEN
 
-        api_connector = APIConnector(
-            wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c',
-            wg_key='83de1a05-06ad-4757-9855-926ef696463f',
-            apiurl='https://truc.com',
-            authurl='https://truc.com/realms/realm/',
-            ssl_verify=False)
+        mock_response = mocker.Mock()
+        mock_response.status_code = 403
 
-        project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
-        # Set up the expected response
-        expected_response = req.Response()
-        expected_response.status_code = 403
+        mocker.patch.object(APIConnector, 'delete_request', return_value=mock_response)
 
-        mocker.patch.object(api_connector, 'delete_request', return_value=expected_response)
-
-        result = project.delete_predictions()
+        result = pytest.project.delete_predictions()
 
         assert result == PredictionErrorStatusDto.FORBIDDEN
 
     def test_delete_predictions_fails(self, mocker):
         """Test, via mocking, that the project delete_predictions method correctly handle 424 response from API call."""
+        #
+        # api_connector = APIConnector(
+        #     wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c',
+        #     wg_key='83de1a05-06ad-4757-9855-926ef696463f',
+        #     apiurl='https://truc.com',
+        #     authurl='https://truc.com/realms/realm/',
+        #     ssl_verify=False)
+        #
+        # project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
+        # # Set up the expected response
+        # expected_response = req.Response()
+        # expected_response.status_code = 424
+        #
+        # mocker.patch.object(api_connector, 'delete_request', return_value=expected_response)
+        #
+        # result = project.delete_predictions()
+        #
+        # assert result == PredictionErrorStatusDto.PREDICTION_SERVICE_FAILURE
 
-        api_connector = APIConnector(
-            wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c',
-            wg_key='83de1a05-06ad-4757-9855-926ef696463f',
-            apiurl='https://truc.com',
-            authurl='https://truc.com/realms/realm/',
-            ssl_verify=False)
+        mock_response = mocker.Mock()
+        mock_response.status_code = 424
 
-        project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
-        # Set up the expected response
-        expected_response = req.Response()
-        expected_response.status_code = 424
+        mocker.patch.object(APIConnector, 'delete_request', return_value=mock_response)
 
-        mocker.patch.object(api_connector, 'delete_request', return_value=expected_response)
-
-        result = project.delete_predictions()
+        result = pytest.project.delete_predictions()
 
         assert result == PredictionErrorStatusDto.PREDICTION_SERVICE_FAILURE
 
     def test_delete_predictions_fails_500(self, mocker):
         """Test, via mocking, that the project delete_predictions method correctly handle 500 response from API call."""
 
-        api_connector = APIConnector(
-            wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c',
-            wg_key='83de1a05-06ad-4757-9855-926ef696463f',
-            apiurl='https://truc.com',
-            authurl='https://truc.com/realms/realm/',
-            ssl_verify=False)
+        # api_connector = APIConnector(
+        #     wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c',
+        #     wg_key='83de1a05-06ad-4757-9855-926ef696463f',
+        #     apiurl='https://truc.com',
+        #     authurl='https://truc.com/realms/realm/',
+        #     ssl_verify=False)
+        #
+        # project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
+        # # Set up the expected response
+        # expected_response = req.Response()
+        # expected_response.status_code = 500
+        #
+        # mocker.patch.object(api_connector, 'delete_request', return_value=expected_response)
+        #
+        # result = project.delete_predictions()
+        #
+        # assert result == PredictionErrorStatusDto.UNKNOWN_ERROR
 
-        project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
-        # Set up the expected response
-        expected_response = req.Response()
-        expected_response.status_code = 500
+        mock_response = mocker.Mock()
+        mock_response.status_code = 500
 
-        mocker.patch.object(api_connector, 'delete_request', return_value=expected_response)
+        mocker.patch.object(APIConnector, 'delete_request', return_value=mock_response)
 
-        result = project.delete_predictions()
+        result = pytest.project.delete_predictions()
 
         assert result == PredictionErrorStatusDto.UNKNOWN_ERROR
 
