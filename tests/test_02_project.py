@@ -206,8 +206,6 @@ class TestProject:
 
         assert result == PredictionPossibilityDto.CAN_LAUNCH_PREDICTION
 
-        print("hello")
-
     def test_prediction_possibility_invalid_response(self, mocker):
         """Test, via mocking,
         that the project prediction_possibility method correctly handle invalid isPredictionLaunchPossible
