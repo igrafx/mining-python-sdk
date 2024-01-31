@@ -618,25 +618,36 @@ class TestProject:
         """Test, via mocking,
         that the project is_ready_prediction_exists method correctly handle expected response True from API call.
         """
+        #
+        # api_connector = APIConnector(
+        #     wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c',
+        #     wg_key='83de1a05-06ad-4757-9855-926ef696463f',
+        #     apiurl='https://truc.com',
+        #     authurl='https://truc.com/realms/realm/',
+        #     ssl_verify=False)
+        #
+        # project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
+        # # Set up the expected response
+        # expected_response = req.Response()
+        # expected_response.status_code = 200
+        # expected_response.headers = None
+        # expected_response._content = bytes(json.dumps({"isPredictionReady": True}), 'utf-8')
+        # expected_response.json = lambda: json.loads(expected_response.content)
+        #
+        # mocker.patch.object(api_connector, 'get_request', return_value=expected_response)
+        #
+        # result = project.is_ready_prediction_exists()
+        #
+        # assert result is True
 
-        api_connector = APIConnector(
-            wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c',
-            wg_key='83de1a05-06ad-4757-9855-926ef696463f',
-            apiurl='https://truc.com',
-            authurl='https://truc.com/realms/realm/',
-            ssl_verify=False)
+        mock_response = mocker.Mock()
+        mock_response.status_code = 200
+        mock_response.headers = None
+        mock_response.json.return_value = {"isPredictionReady": True}
 
-        project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
-        # Set up the expected response
-        expected_response = req.Response()
-        expected_response.status_code = 200
-        expected_response.headers = None
-        expected_response._content = bytes(json.dumps({"isPredictionReady": True}), 'utf-8')
-        expected_response.json = lambda: json.loads(expected_response.content)
+        mocker.patch.object(APIConnector, 'get_request', return_value=mock_response)
 
-        mocker.patch.object(api_connector, 'get_request', return_value=expected_response)
-
-        result = project.is_ready_prediction_exists()
+        result = pytest.project.is_ready_prediction_exists()
 
         assert result is True
 
@@ -645,24 +656,35 @@ class TestProject:
         that the project is_ready_prediction_exists method correctly handle expected response False from API call.
         """
 
-        api_connector = APIConnector(
-            wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c'
-            , wg_key='83de1a05-06ad-4757-9855-926ef696463f',
-            apiurl='https://truc.com',
-            authurl='https://truc.com/realms/realm/',
-            ssl_verify=False)
+        # api_connector = APIConnector(
+        #     wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c'
+        #     , wg_key='83de1a05-06ad-4757-9855-926ef696463f',
+        #     apiurl='https://truc.com',
+        #     authurl='https://truc.com/realms/realm/',
+        #     ssl_verify=False)
+        #
+        # project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
+        # # Set up the expected response
+        # expected_response = req.Response()
+        # expected_response.status_code = 200
+        # expected_response.headers = None
+        # expected_response._content = bytes(json.dumps({"isPredictionReady": False}), 'utf-8')
+        # expected_response.json = lambda: json.loads(expected_response.content)
+        #
+        # mocker.patch.object(api_connector, 'get_request', return_value=expected_response)
+        #
+        # result = project.is_ready_prediction_exists()
+        #
+        # assert result is False
 
-        project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
-        # Set up the expected response
-        expected_response = req.Response()
-        expected_response.status_code = 200
-        expected_response.headers = None
-        expected_response._content = bytes(json.dumps({"isPredictionReady": False}), 'utf-8')
-        expected_response.json = lambda: json.loads(expected_response.content)
+        mock_response = mocker.Mock()
+        mock_response.status_code = 200
+        mock_response.headers = None
+        mock_response.json.return_value = {"isPredictionReady": False}
 
-        mocker.patch.object(api_connector, 'get_request', return_value=expected_response)
+        mocker.patch.object(APIConnector, 'get_request', return_value=mock_response)
 
-        result = project.is_ready_prediction_exists()
+        result = pytest.project.is_ready_prediction_exists()
 
         assert result is False
 
