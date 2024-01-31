@@ -953,6 +953,7 @@ class TestProject:
         mocker.patch.object(api_connector, 'delete_request', return_value=expected_response)
 
         result = project.delete_predictions()
+        print("hello")
 
         assert result is None
 
