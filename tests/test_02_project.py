@@ -793,26 +793,37 @@ class TestProject:
         """Test, via mocking,
         that the project launch_prediction method correctly handle expected response from API call.
         """
+        #
+        # api_connector = APIConnector(
+        #     wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c',
+        #     wg_key='83de1a05-06ad-4757-9855-926ef696463f',
+        #     apiurl='https://truc.com',
+        #     authurl='https://truc.com/realms/realm/',
+        #     ssl_verify=False)
+        #
+        # project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
+        # # Set up the expected response
+        # expected_response = req.Response()
+        # expected_response.status_code = 200
+        # expected_response.headers = None
+        # expected_response._content = bytes(json.dumps({"predictionTrainId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"}),
+        #                                    'utf-8')
+        # expected_response.json = lambda: json.loads(expected_response.content)
+        #
+        # mocker.patch.object(api_connector, 'post_request', return_value=expected_response)
+        #
+        # result = project.launch_prediction()
+        #
+        # assert result == uuid.UUID("3fa85f64-5717-4562-b3fc-2c963f66afa6")
 
-        api_connector = APIConnector(
-            wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c',
-            wg_key='83de1a05-06ad-4757-9855-926ef696463f',
-            apiurl='https://truc.com',
-            authurl='https://truc.com/realms/realm/',
-            ssl_verify=False)
+        mock_response = mocker.Mock()
+        mock_response.status_code = 200
+        mock_response.headers = None
+        mock_response.json.return_value = {"predictionTrainId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"}
 
-        project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
-        # Set up the expected response
-        expected_response = req.Response()
-        expected_response.status_code = 200
-        expected_response.headers = None
-        expected_response._content = bytes(json.dumps({"predictionTrainId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"}),
-                                           'utf-8')
-        expected_response.json = lambda: json.loads(expected_response.content)
+        mocker.patch.object(APIConnector, 'post_request', return_value=mock_response)
 
-        mocker.patch.object(api_connector, 'post_request', return_value=expected_response)
-
-        result = project.launch_prediction()
+        result = pytest.project.launch_prediction()
 
         assert result == uuid.UUID("3fa85f64-5717-4562-b3fc-2c963f66afa6")
 
@@ -821,24 +832,35 @@ class TestProject:
         that the project launch_prediction method correctly handle response with invalid value in JSON from API call.
         """
 
-        api_connector = APIConnector(
-            wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c',
-            wg_key='83de1a05-06ad-4757-9855-926ef696463f',
-            apiurl='https://truc.com',
-            authurl='https://truc.com/realms/realm/',
-            ssl_verify=False)
+        # api_connector = APIConnector(
+        #     wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c',
+        #     wg_key='83de1a05-06ad-4757-9855-926ef696463f',
+        #     apiurl='https://truc.com',
+        #     authurl='https://truc.com/realms/realm/',
+        #     ssl_verify=False)
+        #
+        # project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
+        # # Set up the expected response
+        # expected_response = req.Response()
+        # expected_response.status_code = 200
+        # expected_response.headers = None
+        # expected_response._content = bytes(json.dumps({"predictionTrainId": "toto"}), 'utf-8')
+        # expected_response.json = lambda: json.loads(expected_response.content)
+        #
+        # mocker.patch.object(api_connector, 'post_request', return_value=expected_response)
+        #
+        # result = project.launch_prediction()
+        #
+        # assert result == PredictionLaunchErrorStatusDto.INVALID_RESPONSE
 
-        project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
-        # Set up the expected response
-        expected_response = req.Response()
-        expected_response.status_code = 200
-        expected_response.headers = None
-        expected_response._content = bytes(json.dumps({"predictionTrainId": "toto"}), 'utf-8')
-        expected_response.json = lambda: json.loads(expected_response.content)
+        mock_response = mocker.Mock()
+        mock_response.status_code = 200
+        mock_response.headers = None
+        mock_response.json.return_value = {"predictionTrainId": "toto"}
 
-        mocker.patch.object(api_connector, 'post_request', return_value=expected_response)
+        mocker.patch.object(APIConnector, 'post_request', return_value=mock_response)
 
-        result = project.launch_prediction()
+        result = pytest.project.launch_prediction()
 
         assert result == PredictionLaunchErrorStatusDto.INVALID_RESPONSE
 
@@ -847,25 +869,36 @@ class TestProject:
         that the project launch_prediction method correctly handle response with invalid field in JSON from API call.
         """
 
-        api_connector = APIConnector(
-            wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c',
-            wg_key='83de1a05-06ad-4757-9855-926ef696463f',
-            apiurl='https://truc.com',
-            authurl='https://truc.com/realms/realm/',
-            ssl_verify=False)
+        # api_connector = APIConnector(
+        #     wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c',
+        #     wg_key='83de1a05-06ad-4757-9855-926ef696463f',
+        #     apiurl='https://truc.com',
+        #     authurl='https://truc.com/realms/realm/',
+        #     ssl_verify=False)
+        #
+        # project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
+        # # Set up the expected response
+        # expected_response = req.Response()
+        # expected_response.status_code = 200
+        # expected_response.headers = None
+        # expected_response._content = bytes(json.dumps({"invalidField": "3fa85f64-5717-4562-b3fc-2c963f66afa6"}),
+        #                                    'utf-8')
+        # expected_response.json = lambda: json.loads(expected_response.content)
+        #
+        # mocker.patch.object(api_connector, 'post_request', return_value=expected_response)
+        #
+        # result = project.launch_prediction()
+        #
+        # assert result == PredictionLaunchErrorStatusDto.INVALID_RESPONSE
 
-        project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
-        # Set up the expected response
-        expected_response = req.Response()
-        expected_response.status_code = 200
-        expected_response.headers = None
-        expected_response._content = bytes(json.dumps({"invalidField": "3fa85f64-5717-4562-b3fc-2c963f66afa6"}),
-                                           'utf-8')
-        expected_response.json = lambda: json.loads(expected_response.content)
+        mock_response = mocker.Mock()
+        mock_response.status_code = 200
+        mock_response.headers = None
+        mock_response.json.return_value = {"invalidField": "3fa85f64-5717-4562-b3fc-2c963f66afa6"}
 
-        mocker.patch.object(api_connector, 'post_request', return_value=expected_response)
+        mocker.patch.object(APIConnector, 'post_request', return_value=mock_response)
 
-        result = project.launch_prediction()
+        result = pytest.project.launch_prediction()
 
         assert result == PredictionLaunchErrorStatusDto.INVALID_RESPONSE
 
