@@ -423,31 +423,58 @@ class TestProject:
         a expected JSON with no end date return from API call.
         """
 
-        api_connector = APIConnector(
-            wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c',
-            wg_key='83de1a05-06ad-4757-9855-926ef696463f',
-            apiurl='https://truc.com',
-            authurl='https://truc.com/realms/realm/',
-            ssl_verify=False)
+        # api_connector = APIConnector(
+        #     wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c',
+        #     wg_key='83de1a05-06ad-4757-9855-926ef696463f',
+        #     apiurl='https://truc.com',
+        #     authurl='https://truc.com/realms/realm/',
+        #     ssl_verify=False)
+        #
+        # project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
+        # # Set up the expected response
+        # expected_response = req.Response()
+        # expected_response.status_code = 200
+        # expected_response.headers = None
+        # expected_response._content = bytes(json.dumps([
+        #     {
+        #         "workflowId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        #         "status": "RUNNING",
+        #         "projectId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        #         "startTime": "2023-12-12T13:24:11.929Z"
+        #     }
+        # ]), 'utf-8')
+        # expected_response.json = lambda: json.loads(expected_response.content)
+        #
+        # mocker.patch.object(api_connector, 'get_request', return_value= expected_response)
+        #
+        # result = project.predictions_status()
+        # date_format = "%Y-%m-%dT%H:%M:%S.%fZ"
+        # expected_result = WorkflowStatusDto(
+        #     uuid.UUID("3fa85f64-5717-4562-b3fc-2c963f66afa6"),
+        #     uuid.UUID("3fa85f64-5717-4562-b3fc-2c963f66afa6"),
+        #     PredictionStatusDto.RUNNING,
+        #     datetime.strptime("2023-12-12T13:24:11.929Z", date_format),
+        #     None,
+        #     []
+        # )
+        #
+        # assert result[0] == expected_result
 
-        project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
-        # Set up the expected response
-        expected_response = req.Response()
-        expected_response.status_code = 200
-        expected_response.headers = None
-        expected_response._content = bytes(json.dumps([
+        mock_response = mocker.Mock()
+        mock_response.status_code = 200
+        mock_response.headers = None
+        mock_response.json.return_value = [
             {
                 "workflowId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
                 "status": "RUNNING",
                 "projectId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
                 "startTime": "2023-12-12T13:24:11.929Z"
             }
-        ]), 'utf-8')
-        expected_response.json = lambda: json.loads(expected_response.content)
+        ]
 
-        mocker.patch.object(api_connector, 'get_request', return_value= expected_response)
+        mocker.patch.object(APIConnector, 'get_request', return_value=mock_response)
 
-        result = project.predictions_status()
+        result = pytest.project.predictions_status()
         date_format = "%Y-%m-%dT%H:%M:%S.%fZ"
         expected_result = WorkflowStatusDto(
             uuid.UUID("3fa85f64-5717-4562-b3fc-2c963f66afa6"),
