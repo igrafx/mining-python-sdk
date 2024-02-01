@@ -1265,7 +1265,12 @@ class TestProject:
         """Test, via mocking,
         that the project delete_predictions method correctly handles 402 response from API call.
         """
-
+        # api_connector = APIConnector(
+        #     wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c',
+        #     wg_key='83de1a05-06ad-4757-9855-926ef696463f',
+        #     apiurl='https://truc.com',
+        #     authurl='https://truc.com/realms/realm/',
+        #     ssl_verify=False)
         # project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
         #
         # # Set up the expected response
@@ -1281,11 +1286,12 @@ class TestProject:
         mock_response = mocker.Mock()
         mock_response.status_code = 402
 
-        mocker.patch.object(api_connector, 'delete_request', return_value=mock_response)
+        mocker.patch.object(APIConnector, 'delete_request', return_value=mock_response)
 
         result = pytest.project.delete_predictions()
 
         assert result == PredictionErrorStatusDto.NON_ACTIVATED_PREDICTION
+
 
     def test_delete_predictions_forbidden(self, mocker):
         """Test, via mocking, that the project delete_predictions method correctly handle 403 response from API call."""
