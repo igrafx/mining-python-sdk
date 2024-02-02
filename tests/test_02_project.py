@@ -12,12 +12,9 @@ from igrafx_mining_sdk.dtos.PredictionLaunchErrorStatusDto import PredictionLaun
 from igrafx_mining_sdk.dtos.PredictionPossibilityDto import PredictionPossibilityDto
 from igrafx_mining_sdk.dtos.PredictionErrorStatusDto import PredictionErrorStatusDto
 from igrafx_mining_sdk.dtos.WorkflowStatusDto import WorkflowStatusDto
-from igrafx_mining_sdk.project import Project
 from igrafx_mining_sdk.api_connector import APIConnector
 from unittest.mock import MagicMock
-import json
 import uuid
-import requests as req
 from datetime import datetime
 
 
@@ -218,27 +215,6 @@ class TestProject:
         that the project prediction_possibility method correctly handle invalid argument name in return from API call.
         """
 
-        # api_connector = APIConnector(
-        #     wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c',
-        #     wg_key='83de1a05-06ad-4757-9855-926ef696463f',
-        #     apiurl='https://truc.com',
-        #     authurl='https://truc.com/realms/realm/',
-        #     ssl_verify=False)
-        #
-        # project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
-        # # Set up the expected response
-        # expected_response = req.Response()
-        # expected_response.status_code = 200
-        # expected_response.headers = None
-        # expected_response._content = bytes(json.dumps({"falseArgument": "CAN_LAUNCH_PREDICTION"}), 'utf-8')
-        # expected_response.json = lambda: json.loads(expected_response.content)
-        #
-        # mocker.patch.object(api_connector, 'get_request', return_value= expected_response)
-        #
-        # result = project.prediction_possibility()
-        #
-        # assert result == PredictionPossibilityDto.INVALID_RESPONSE
-
         mock_response = mocker.Mock()
         mock_response.status_code = 200
         mock_response.headers = None
@@ -255,24 +231,6 @@ class TestProject:
         that the project prediction_possibility method correctly handle a 402 return from API call.
         """
 
-        # api_connector = APIConnector(
-        #     wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c',
-        #     wg_key='83de1a05-06ad-4757-9855-926ef696463f',
-        #     apiurl='https://truc.com',
-        #     authurl='https://truc.com/realms/realm/',
-        #     ssl_verify=False)
-        #
-        # project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
-        # # Set up the expected response
-        # expected_response = req.Response()
-        # expected_response.status_code = 402
-        #
-        # mocker.patch.object(api_connector, 'get_request', return_value= expected_response)
-        #
-        # result = project.prediction_possibility()
-        #
-        # assert result == PredictionPossibilityDto.NON_ACTIVATED_PREDICTION
-
         mock_response = mocker.Mock()
         mock_response.status_code = 402
 
@@ -286,24 +244,6 @@ class TestProject:
         """Test, via mocking,
          that the project prediction_possibility method correctly handle a 403 return from API call.
          """
-
-        # api_connector = APIConnector(
-        #     wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c',
-        #     wg_key='83de1a05-06-9855-926ef696463f',
-        #     apiurl='https://truc.com',
-        #     authurl='https://truc.com/realms/realm/',
-        #     ssl_verify=False)
-        #
-        # project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
-        # # Set up the expected response
-        # expected_response = req.Response()
-        # expected_response.status_code = 403
-        #
-        # mocker.patch.object(api_connector, 'get_request', return_value= expected_response)
-        #
-        # result = project.prediction_possibility()
-        #
-        # assert result == PredictionPossibilityDto.FORBIDDEN
 
         mock_response = mocker.Mock()
         mock_response.status_code = 403
@@ -319,24 +259,6 @@ class TestProject:
         that the project prediction_possibility method correctly handle a 500 return from API call.
         """
 
-        # api_connector = APIConnector(
-        #     wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c',
-        #     wg_key='83de1a05-06ad-4757-9855-926ef696463f',
-        #     apiurl='https://truc.com',
-        #     authurl='https://truc.com/realms/realm/',
-        #     ssl_verify=False)
-        #
-        # project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
-        # # Set up the expected response
-        # expected_response = req.Response()
-        # expected_response.status_code = 500
-        #
-        # mocker.patch.object(api_connector, 'get_request', return_value= expected_response)
-        #
-        # result = project.prediction_possibility()
-        #
-        # assert result == PredictionPossibilityDto.UNKNOWN_ERROR
-
         mock_response = mocker.Mock()
         mock_response.status_code = 500
 
@@ -350,45 +272,6 @@ class TestProject:
         """Test, via mocking,
         that the project predictions_status method correctly handle a expected JSON return from API call.
         """
-
-        # api_connector = APIConnector(
-        #     wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c',
-        #     wg_key='83de1a05-06ad-4757-9855-926ef696463f',
-        #     apiurl='https://truc.com',
-        #     authurl='https://truc.com/realms/realm/',
-        #     ssl_verify=False)
-        #
-        # project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
-        # # Set up the expected response
-        # expected_response = req.Response()
-        # expected_response.status_code = 200
-        # expected_response.headers = None
-        # expected_response._content = bytes(json.dumps([
-        #     {
-        #         "workflowId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        #         "status": "RUNNING",
-        #         "projectId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        #         "completedTasks": ["TRAIN_TOPOLOGY"],
-        #         "startTime": "2023-12-12T13:24:11.929Z",
-        #         "endTime": "2023-12-12T13:24:11.929Z"
-        #     }
-        # ]), 'utf-8')
-        # expected_response.json = lambda: json.loads(expected_response.content)
-        #
-        # mocker.patch.object(api_connector, 'get_request', return_value=expected_response)
-        #
-        # result = project.predictions_status()
-        # date_format = "%Y-%m-%dT%H:%M:%S.%fZ"
-        # expected_result = WorkflowStatusDto(
-        #     uuid.UUID("3fa85f64-5717-4562-b3fc-2c963f66afa6"),
-        #     uuid.UUID("3fa85f64-5717-4562-b3fc-2c963f66afa6"),
-        #     PredictionStatusDto.RUNNING,
-        #     datetime.strptime("2023-12-12T13:24:11.929Z", date_format),
-        #     datetime.strptime("2023-12-12T13:24:11.929Z", date_format),
-        #     [PredictionTaskTypeDto.TRAIN_TOPOLOGY]
-        # )
-        #
-        # assert result[0] == expected_result
 
         mock_response = mocker.Mock()
         mock_response.status_code = 200
@@ -425,43 +308,6 @@ class TestProject:
         a expected JSON with no end date return from API call.
         """
 
-        # api_connector = APIConnector(
-        #     wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c',
-        #     wg_key='83de1a05-06ad-4757-9855-926ef696463f',
-        #     apiurl='https://truc.com',
-        #     authurl='https://truc.com/realms/realm/',
-        #     ssl_verify=False)
-        #
-        # project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
-        # # Set up the expected response
-        # expected_response = req.Response()
-        # expected_response.status_code = 200
-        # expected_response.headers = None
-        # expected_response._content = bytes(json.dumps([
-        #     {
-        #         "workflowId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        #         "status": "RUNNING",
-        #         "projectId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        #         "startTime": "2023-12-12T13:24:11.929Z"
-        #     }
-        # ]), 'utf-8')
-        # expected_response.json = lambda: json.loads(expected_response.content)
-        #
-        # mocker.patch.object(api_connector, 'get_request', return_value= expected_response)
-        #
-        # result = project.predictions_status()
-        # date_format = "%Y-%m-%dT%H:%M:%S.%fZ"
-        # expected_result = WorkflowStatusDto(
-        #     uuid.UUID("3fa85f64-5717-4562-b3fc-2c963f66afa6"),
-        #     uuid.UUID("3fa85f64-5717-4562-b3fc-2c963f66afa6"),
-        #     PredictionStatusDto.RUNNING,
-        #     datetime.strptime("2023-12-12T13:24:11.929Z", date_format),
-        #     None,
-        #     []
-        # )
-        #
-        # assert result[0] == expected_result
-
         mock_response = mocker.Mock()
         mock_response.status_code = 200
         mock_response.headers = None
@@ -495,44 +341,6 @@ class TestProject:
          from API call has invalid field.
          """
 
-        # api_connector = APIConnector(
-        #     wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c',
-        #     wg_key='83de1a05-06ad-4757-9855-926ef696463f',
-        #     apiurl='https://truc.com',
-        #     authurl='https://truc.com/realms/realm/',
-        #     ssl_verify=False)
-        #
-        # project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
-        # # Set up the expected response
-        # expected_response = req.Response()
-        # expected_response.status_code = 200
-        # expected_response.headers = None
-        # expected_response._content = bytes(json.dumps([
-        #     {
-        #         "workflowId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        #         "status": "RUNNING",
-        #         "projectId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        #         "completedTasks": ["TRAIN_TOPOLOGY"],
-        #         "startTime": "2023-12-12T13:24:11.929Z",
-        #         "endTime": "2023-12-12T13:24:11.929Z"
-        #     },
-        #     {
-        #         "invalidField": "3fa45f64-5717-4562-b3fc-2c963f66afa6",
-        #         "status": "RUNNING",
-        #         "projectId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        #         "completedTasks": ["TRAIN_TOPOLOGY"],
-        #         "startTime": "2023-12-12T13:24:11.929Z",
-        #         "endTime": "2023-12-12T13:24:11.929Z"
-        #     }
-        # ]), 'utf-8')
-        # expected_response.json = lambda: json.loads(expected_response.content)
-        #
-        # mocker.patch.object(api_connector, 'get_request', return_value= expected_response)
-        #
-        # result = project.predictions_status()
-        #
-        # assert result == PredictionErrorStatusDto.INVALID_RESPONSE
-
         mock_response = mocker.Mock()
         mock_response.status_code = 200
         mock_response.headers = None
@@ -561,33 +369,10 @@ class TestProject:
 
         assert result == PredictionErrorStatusDto.INVALID_RESPONSE
 
-
-
     def test_predictions_status_empty_response(self, mocker):
         """Test, via mocking,
          that the project predictions_status method correctly respond no elements returned from API call.
          """
-
-        # api_connector = APIConnector(
-        #     wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c',
-        #     wg_key='83de1a05-06ad-4757-9855-926ef696463f',
-        #     apiurl='https://truc.com',
-        #     authurl='https://truc.com/realms/realm/',
-        #     ssl_verify=False)
-        #
-        # project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
-        # # Set up the expected response
-        # expected_response = req.Response()
-        # expected_response.status_code = 200
-        # expected_response.headers = None
-        # expected_response._content = bytes(json.dumps([]), 'utf-8')
-        # expected_response.json = lambda: json.loads(expected_response.content)
-        #
-        # mocker.patch.object(api_connector, 'get_request', return_value=expected_response)
-        #
-        # result = project.predictions_status()
-        #
-        # assert len(result) == 0
 
         mock_response = mocker.Mock()
         mock_response.status_code = 200
@@ -603,24 +388,6 @@ class TestProject:
     def test_predictions_status_non_active(self, mocker):
         """Test, via mocking, that the project predictions_status method correctly handle 402 response from API call."""
 
-        # api_connector = APIConnector(
-        #     wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c',
-        #     wg_key='83de1a05-06ad-4757-9855-926ef696463f',
-        #     apiurl='https://truc.com',
-        #     authurl='https://truc.com/realms/realm/',
-        #     ssl_verify=False)
-        #
-        # project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
-        # # Set up the expected response
-        # expected_response = req.Response()
-        # expected_response.status_code = 402
-        #
-        # mocker.patch.object(api_connector, 'get_request', return_value=expected_response)
-        #
-        # result = project.predictions_status()
-        #
-        # assert result == PredictionErrorStatusDto.NON_ACTIVATED_PREDICTION
-
         mock_response = mocker.Mock()
         mock_response.status_code = 402
 
@@ -633,24 +400,6 @@ class TestProject:
     def test_predictions_status_forbidden(self, mocker):
         """Test, via mocking, that the project predictions_status method correctly handle 403 response from API call."""
 
-        # api_connector = APIConnector(
-        #     wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c',
-        #     wg_key='83de1a05-06ad-4757-9855-926ef696463f',
-        #     apiurl='https://truc.com',
-        #     authurl='https://truc.com/realms/realm/',
-        #     ssl_verify=False)
-        #
-        # project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
-        # # Set up the expected response
-        # expected_response = req.Response()
-        # expected_response.status_code = 403
-        #
-        # mocker.patch.object(api_connector, 'get_request', return_value=expected_response)
-        #
-        # result = project.predictions_status()
-        #
-        # assert result == PredictionErrorStatusDto.FORBIDDEN
-
         mock_response = mocker.Mock()
         mock_response.status_code = 403
 
@@ -662,24 +411,6 @@ class TestProject:
 
     def test_predictions_status_failure(self, mocker):
         """Test, via mocking, that the project predictions_status method correctly handle 424 response from API call."""
-        #
-        # api_connector = APIConnector(
-        #     wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c',
-        #     wg_key='83de1a05-06ad-4757-9855-926ef696463f',
-        #     apiurl='https://truc.com',
-        #     authurl='https://truc.com/realms/realm/',
-        #     ssl_verify=False)
-        #
-        # project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
-        # # Set up the expected response
-        # expected_response = req.Response()
-        # expected_response.status_code = 424
-        #
-        # mocker.patch.object(api_connector, 'get_request', return_value=expected_response)
-        #
-        # result = project.predictions_status()
-        #
-        # assert result == PredictionErrorStatusDto.PREDICTION_SERVICE_FAILURE
 
         mock_response = mocker.Mock()
         mock_response.status_code = 424
@@ -692,24 +423,6 @@ class TestProject:
 
     def test_predictions_status_unkown_failure(self, mocker):
         """Test, via mocking, that the project predictions_status method correctly handle 500 response from API call."""
-
-        # api_connector = APIConnector(
-        #     wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c',
-        #     wg_key='83de1a05-06ad-4757-9855-926ef696463f',
-        #     apiurl='https://truc.com',
-        #     authurl='https://truc.com/realms/realm/',
-        #     ssl_verify=False)
-        #
-        # project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
-        # # Set up the expected response
-        # expected_response = req.Response()
-        # expected_response.status_code = 500
-        #
-        # mocker.patch.object(api_connector, 'get_request', return_value=expected_response)
-        #
-        # result = project.predictions_status()
-        #
-        # assert result == PredictionErrorStatusDto.UNKNOWN_ERROR
 
         mock_response = mocker.Mock()
         mock_response.status_code = 500
@@ -724,27 +437,6 @@ class TestProject:
         """Test, via mocking,
         that the project is_ready_prediction_exists method correctly handle expected response True from API call.
         """
-        #
-        # api_connector = APIConnector(
-        #     wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c',
-        #     wg_key='83de1a05-06ad-4757-9855-926ef696463f',
-        #     apiurl='https://truc.com',
-        #     authurl='https://truc.com/realms/realm/',
-        #     ssl_verify=False)
-        #
-        # project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
-        # # Set up the expected response
-        # expected_response = req.Response()
-        # expected_response.status_code = 200
-        # expected_response.headers = None
-        # expected_response._content = bytes(json.dumps({"isPredictionReady": True}), 'utf-8')
-        # expected_response.json = lambda: json.loads(expected_response.content)
-        #
-        # mocker.patch.object(api_connector, 'get_request', return_value=expected_response)
-        #
-        # result = project.is_ready_prediction_exists()
-        #
-        # assert result is True
 
         mock_response = mocker.Mock()
         mock_response.status_code = 200
@@ -761,27 +453,6 @@ class TestProject:
         """Test, via mocking,
         that the project is_ready_prediction_exists method correctly handle expected response False from API call.
         """
-
-        # api_connector = APIConnector(
-        #     wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c'
-        #     , wg_key='83de1a05-06ad-4757-9855-926ef696463f',
-        #     apiurl='https://truc.com',
-        #     authurl='https://truc.com/realms/realm/',
-        #     ssl_verify=False)
-        #
-        # project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
-        # # Set up the expected response
-        # expected_response = req.Response()
-        # expected_response.status_code = 200
-        # expected_response.headers = None
-        # expected_response._content = bytes(json.dumps({"isPredictionReady": False}), 'utf-8')
-        # expected_response.json = lambda: json.loads(expected_response.content)
-        #
-        # mocker.patch.object(api_connector, 'get_request', return_value=expected_response)
-        #
-        # result = project.is_ready_prediction_exists()
-        #
-        # assert result is False
 
         mock_response = mocker.Mock()
         mock_response.status_code = 200
@@ -800,27 +471,6 @@ class TestProject:
         unexpected non boolean response from API call to INVALID_RESPONSE result.
         """
 
-        # api_connector = APIConnector(
-        #     wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c',
-        #     wg_key='83de1a05-06ad-4757-9855-926ef696463f',
-        #     apiurl='https://truc.com',
-        #     authurl='https://truc.com/realms/realm/',
-        #     ssl_verify=False)
-        #
-        # project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
-        # # Set up the expected response
-        # expected_response = req.Response()
-        # expected_response.status_code = 200
-        # expected_response.headers = None
-        # expected_response._content = bytes(json.dumps({"isPredictionReady": "toto"}), 'utf-8')
-        # expected_response.json = lambda: json.loads(expected_response.content)
-        #
-        # mocker.patch.object(api_connector, 'get_request', return_value=expected_response)
-        #
-        # result = project.is_ready_prediction_exists()
-        #
-        # assert result == PredictionErrorStatusDto.INVALID_RESPONSE
-
         mock_response = mocker.Mock()
         mock_response.status_code = 200
         mock_response.headers = None
@@ -837,27 +487,6 @@ class TestProject:
         that the project is_ready_prediction_exists method correctly handle response with unexpected field from API
         call to INVALID_RESPONSE result.
         """
-        #
-        # api_connector = APIConnector(
-        #     wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c',
-        #     wg_key='83de1a05-06ad-4757-9855-926ef696463f',
-        #     apiurl='https://truc.com',
-        #     authurl='https://truc.com/realms/realm/',
-        #     ssl_verify=False)
-        #
-        # project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
-        # # Set up the expected response
-        # expected_response = req.Response()
-        # expected_response.status_code = 200
-        # expected_response.headers = None
-        # expected_response._content = bytes(json.dumps({"invalidField": "toto"}), 'utf-8')
-        # expected_response.json = lambda: json.loads(expected_response.content)
-        #
-        # mocker.patch.object(api_connector, 'get_request', return_value=expected_response)
-        #
-        # result = project.is_ready_prediction_exists()
-        #
-        # assert result == PredictionErrorStatusDto.INVALID_RESPONSE
 
         mock_response = mocker.Mock()
         mock_response.status_code = 200
@@ -875,24 +504,6 @@ class TestProject:
         that the project is_ready_prediction_exists method correctly handle 402 response from API call.
         """
 
-        # api_connector = APIConnector(
-        #     wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c',
-        #     wg_key='83de1a05-06ad-4757-9855-926ef696463f',
-        #     apiurl='https://truc.com',
-        #     authurl='https://truc.com/realms/realm/',
-        #     ssl_verify=False)
-        #
-        # project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
-        # # Set up the expected response
-        # expected_response = req.Response()
-        # expected_response.status_code = 402
-        #
-        # mocker.patch.object(api_connector, 'get_request', return_value= expected_response)
-        #
-        # result = project.is_ready_prediction_exists()
-        #
-        # assert result == PredictionErrorStatusDto.NON_ACTIVATED_PREDICTION
-
         mock_response = mocker.Mock()
         mock_response.status_code = 402
 
@@ -906,24 +517,6 @@ class TestProject:
         """Test, via mocking,
         that the project is_ready_prediction_exists method correctly handle 403 response from API call.
         """
-
-        # api_connector = APIConnector(
-        #     wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c',
-        #     wg_key='83de1a05-06ad-4757-9855-926ef696463f',
-        #     apiurl='https://truc.com',
-        #     authurl='https://truc.com/realms/realm/',
-        #     ssl_verify=False)
-        #
-        # project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
-        # # Set up the expected response
-        # expected_response = req.Response()
-        # expected_response.status_code = 403
-        #
-        # mocker.patch.object(api_connector, 'get_request', return_value=expected_response)
-        #
-        # result = project.is_ready_prediction_exists()
-        #
-        # assert result == PredictionErrorStatusDto.FORBIDDEN
 
         mock_response = mocker.Mock()
         mock_response.status_code = 403
@@ -939,24 +532,6 @@ class TestProject:
         that the project is_ready_prediction_exists method correctly handle 500 response from API call.
         """
 
-        # api_connector = APIConnector(
-        #     wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c',
-        #     wg_key='83de1a05-06ad-4757-9855-926ef696463f',
-        #     apiurl='https://truc.com',
-        #     authurl='https://truc.com/realms/realm/',
-        #     ssl_verify=False)
-        #
-        # project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
-        # # Set up the expected response
-        # expected_response = req.Response()
-        # expected_response.status_code = 500
-        #
-        # mocker.patch.object(api_connector, 'get_request', return_value=expected_response)
-        #
-        # result = project.is_ready_prediction_exists()
-        #
-        # assert result == PredictionErrorStatusDto.UNKNOWN_ERROR
-
         mock_response = mocker.Mock()
         mock_response.status_code = 500
 
@@ -970,28 +545,6 @@ class TestProject:
         """Test, via mocking,
         that the project launch_prediction method correctly handle expected response from API call.
         """
-        #
-        # api_connector = APIConnector(
-        #     wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c',
-        #     wg_key='83de1a05-06ad-4757-9855-926ef696463f',
-        #     apiurl='https://truc.com',
-        #     authurl='https://truc.com/realms/realm/',
-        #     ssl_verify=False)
-        #
-        # project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
-        # # Set up the expected response
-        # expected_response = req.Response()
-        # expected_response.status_code = 200
-        # expected_response.headers = None
-        # expected_response._content = bytes(json.dumps({"predictionTrainId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"}),
-        #                                    'utf-8')
-        # expected_response.json = lambda: json.loads(expected_response.content)
-        #
-        # mocker.patch.object(api_connector, 'post_request', return_value=expected_response)
-        #
-        # result = project.launch_prediction()
-        #
-        # assert result == uuid.UUID("3fa85f64-5717-4562-b3fc-2c963f66afa6")
 
         mock_response = mocker.Mock()
         mock_response.status_code = 200
@@ -1009,27 +562,6 @@ class TestProject:
         that the project launch_prediction method correctly handle response with invalid value in JSON from API call.
         """
 
-        # api_connector = APIConnector(
-        #     wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c',
-        #     wg_key='83de1a05-06ad-4757-9855-926ef696463f',
-        #     apiurl='https://truc.com',
-        #     authurl='https://truc.com/realms/realm/',
-        #     ssl_verify=False)
-        #
-        # project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
-        # # Set up the expected response
-        # expected_response = req.Response()
-        # expected_response.status_code = 200
-        # expected_response.headers = None
-        # expected_response._content = bytes(json.dumps({"predictionTrainId": "toto"}), 'utf-8')
-        # expected_response.json = lambda: json.loads(expected_response.content)
-        #
-        # mocker.patch.object(api_connector, 'post_request', return_value=expected_response)
-        #
-        # result = project.launch_prediction()
-        #
-        # assert result == PredictionLaunchErrorStatusDto.INVALID_RESPONSE
-
         mock_response = mocker.Mock()
         mock_response.status_code = 200
         mock_response.headers = None
@@ -1046,28 +578,6 @@ class TestProject:
         that the project launch_prediction method correctly handle response with invalid field in JSON from API call.
         """
 
-        # api_connector = APIConnector(
-        #     wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c',
-        #     wg_key='83de1a05-06ad-4757-9855-926ef696463f',
-        #     apiurl='https://truc.com',
-        #     authurl='https://truc.com/realms/realm/',
-        #     ssl_verify=False)
-        #
-        # project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
-        # # Set up the expected response
-        # expected_response = req.Response()
-        # expected_response.status_code = 200
-        # expected_response.headers = None
-        # expected_response._content = bytes(json.dumps({"invalidField": "3fa85f64-5717-4562-b3fc-2c963f66afa6"}),
-        #                                    'utf-8')
-        # expected_response.json = lambda: json.loads(expected_response.content)
-        #
-        # mocker.patch.object(api_connector, 'post_request', return_value=expected_response)
-        #
-        # result = project.launch_prediction()
-        #
-        # assert result == PredictionLaunchErrorStatusDto.INVALID_RESPONSE
-
         mock_response = mocker.Mock()
         mock_response.status_code = 200
         mock_response.headers = None
@@ -1082,24 +592,6 @@ class TestProject:
     def test_launch_prediction_non_active(self, mocker):
         """Test, via mocking, that the project launch_prediction method correctly handle 402 response from API call."""
 
-        # api_connector = APIConnector(
-        #     wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c',
-        #     wg_key='83de1a05-06ad-4757-9855-926ef696463f',
-        #     apiurl='https://truc.com',
-        #     authurl='https://truc.com/realms/realm/',
-        #     ssl_verify=False)
-        #
-        # project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
-        # # Set up the expected response
-        # expected_response = req.Response()
-        # expected_response.status_code = 402
-        #
-        # mocker.patch.object(api_connector, 'post_request', return_value=expected_response)
-        #
-        # result = project.launch_prediction()
-        #
-        # assert result == PredictionLaunchErrorStatusDto.NON_ACTIVATED_PREDICTION
-
         mock_response = mocker.Mock()
         mock_response.status_code = 402
 
@@ -1111,24 +603,6 @@ class TestProject:
 
     def test_launch_prediction_forbidden(self, mocker):
         """Test, via mocking, that the project launch_prediction method correctly handle 403 response from API call."""
-        #
-        # api_connector = APIConnector(
-        #     wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c',
-        #     wg_key='83de1a05-06ad-4757-9855-926ef696463f',
-        #     apiurl='https://truc.com',
-        #     authurl='https://truc.com/realms/realm/',
-        #     ssl_verify=False)
-        #
-        # project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
-        # # Set up the expected response
-        # expected_response = req.Response()
-        # expected_response.status_code = 403
-        #
-        # mocker.patch.object(api_connector, 'post_request', return_value=expected_response)
-        #
-        # result = project.launch_prediction()
-        #
-        # assert result == PredictionLaunchErrorStatusDto.FORBIDDEN
 
         mock_response = mocker.Mock()
         mock_response.status_code = 403
@@ -1142,24 +616,6 @@ class TestProject:
     def test_launch_prediction_impossible(self, mocker):
         """Test, via mocking, that the project launch_prediction method correctly handle 409 response from API call."""
 
-        # api_connector = APIConnector(
-        #     wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c',
-        #     wg_key='83de1a05-06ad-4757-9855-926ef696463f',
-        #     apiurl='https://truc.com',
-        #     authurl='https://truc.com/realms/realm/',
-        #     ssl_verify=False)
-        #
-        # project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
-        # # Set up the expected response
-        # expected_response = req.Response()
-        # expected_response.status_code = 409
-        #
-        # mocker.patch.object(api_connector, 'post_request', return_value=expected_response)
-        #
-        # result = project.launch_prediction()
-        #
-        # assert result == PredictionLaunchErrorStatusDto.NOTHING_TO_PREDICT
-
         mock_response = mocker.Mock()
         mock_response.status_code = 409
 
@@ -1172,24 +628,6 @@ class TestProject:
     def test_launch_prediction_failure(self, mocker):
         """Test, via mocking, that the project launch_prediction method correctly handle 424 response from API call."""
 
-        # api_connector = APIConnector(
-        #     wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c',
-        #     wg_key='83de1a05-06ad-4757-9855-926ef696463f',
-        #     apiurl='https://truc.com',
-        #     authurl='https://truc.com/realms/realm/',
-        #     ssl_verify=False)
-        #
-        # project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
-        # # Set up the expected response
-        # expected_response = req.Response()
-        # expected_response.status_code = 424
-        #
-        # mocker.patch.object(api_connector, 'post_request', return_value=expected_response)
-        #
-        # result = project.launch_prediction()
-        #
-        # assert result == PredictionLaunchErrorStatusDto.PREDICTION_SERVICE_FAILURE
-
         mock_response = mocker.Mock()
         mock_response.status_code = 424
 
@@ -1201,24 +639,6 @@ class TestProject:
 
     def test_launch_prediction_unknown_failure(self, mocker):
         """Test, via mocking, that the project launch_prediction method correctly handle 500 response from API call."""
-
-        # api_connector = APIConnector(
-        #     wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c',
-        #     wg_key='83de1a05-06ad-4757-9855-926ef696463f',
-        #     apiurl='https://truc.com',
-        #     authurl='https://truc.com/realms/realm/',
-        #     ssl_verify=False)
-        #
-        # project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
-        # # Set up the expected response
-        # expected_response = req.Response()
-        # expected_response.status_code = 500
-        #
-        # mocker.patch.object(api_connector, 'post_request', return_value=expected_response)
-        #
-        # result = project.launch_prediction()
-        #
-        # assert result == PredictionLaunchErrorStatusDto.UNKNOWN_ERROR
 
         mock_response = mocker.Mock()
         mock_response.status_code = 500
@@ -1234,24 +654,6 @@ class TestProject:
         that the project delete_predictions method correctly handle expected response from API call.
         """
 
-        # api_connector = APIConnector(
-        #     wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c',
-        #     wg_key='83de1a05-06ad-4757-9855-926ef696463f',
-        #     apiurl='https://truc.com',
-        #     authurl='https://truc.com/realms/realm/',
-        #     ssl_verify=False)
-        #
-        # project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
-        # # Set up the expected response
-        # expected_response = req.Response()
-        # expected_response.status_code = 204
-        #
-        # mocker.patch.object(api_connector, 'delete_request', return_value=expected_response)
-        #
-        # result = project.delete_predictions()
-        #
-        # assert result is None
-
         mock_response = mocker.Mock()
         mock_response.status_code = 204
 
@@ -1265,23 +667,6 @@ class TestProject:
         """Test, via mocking,
         that the project delete_predictions method correctly handles 402 response from API call.
         """
-        # api_connector = APIConnector(
-        #     wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c',
-        #     wg_key='83de1a05-06ad-4757-9855-926ef696463f',
-        #     apiurl='https://truc.com',
-        #     authurl='https://truc.com/realms/realm/',
-        #     ssl_verify=False)
-        # project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
-        #
-        # # Set up the expected response
-        # expected_response = req.Response()
-        # expected_response.status_code = 402
-        #
-        # mocker.patch.object(api_connector, 'delete_request', return_value=expected_response)
-        #
-        # result = project.delete_predictions()
-        #
-        # assert result == PredictionErrorStatusDto.NON_ACTIVATED_PREDICTION
 
         mock_response = mocker.Mock()
         mock_response.status_code = 402
@@ -1292,27 +677,8 @@ class TestProject:
 
         assert result == PredictionErrorStatusDto.NON_ACTIVATED_PREDICTION
 
-
     def test_delete_predictions_forbidden(self, mocker):
         """Test, via mocking, that the project delete_predictions method correctly handle 403 response from API call."""
-        #
-        # api_connector = APIConnector(
-        #     wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c',
-        #     wg_key='83de1a05-06ad-4757-9855-926ef696463f',
-        #     apiurl='https://truc.com',
-        #     authurl='https://truc.com/realms/realm/',
-        #     ssl_verify=False)
-        #
-        # project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
-        # # Set up the expected response
-        # expected_response = req.Response()
-        # expected_response.status_code = 403
-        #
-        # mocker.patch.object(api_connector, 'delete_request', return_value=expected_response)
-        #
-        # result = project.delete_predictions()
-        #
-        # assert result == PredictionErrorStatusDto.FORBIDDEN
 
         mock_response = mocker.Mock()
         mock_response.status_code = 403
@@ -1325,24 +691,6 @@ class TestProject:
 
     def test_delete_predictions_fails(self, mocker):
         """Test, via mocking, that the project delete_predictions method correctly handle 424 response from API call."""
-        #
-        # api_connector = APIConnector(
-        #     wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c',
-        #     wg_key='83de1a05-06ad-4757-9855-926ef696463f',
-        #     apiurl='https://truc.com',
-        #     authurl='https://truc.com/realms/realm/',
-        #     ssl_verify=False)
-        #
-        # project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
-        # # Set up the expected response
-        # expected_response = req.Response()
-        # expected_response.status_code = 424
-        #
-        # mocker.patch.object(api_connector, 'delete_request', return_value=expected_response)
-        #
-        # result = project.delete_predictions()
-        #
-        # assert result == PredictionErrorStatusDto.PREDICTION_SERVICE_FAILURE
 
         mock_response = mocker.Mock()
         mock_response.status_code = 424
@@ -1355,24 +703,6 @@ class TestProject:
 
     def test_delete_predictions_fails_500(self, mocker):
         """Test, via mocking, that the project delete_predictions method correctly handle 500 response from API call."""
-
-        # api_connector = APIConnector(
-        #     wg_id='bd4f84d9-34ec-4943-b37a-c025ebaa840c',
-        #     wg_key='83de1a05-06ad-4757-9855-926ef696463f',
-        #     apiurl='https://truc.com',
-        #     authurl='https://truc.com/realms/realm/',
-        #     ssl_verify=False)
-        #
-        # project = Project(pid=str(uuid.uuid4()), api_connector=api_connector)
-        # # Set up the expected response
-        # expected_response = req.Response()
-        # expected_response.status_code = 500
-        #
-        # mocker.patch.object(api_connector, 'delete_request', return_value=expected_response)
-        #
-        # result = project.delete_predictions()
-        #
-        # assert result == PredictionErrorStatusDto.UNKNOWN_ERROR
 
         mock_response = mocker.Mock()
         mock_response.status_code = 500
@@ -1459,6 +789,7 @@ class TestProject:
         """Test, via mocking,
         that the project get_project_predictions method correctly handles multiple case IDs from API call.
         """
+
         mock_response = mocker.Mock()
         mock_response.status_code = 200
         mock_response.json.return_value = {"prediction": "result"}

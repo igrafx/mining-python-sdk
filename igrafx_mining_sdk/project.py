@@ -239,7 +239,8 @@ class Project:
         return response_add_file.status_code == 201
 
     def prediction_possibility(self) -> PredictionPossibilityDto:
-        """Makes an API call to get information on possibility to launch prediction on a project, or on why it can not be launched on the project"""
+        """Makes an API call to get information on possibility to launch prediction on a project,
+        or on why it can not be launched on the project"""
 
         json_response = self.api_connector.get_request(f"/projects/{self.id}/predictions/trains/possible")
 
@@ -248,16 +249,19 @@ class Project:
             if 'isPredictionLaunchPossible' in json_content:
                 response_value = json_content['isPredictionLaunchPossible']
                 value_as_enum = self._get_enum_value_or_none(response_value, PredictionPossibilityDto)
-                if value_as_enum == None:
-                    print(f"Tried to get prediction possibility but invalid response value on project {self.id}. Response: {json_content}")
+                if value_as_enum is None:
+                    print(f"Tried to get prediction possibility but invalid response value on project {self.id}. "
+                          f"Response: {json_content}")
                     return PredictionPossibilityDto.INVALID_RESPONSE
                 else:
                     return value_as_enum
             else:
-                print(f"Tried to get prediction possibility but invalid response format on project {self.id}. Response: {json_content}")
+                print(f"Tried to get prediction possibility but invalid response format on project {self.id}. "
+                      f"Response: {json_content}")
                 return PredictionPossibilityDto.INVALID_RESPONSE
         elif json_response.status_code == 402:
-            print(f"Tried to get prediction possibility but non activated on project {self.id}. Response: {json_response}")
+            print(f"Tried to get prediction possibility but non activated on project {self.id}. "
+                  f"Response: {json_response}")
             return PredictionPossibilityDto.NON_ACTIVATED_PREDICTION
         elif json_response.status_code == 403:
             print(f"Tried to get prediction possibility but forbidden on project {self.id}. Response: {json_response}")
@@ -276,7 +280,8 @@ class Project:
             json_content = json_response.json()
             workflows_status = [self._parse_workflow_status(item) for item in json_content]
             if any(isinstance(workflow_status, PredictionErrorStatusDto) for workflow_status in workflows_status):
-                print(f"Tried to get predictions status but invalid response format on project {self.id}. Response: {json_content}")
+                print(f"Tried to get predictions status but invalid response format on project {self.id}. "
+                      f"Response: {json_content}")
                 return PredictionErrorStatusDto.INVALID_RESPONSE
             else:
                 return workflows_status
@@ -304,7 +309,8 @@ class Project:
             if is_prediction_ready is not None and isinstance(is_prediction_ready, bool):
                 return is_prediction_ready
             else:
-                print(f"Tried to get prediction existence but invalid response format on project {self.id}. Response: {json_content}")
+                print(f"Tried to get prediction existence but invalid response format on project {self.id}. "
+                      f"Response: {json_content}")
                 return PredictionErrorStatusDto.INVALID_RESPONSE
         elif response.status_code == 402:
             print(f"Tried to get prediction existence but non activated on project {self.id}. Response: {response}")
@@ -324,7 +330,7 @@ class Project:
         if response.status_code == 200:
             json_content = response.json()
             prediction_train_id = json_content.get('predictionTrainId')
-            if (prediction_train_id is not None):
+            if prediction_train_id is not None:
                 try:
                     return uuid.UUID(prediction_train_id)
                 except ValueError:

@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class PredictionPossibilityDto(Enum):
     """Class PredictionPossibilityDto for the prediction possiblility: CAN_LAUNCH_PREDICTION if prediction can be launched, explicit error code if can not be launched."""
 
