@@ -1,7 +1,6 @@
 # MIT License, Copyright 2023 iGrafx
 # https://github.com/igrafx/mining-python-sdk/blob/dev/LICENSE
 import json
-
 import pytest
 from igrafx_mining_sdk.column_mapping import ColumnType, Column, ColumnMapping, GroupedTasksDimensionAggregation, \
     MetricAggregation

@@ -11,7 +11,6 @@ HOST = os.environ.get('HOST')
 PORT = os.environ.get('PORT')
 
 
-
 class TestDatasource:
     """Class for testing Datasource class.
     Workgroup and project are pytest fixtures defined in conftest.py file.

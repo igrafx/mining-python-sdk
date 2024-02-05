@@ -4,6 +4,7 @@ from datetime import datetime
 from igrafx_mining_sdk.dtos.PredictionStatusDto import PredictionStatusDto
 from igrafx_mining_sdk.dtos.PredictionTaskTypeDto import PredictionTaskTypeDto
 
+
 class WorkflowStatusDto:
     """A iGrafx P360 Live Mining project representing a prediction status"""
 

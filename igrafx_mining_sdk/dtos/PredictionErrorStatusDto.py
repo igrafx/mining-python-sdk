@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class PredictionErrorStatusDto(Enum):
     """Class PredictionErrorStatusDto for most of the predictions API failures possibilities"""
 
