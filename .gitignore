@@ -24,3 +24,6 @@ CONTRIBUTE.md
 CHANGELOG.md
 igrafx_mining_sdk.egg-info/
 dist/
+sphinx_docs/build/*
+sphinx_docs/doctrees/*
+sphinx_docs/html/*

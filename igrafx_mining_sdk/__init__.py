@@ -36,7 +36,7 @@ __email__ = metadata['email']
 __version__ = metadata['version']
 __doc__ = """
 igrafx_mining_sdk
-================
+==================
 
 Description
 -----------

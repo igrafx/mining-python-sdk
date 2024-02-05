@@ -1,9 +1,9 @@
 # MIT License, Copyright 2023 iGrafx
 # https://github.com/igrafx/mining-python-sdk/blob/dev/LICENSE
-
 from pathlib import Path
 import pytest
 from igrafx_mining_sdk.graph import Graph
+
 
 class TestGraph:
     """Tests for the Graph class.
