@@ -216,6 +216,7 @@ class Project:
 
     def add_file(self, path):
         """Adds a file to the project
+
         :param path: The path to the file to add
         """
         route = f"/project/{self.id}/file?teamId={self.api_connector.wg_id}"
