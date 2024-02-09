@@ -384,12 +384,15 @@ class Project:
         completed_tasks = [self._get_enum_value_or_none(task, PredictionTaskTypeDto) for task in item.get('completedTasks', [])]
         end_time = item.get('endTime', None)
 
-        if None in (prediction_id, project_id, status, start_time, completed_tasks):
+        if None in (prediction_id, project_id, status, completed_tasks):
             return PredictionErrorStatusDto.INVALID_RESPONSE
         else:
             try:
                 date_format = "%Y-%m-%dT%H:%M:%S.%fZ"
-                start_datetime = datetime.strptime(start_time, date_format)
+                if start_time is not None:
+                    start_datetime = datetime.strptime(start_time, date_format)
+                else:
+                    start_datetime = None
 
                 if end_time is not None:
                     end_datetime = datetime.strptime(end_time, date_format)
