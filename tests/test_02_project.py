@@ -149,6 +149,7 @@ class TestProject:
 
     @pytest.mark.dependency(depends=['project_contains_data'])
     def test_get_project_variants(self):
+        time.sleep(3)
         """Test that the project correct variants are returned."""
         assert pytest.project.get_project_variants(1, 3)
 
