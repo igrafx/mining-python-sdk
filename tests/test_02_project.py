@@ -314,9 +314,8 @@ class TestProject:
         mock_response.json.return_value = [
             {
                 "workflowId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-                "status": "RUNNING",
-                "projectId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-                "startTime": "2023-12-12T13:24:11.929Z"
+                "status": "PENDING",
+                "projectId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
             }
         ]
 
@@ -327,7 +326,7 @@ class TestProject:
         expected_result = WorkflowStatusDto(
             uuid.UUID("3fa85f64-5717-4562-b3fc-2c963f66afa6"),
             uuid.UUID("3fa85f64-5717-4562-b3fc-2c963f66afa6"),
-            PredictionStatusDto.RUNNING,
+            PredictionStatusDto.PENDING,
             None,
             None,
             []
