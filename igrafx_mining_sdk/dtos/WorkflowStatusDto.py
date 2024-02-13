@@ -8,7 +8,7 @@ from igrafx_mining_sdk.dtos.PredictionTaskTypeDto import PredictionTaskTypeDto
 class WorkflowStatusDto:
     """A iGrafx P360 Live Mining project representing a prediction status"""
 
-    def __init__(self, prediction_id: uuid.UUID, project_id: uuid.UUID, status: PredictionStatusDto, start_time: datetime,
+    def __init__(self, prediction_id: uuid.UUID, project_id: uuid.UUID, status: PredictionStatusDto, start_time: Optional[datetime],
                  end_time: Optional[datetime] = None, completed_tasks: Optional[List[PredictionTaskTypeDto]] = None):
         """Create a iGrafx P360 Live Mining project from a project ID and the Workgroup it was created from
 
