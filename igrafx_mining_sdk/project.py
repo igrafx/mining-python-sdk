@@ -208,6 +208,40 @@ class Project:
         response_mapping_infos = self.api_connector.get_request(f"/project/{self.id}/mappingInfos").json()
         return response_mapping_infos
 
+    def get_column_mapping(self):
+        """Returns the column mapping of the project"""
+
+        if self.column_mapping_exists:
+            mapping_infos = self.get_mapping_infos()
+            column_mapping = {}
+
+            for i, dimension in enumerate(mapping_infos.get('dimensions', []), start=1):
+                column_mapping[f"col{i}"] = {
+                    "name": dimension.get('name', ''),
+                    "columnIndex": str(i - 1),  # Assuming columnIndex starts from 0
+                    "columnType": "DIMENSION"
+                }
+
+            for i, metric in enumerate(mapping_infos.get('metrics', []), start=len(column_mapping) + 1):
+                column_mapping[f"col{i}"] = {
+                    "name": metric.get('name', ''),
+                    "columnIndex": str(i - 1),  # Assuming columnIndex starts from 0
+                    "columnType": "METRIC"
+                }
+
+            # for index, info in enumerate(mapping_infos["metrics"] + mapping_infos["dimensions"]):
+            #     col_name = f"col{index + 1}"
+            #     column_mapping[col_name] = {
+            #         "name": info["name"],
+            #         "columnIndex": str(index),
+            #         "columnType": "CASE_ID" if info.get("isCaseScope") else "ATTRIBUTE",
+            #     }
+
+        else:
+            raise ValueError("Column mapping does not exist for this project.")
+
+        return column_mapping
+
     def reset(self):
         """Makes an API call to manually reset a project"""
 

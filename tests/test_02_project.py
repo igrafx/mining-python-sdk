@@ -64,10 +64,16 @@ class TestProject:
         """Test that the correct mapping infos can be returned"""
         assert pytest.project.get_mapping_infos()
 
+
     @pytest.mark.dependency(name='reset', depends=['project'], scope='session')
     def test_reset(self):
         """Test that a project can be reset."""
         assert pytest.project.reset()
+
+    def test_get_column_mapping_not_exist(self):
+        """Test that a column mapping does not exist and cannot be retrieved."""
+        with pytest.raises(ValueError):
+            pytest.project.get_column_mapping()
 
     @pytest.mark.dependency(depends=['reset', 'add_column_mapping'])
     def test_add_xlsx_file(self):
@@ -123,6 +129,8 @@ class TestProject:
             Column('Activity', 1, ColumnType.TASK_NAME),
             Column('Start Date', 2, ColumnType.TIME, time_format='dd/MM/yyyy HH:mm'),
             Column('End Date', 3, ColumnType.TIME, time_format='dd/MM/yyyy HH:mm'),
+            Column('Price', 4, ColumnType.METRIC),
+            Column('Forme', 5, ColumnType.DIMENSION),
         ]
         column_mapping = ColumnMapping(column_list)
         base_dir = Path(__file__).resolve().parent
@@ -152,6 +160,10 @@ class TestProject:
         time.sleep(3)
         """Test that the project correct variants are returned."""
         assert pytest.project.get_project_variants(1, 3)
+
+    def test_get_column_mapping(self):
+        """Test that the correct column mapping can be returned"""
+        assert pytest.project.get_column_mapping()
 
     @pytest.mark.dependency(depends=['project_contains_data'])
     def test_prediction_possibility_no_end_case_rule(self):
