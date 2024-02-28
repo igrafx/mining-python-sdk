@@ -126,6 +126,12 @@ Furthermore, the `mapping infos` of the project can be retrieved:
 ````python
 my_project.get_mapping_infos()
 ````
+Please note that to retrieve the column mapping of a project, you may use the following method:
+````python
+my_project.get_column_mapping()
+````
+
+Here is an example of what it returns.
 
 The project can also be ``deleted``:
 ````python
