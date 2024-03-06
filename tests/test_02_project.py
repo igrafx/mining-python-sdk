@@ -133,7 +133,7 @@ class TestProject:
 
     @pytest.mark.dependency(name='add_csv_file', depends=['reset', 'add_column_mapping'], scope='session')
     def test_add_csv_file_from_json_column_mapping(self):
-        """Test that a csv file can be added to a project."""
+        """Test that a csv file can be added to a project. Using a json column mapping that contains grouped tasks"""
         pytest.project.reset()
         filestructure = FileStructure(
             file_type=FileType.csv,
