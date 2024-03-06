@@ -130,6 +130,28 @@ class TestProject:
         assert pytest.project.add_column_mapping(filestructure, column_mapping)
         assert pytest.project.add_file(str(file_path))
 
+
+    @pytest.mark.dependency(name='add_csv_file', depends=['reset', 'add_column_mapping'], scope='session')
+    def test_add_csv_file_from_json_column_mapping(self):
+        """Test that a csv file can be added to a project."""
+        pytest.project.reset()
+        filestructure = FileStructure(
+            file_type=FileType.csv,
+        )
+        column_dict = '''{
+        "col1": {"name": "Case ID", "columnIndex": "0", "columnType":   "CASE_ID"},
+        "col2": {"name": "Activity", "columnIndex": "1", "columnType": "TASK_NAME", "groupedTasksColumns": [1, 2, 3]},
+        "col3": {"name": "Start Date", "columnIndex": "2", "columnType": "TIME", "format": "dd/MM/yyyy HH:mm"},
+        "col4": {"name": "End Date", "columnIndex": "3", "columnType": "TIME", "format": "dd/MM/yyyy HH:mm"},
+        "col5": {"name": "Price", "columnIndex": "4", "columnType": "METRIC", "isCaseScope": false, "groupedTasksAggregation": "SUM", "aggregation": "SUM", "unit": "円"},
+        "col6": {"name": "Forme", "columnIndex": "5", "columnType": "DIMENSION", "isCaseScope": false, "groupedTasksAggregation": "LAST", "aggregation": "DISTINCT"}
+        }'''
+        column_mapping = ColumnMapping.from_json(column_dict)
+        base_dir = Path(__file__).resolve().parent
+        file_path = base_dir / 'data' / 'tables' / 'testdata.csv'
+        assert pytest.project.add_column_mapping(filestructure, column_mapping)
+        assert pytest.project.add_file(str(file_path))
+
     @pytest.mark.dependency(name='project_contains_data', depends=['add_csv_file'])
     def test_project_contains_data(self):
         count = 0
