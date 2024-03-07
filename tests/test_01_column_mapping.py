@@ -220,6 +220,19 @@ class TestColumnMapping:
         column_mapping = ColumnMapping.from_json(column_dict)
         assert isinstance(column_mapping, ColumnMapping)
 
+    def test_create_column_mapping_from_json_dict_grouped_tasks(self):
+        """ Test to define a valid column mapping from a column dictionary json with grouped tasks"""
+        column_dict = '''{
+        "col1": {"name": "Case ID", "columnIndex": "0", "columnType":   "CASE_ID"},
+        "col2": {"name": "Activity", "columnIndex": "1", "columnType": "TASK_NAME", "groupedTasksColumns": [1, 2, 3]},
+        "col3": {"name": "Start Date", "columnIndex": "2", "columnType": "TIME", "format": "dd/MM/yyyy HH:mm"},
+        "col4": {"name": "End Date", "columnIndex": "3", "columnType": "TIME", "format": "dd/MM/yyyy HH:mm"},
+        "col5": {"name": "Price", "columnIndex": "4", "columnType": "METRIC", "isCaseScope": false, "groupedTasksAggregation": "SUM", "aggregation": "SUM", "unit": "円"},
+        "col6": {"name": "Forme", "columnIndex": "5", "columnType": "DIMENSION", "isCaseScope": false, "groupedTasksAggregation": "LAST", "aggregation": "DISTINCT"}
+        }'''
+        column_mapping = ColumnMapping.from_json(column_dict)
+        assert isinstance(column_mapping, ColumnMapping)
+
     @pytest.mark.dependency(depends=['create_column_from_json', 'column_mapping'])
     def test_create_column_mapping_from_json_list(self):
         """ Test to define a valid column mapping from a column list json"""

@@ -128,6 +128,7 @@ class ColumnType(Enum):
 
 
 class Column:
+
     """A Column used in the column mapping"""
     def __init__(self, name: str, index: int, column_type: ColumnType, *, is_case_scope: bool = False,
                  aggregation: Union[MetricAggregation, DimensionAggregation] = None, grouped_tasks_columns: [] = None,
@@ -197,7 +198,7 @@ class Column:
         if self.grouped_tasks_columns is not None:
             res['groupedTasksColumns'] = self.grouped_tasks_columns
         if self.grouped_tasks_aggregation is not None:
-            res['groupedTasksAggregation'] = self.grouped_tasks_aggregation
+            res['groupedTasksAggregation'] = self.grouped_tasks_aggregation.value if isinstance(self.grouped_tasks_aggregation, Enum) else self.grouped_tasks_aggregation
         return res
 
     @classmethod
@@ -241,9 +242,9 @@ class Column:
         grouped_tasks_aggregation = data.get('groupedTasksAggregation')
 
         if grouped_tasks_aggregation is not None:
-            if column_type == ColumnType.METRIC.value:
+            if column_type == ColumnType.METRIC:
                 supported_aggregations = MetricAggregation
-            elif column_type == ColumnType.DIMENSION.value:
+            elif column_type == ColumnType.DIMENSION:
                 supported_aggregations = GroupedTasksDimensionAggregation
             else:
                 raise ValueError('groupedTasksAggregation field should only be fill for columns of type metric or dimension')
