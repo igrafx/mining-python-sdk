@@ -108,7 +108,6 @@ class Project:
         """Returns datasource of type '_simplifiedEdge'"""
         return self.__get_datasource_by_name('_simplifiedEdge')
 
-
     @property
     def cases_datasource(self):
         """Returns datasource of type 'cases'"""
@@ -374,14 +373,15 @@ class Project:
             print(f"Failed to delete predictions on project {self.id}. Response: {response}")
             return PredictionErrorStatusDto.UNKNOWN_ERROR
 
-    def _parse_workflow_status(self, item: Dict[str, str]) ->  Union[WorkflowStatusDto, PredictionErrorStatusDto]:
+    def _parse_workflow_status(self, item: Dict[str, str]) -> Union[WorkflowStatusDto, PredictionErrorStatusDto]:
         """Parses the prediction status object to a business class WorkflowStatusDto"""
 
         prediction_id = self._cast_string_to_uuid_or_none(item.get('workflowId'))
         project_id = self._cast_string_to_uuid_or_none(item.get('projectId'))
         status = self._get_enum_value_or_none(item.get('status'), PredictionStatusDto)
         start_time = item.get('startTime')
-        completed_tasks = [self._get_enum_value_or_none(task, PredictionTaskTypeDto) for task in item.get('completedTasks', [])]
+        completed_tasks = [self._get_enum_value_or_none(task, PredictionTaskTypeDto)
+                           for task in item.get('completedTasks', [])]
         end_time = item.get('endTime', None)
 
         if None in (prediction_id, project_id, status, completed_tasks):
@@ -399,7 +399,12 @@ class Project:
                 else:
                     end_datetime = None
 
-                return WorkflowStatusDto(prediction_id, project_id, status, start_datetime, end_datetime, completed_tasks)
+                return WorkflowStatusDto(prediction_id,
+                                         project_id,
+                                         status,
+                                         start_datetime,
+                                         end_datetime,
+                                         completed_tasks)
             except ValueError:
                 return PredictionErrorStatusDto.INVALID_RESPONSE
 

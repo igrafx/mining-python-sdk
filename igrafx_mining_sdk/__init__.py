@@ -1,7 +1,8 @@
 # MIT License, Copyright 2023 iGrafx
 # https://github.com/igrafx/mining-python-sdk/blob/dev/LICENSE
 
-from igrafx_mining_sdk.column_mapping import FileType, FileStructure, ColumnMapping, MetricAggregation, DimensionAggregation
+from igrafx_mining_sdk.column_mapping import (FileType, FileStructure, ColumnMapping, MetricAggregation,
+                                              DimensionAggregation)
 from igrafx_mining_sdk.datasource import Datasource
 from igrafx_mining_sdk.workgroup import Workgroup
 from igrafx_mining_sdk.project import Project

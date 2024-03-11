@@ -5,14 +5,14 @@ import requests as req
 
 
 class InvalidRouteError(Exception):
-    """Raised when Login failed after a number of try to login"""
+    """Raised when Login failed after a number of try to log in"""
     def __init__(self, message="Unauthorized to use this route"):
         self.message = message
         super().__init__(self.message)
 
 
 class APIConnector:
-    """Class to connect to the API. It allows us to log into the Mining Public API and retrive a token.
+    """Class to connect to the API. It allows us to log into the Mining Public API and retrieve a token.
     It also allows us to do HTTP GET, POST and DELETE requests."""
     def __init__(self, wg_id: str, wg_key: str, apiurl: str, authurl: str, ssl_verify: bool):
         """Initializes the APIConnector class.
@@ -38,16 +38,15 @@ class APIConnector:
         """
         return apiurl if apiurl.endswith("/pub") else apiurl + "/pub"
 
-    def __remove_slash(selfself, url):
+    def __remove_slash(self, url):
         """Ensure that any URL ending with  / are correctly managed and remove / if needed
 
         :param url: The URL to analyse
         """
         return url.strip().rstrip('/')
 
-
     def __login(self):
-        """Logs into the Mining Public API with the Workgroup's credentials and retrieves a token for later requests"""
+        """Logs into the Mining Public API with the Workgroups credentials and retrieves a token for later requests"""
 
         login_url = f"{self._authurl}/protocol/openid-connect/token"
         login_data = {
@@ -62,13 +61,13 @@ class APIConnector:
             return {"Authorization": "Bearer " + response.json()["access_token"]}
 
         except req.exceptions.HTTPError as error:
-            print(f"HTTP Error occured: {error}")
+            print(f"HTTP Error occurred: {error}")
             if error.response.reason == 'Bad Request':
                 raise Exception("Invalid login credentials. \n\nTo check your credentials,"
                                 "please go to the Process Explorer 360.\n"
                                 "When on the platform, go to the workgroup settings and on the Open API tab and "
                                 "check that the correct credentials have been entered.\n\n"
-                                "There, you can find your workgroup's ID and secret key "
+                                "There, you can find your workgroups ID and secret key "
                                 "and the API and authentication url.")
 
     def get_request(self, route, *, params=None, nblasttries=0, maxtries=3):
@@ -95,12 +94,13 @@ class APIConnector:
                     raise InvalidRouteError()
             response.raise_for_status()
         except (req.HTTPError, InvalidRouteError) as error:
-            print(f"Http error occured: {error}")
+            print(f"Http error occurred: {error}")
             print(response.text)
         return response
 
     def post_request(self, route, *, params=None, json=None, files=None, headers={}, nblasttries=0, maxtries=3):
-        """Does an HTTP POST request to the Mining Public API by simply taking the route, an eventual JSON, files and headers
+        """Does an HTTP POST request to the Mining Public API by simply taking the route, an eventual JSON,
+        files and headers
 
         :param route: The route of the request
         :param params: The parameters of the request
@@ -123,13 +123,18 @@ class APIConnector:
             if response.status_code == 401:  # Only possible if the token has expired
                 if nblasttries < maxtries:
                     self.token_header = self.__login()
-                    self.post_request(route, json=json, files=files, headers=headers, nblasttries=nblasttries+1, maxtries=maxtries)
+                    self.post_request(route,
+                                      json=json,
+                                      files=files,
+                                      headers=headers,
+                                      nblasttries=nblasttries+1,
+                                      maxtries=maxtries)
                 else:
                     raise InvalidRouteError()
             response.raise_for_status()
         except (req.HTTPError, InvalidRouteError) as error:
             if response is not None:
-                print(f"Http error occured: {error}")
+                print(f"Http error occurred: {error}")
                 print(response.text)
         return response
 
@@ -142,7 +147,7 @@ class APIConnector:
         """
 
         response = None
-        _route = self.apiurl +(route if route.startswith('/') else '/' + route)
+        _route = self.apiurl + (route if route.startswith('/') else '/' + route)
         try:
             response = req.delete(_route,
                                   headers=self.token_header,
@@ -155,6 +160,6 @@ class APIConnector:
                     raise InvalidRouteError()
             response.raise_for_status()
         except (req.HTTPError, InvalidRouteError) as error:
-            print(f"Http error occured: {error}")
+            print(f"Http error occurred: {error}")
             print(response.text)
         return response
