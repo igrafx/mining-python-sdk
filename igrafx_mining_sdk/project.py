@@ -409,7 +409,7 @@ class Project:
                 return PredictionErrorStatusDto.INVALID_RESPONSE
 
     def _get_enum_value_or_none(self, value_str: str, enum_type: Enum) -> Optional[Enum]:
-        """Parses the value_str string to the given enum_type or None if does not match"""
+        """Parses the value_str string to the given enum_type or None if it does not match"""
 
         try:
             return enum_type(value_str)
@@ -417,7 +417,7 @@ class Project:
             return None
 
     def _cast_string_to_uuid_or_none(self, string_value: str) -> Optional[uuid.UUID]:
-        """Parses the string_value string to a UUID class or None if does not match to a UUID"""
+        """Parses the string_value string to a UUID class or None if it does not match to a UUID"""
 
         try:
             if string_value is None:
