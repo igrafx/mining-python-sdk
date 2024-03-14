@@ -11,6 +11,7 @@ class FileType(str, Enum):
     xls = "xls"
     xlsx = "xlsx"
 
+
 class FileStructure:
     """ A FileStructure used to create a column mapping"""
     def __init__(self, file_type: FileType, charset: str = "UTF-8", delimiter: str = ",", quote_char: str = '"',
@@ -41,7 +42,7 @@ class FileStructure:
         self.sheet_name = sheet_name
 
     def to_dict(self):
-        """Returns the JSON dictionnary format of the FileStructure"""
+        """Returns the JSON dictionary format of the FileStructure"""
 
         res = {
             'fileType': self.file_type.value,
@@ -163,20 +164,28 @@ class Column:
             if self.time_format is not None:
                 raise ValueError("time_format can only be used with 'time' column type")
 
-        if any(p is not None for p in [self.aggregation, self.unit]) and self.column_type not in [
-            ColumnType.METRIC, ColumnType.DIMENSION]:
+        if (any(p is not None for p in [self.aggregation, self.unit]) and self.column_type not in
+                [ColumnType.METRIC, ColumnType.DIMENSION]):
             raise ValueError(f"Aggregation and unit parameters are not allowed for {self.column_type} columns")
 
-        if self.column_type == ColumnType.METRIC and self.aggregation is not None and self.aggregation not in MetricAggregation:
+        if (self.column_type == ColumnType.METRIC
+                and self.aggregation is not None
+                and self.aggregation not in MetricAggregation):
             raise ValueError("Aggregation of a 'metric' column type must be a MetricAggregation")
 
-        if self.column_type == ColumnType.DIMENSION and self.aggregation is not None and self.aggregation not in DimensionAggregation:
+        if (self.column_type == ColumnType.DIMENSION
+                and self.aggregation is not None
+                and self.aggregation not in DimensionAggregation):
             raise ValueError("Aggregation of a 'dimension' column type must be a DimensionAggregation")
 
-        if self.column_type == ColumnType.METRIC and self.grouped_tasks_aggregation is not None and self.grouped_tasks_aggregation not in MetricAggregation:
+        if (self.column_type == ColumnType.METRIC
+                and self.grouped_tasks_aggregation is not None
+                and self.grouped_tasks_aggregation not in MetricAggregation):
             raise ValueError("Grouped task aggregation of a 'METRIC' column type must be a MetricAggregation")
 
-        if self.column_type == ColumnType.DIMENSION and self.grouped_tasks_aggregation is not None and self.grouped_tasks_aggregation not in GroupedTasksDimensionAggregation:
+        if (self.column_type == ColumnType.DIMENSION
+                and self.grouped_tasks_aggregation is not None
+                and self.grouped_tasks_aggregation not in GroupedTasksDimensionAggregation):
             raise ValueError(
                 "Grouped task aggregation of a 'DIMENSION' column type must be a GroupedTasksDimensionAggregation")
 
@@ -198,7 +207,8 @@ class Column:
         if self.grouped_tasks_columns is not None:
             res['groupedTasksColumns'] = self.grouped_tasks_columns
         if self.grouped_tasks_aggregation is not None:
-            res['groupedTasksAggregation'] = self.grouped_tasks_aggregation.value if isinstance(self.grouped_tasks_aggregation, Enum) else self.grouped_tasks_aggregation
+            res['groupedTasksAggregation'] = self.grouped_tasks_aggregation.value if isinstance(
+                self.grouped_tasks_aggregation, Enum) else self.grouped_tasks_aggregation
         return res
 
     @classmethod
@@ -247,10 +257,12 @@ class Column:
             elif column_type == ColumnType.DIMENSION:
                 supported_aggregations = GroupedTasksDimensionAggregation
             else:
-                raise ValueError('groupedTasksAggregation field should only be fill for columns of type metric or dimension')
+                raise ValueError(
+                    'groupedTasksAggregation field should only be fill for columns of type metric or dimension')
             valid_aggregations = [x.name for x in supported_aggregations]
             if grouped_tasks_aggregation not in valid_aggregations:
-                raise ValueError(f'Invalid groupedTasksAggregation, must be one of the following: {", ".join(valid_aggregations)}.')
+                raise ValueError(f'Invalid groupedTasksAggregation, must be one of the following: '
+                                 f'{", ".join(valid_aggregations)}.')
             grouped_tasks_aggregation = supported_aggregations[grouped_tasks_aggregation]
         unit = data.get('unit')
         time_format = data.get('format')
@@ -286,7 +298,9 @@ class ColumnMapping:
 
         if self.task_name_column.grouped_tasks_columns is not None:
             if any(c.grouped_tasks_aggregation is None for c in self.metric_columns + self.dimension_columns):
-                raise ValueError('If using "grouped_tasks_columns" for "task_name_column", please provide "grouped_task_aggregations" for other columns')
+                raise ValueError(
+                    'If using "grouped_tasks_columns" for "task_name_column",'
+                    ' please provide "grouped_task_aggregations" for other columns')
 
             if self.task_name_column.index not in self.task_name_column.grouped_tasks_columns:
                 raise ValueError(
@@ -302,11 +316,14 @@ class ColumnMapping:
             # If there is no intersection (none of the required types are present), raise an error
             if not required_types.intersection(other_types):
                 raise ValueError(
-                    'The "grouped_tasks_columns" list must contain the index of a column of type "METRIC", "DIMENSION", or "TIME"')
+                    'The "grouped_tasks_columns" list must contain the index of a column of type "METRIC", '
+                    '"DIMENSION", or "TIME"')
 
         if self.task_name_column.grouped_tasks_columns is None:
             if any(c.grouped_tasks_aggregation is not None for c in self.metric_columns + self.dimension_columns):
-                raise ValueError('If not using "grouped_tasks_columns" for "task_name_column", please do not provide "grouped_task_aggregations" for other columns')
+                raise ValueError(
+                    'If not using "grouped_tasks_columns" for "task_name_column", '
+                    'please do not provide "grouped_task_aggregations" for other columns')
 
     def __get_columns_from_type(self, column_list: List[Column], filter: ColumnType, *,
                                 expected_num: Union[int, List[int]] = None) -> List[Column]:
@@ -368,4 +385,3 @@ class ColumnMapping:
 
         # Call constructor with column_list
         return cls(columns_list)
-

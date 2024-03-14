@@ -6,9 +6,10 @@ import networkx as nx
 
 
 class Graph(nx.DiGraph):
-    """A graph from a iGrafx P360 Live Mining project, created with the parent Project's ID, a list of nodes and a list of edges"""
+    """A graph from a iGrafx P360 Live Mining project, created with the parent Project's ID,
+    a list of nodes and a list of edges"""
     def __init__(self, project_id: str, nodes_list: list, edges_list: list):
-        """Initializes a graph from a Mining project, created with the parent Project's ID'
+        """Initializes a graph from a Mining project, created with the parent Project's ID
 
         :param project_id: the ID of the parent project
         :param nodes_list: the list of nodes

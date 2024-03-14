@@ -1,6 +1,5 @@
 # MIT License, Copyright 2023 iGrafx
 # https://github.com/igrafx/mining-python-sdk/blob/dev/LICENSE
-from pathlib import Path
 import pytest
 from igrafx_mining_sdk import Project
 from igrafx_mining_sdk.workgroup import Workgroup
@@ -29,7 +28,7 @@ class TestWorkgroup:
     def test_wrong_login(self):
         """Test the login with wrong credentials."""
         with pytest.raises(Exception):
-            assert Workgroup("a", "b")
+            assert Workgroup("a", "b", "c", "d")
 
     @pytest.mark.dependency(name='project', depends=['workgroup'], scope='session')
     def test_create_project(self):
