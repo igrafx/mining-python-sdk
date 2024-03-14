@@ -190,7 +190,7 @@ class TestColumnMapping:
             Column.from_json(json_str)
 
     def test_exception_aggregation_on_non_metric_or_dimension_column(self):
-        """ Test exception aggregation on non metric or dimension column"""
+        """ Test exception aggregation on non-metric or dimension column"""
         with pytest.raises(ValueError):
             json_str = '{"name": "test", "columnIndex": "1", "columnType": "CASE_ID", "aggregation": "MAX"}'
             Column.from_json(json_str)
@@ -227,8 +227,10 @@ class TestColumnMapping:
         "col2": {"name": "Activity", "columnIndex": "1", "columnType": "TASK_NAME", "groupedTasksColumns": [1, 2, 3]},
         "col3": {"name": "Start Date", "columnIndex": "2", "columnType": "TIME", "format": "dd/MM/yyyy HH:mm"},
         "col4": {"name": "End Date", "columnIndex": "3", "columnType": "TIME", "format": "dd/MM/yyyy HH:mm"},
-        "col5": {"name": "Price", "columnIndex": "4", "columnType": "METRIC", "isCaseScope": false, "groupedTasksAggregation": "SUM", "aggregation": "SUM", "unit": "円"},
-        "col6": {"name": "Forme", "columnIndex": "5", "columnType": "DIMENSION", "isCaseScope": false, "groupedTasksAggregation": "LAST", "aggregation": "DISTINCT"}
+        "col5": {"name": "Price", "columnIndex": "4", "columnType": "METRIC", "isCaseScope": false, 
+        "groupedTasksAggregation": "SUM", "aggregation": "SUM", "unit": "円"},
+        "col6": {"name": "Forme", "columnIndex": "5", "columnType": "DIMENSION", "isCaseScope": false,
+        "groupedTasksAggregation": "LAST", "aggregation": "DISTINCT"}
         }'''
         column_mapping = ColumnMapping.from_json(column_dict)
         assert isinstance(column_mapping, ColumnMapping)

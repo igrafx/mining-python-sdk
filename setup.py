@@ -11,7 +11,8 @@ package_infos = {
     "__author__": pyproject_data['tool']['poetry']['authors'][0].split('<')[0].rstrip(),
     "__version__": pyproject_data['tool']['poetry']['version'],
     "__doc__": pyproject_data['tool']['poetry']['description'],
-    "__email__": re.findall("[0-9a-zA-z]+@[0-9a-zA-z]+\.[0-9a-zA-z]+", pyproject_data['tool']['poetry']['authors'][0])[0]
+    "__email__": re.findall("[0-9a-zA-z]+@[0-9a-zA-z]+\.[0-9a-zA-z]+",
+                            pyproject_data['tool']['poetry']['authors'][0])[0]
 }
 
 # Extract requirements

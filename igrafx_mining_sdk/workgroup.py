@@ -10,11 +10,11 @@ class Workgroup:
     """A iGrafx P360 Live Mining workgroup, which is used to log in and access projects"""
 
     def __init__(self, w_id: str, w_key: str, apiurl: str, authurl: str, ssl_verify=True):
-        """ Creates a iGrafx P360 Live Mining Workgroup and automatically logs into the iMining Public API using the provided client id and
-        secret key
+        """ Creates a iGrafx P360 Live Mining Workgroup and automatically logs into the iMining Public API using
+        the provided client id and secret key
 
         :param w_id: the workgroup ID, which can be found in iGrafx P360 Live Mining
-        :param w_key: the workgroup's secret key, used for authetication, also found in iGrafx P360 Live Mining
+        :param w_key: the workgroup's secret key, used for authentication, also found in iGrafx P360 Live Mining
         :param apiurl: the URL of the api found in iGrafx P360 Live Mining
         :param authurl: the URL of the authentication found in iGrafx P360 Live Mining
         :param ssl_verify: verify SSL certificates

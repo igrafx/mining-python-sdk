@@ -71,7 +71,7 @@ class TestProject:
 
     @pytest.mark.dependency(depends=['reset', 'add_column_mapping'])
     def test_add_xlsx_file(self):
-        """Test that an xlsx file can be added to a project."""
+        """Test that a xlsx file can be added to a project."""
         pytest.project.reset()
         filestructure = FileStructure(
             file_type=FileType.xlsx,
@@ -92,7 +92,7 @@ class TestProject:
 
     @pytest.mark.dependency(depends=['reset', 'add_column_mapping'])
     def test_add_xls_file(self):
-        """Test that an xls file can be added to a project."""
+        """Test that a xls file can be added to a project."""
         pytest.project.reset()
         filestructure = FileStructure(
             file_type=FileType.xls,
@@ -130,7 +130,6 @@ class TestProject:
         assert pytest.project.add_column_mapping(filestructure, column_mapping)
         assert pytest.project.add_file(str(file_path))
 
-
     @pytest.mark.dependency(name='add_csv_file', depends=['reset', 'add_column_mapping'], scope='session')
     def test_add_csv_file_from_json_column_mapping(self):
         """Test that a csv file can be added to a project. Using a json column mapping that contains grouped tasks"""
@@ -143,8 +142,10 @@ class TestProject:
         "col2": {"name": "Activity", "columnIndex": "1", "columnType": "TASK_NAME", "groupedTasksColumns": [1, 2, 3]},
         "col3": {"name": "Start Date", "columnIndex": "2", "columnType": "TIME", "format": "dd/MM/yyyy HH:mm"},
         "col4": {"name": "End Date", "columnIndex": "3", "columnType": "TIME", "format": "dd/MM/yyyy HH:mm"},
-        "col5": {"name": "Price", "columnIndex": "4", "columnType": "METRIC", "isCaseScope": false, "groupedTasksAggregation": "SUM", "aggregation": "SUM", "unit": "円"},
-        "col6": {"name": "Forme", "columnIndex": "5", "columnType": "DIMENSION", "isCaseScope": false, "groupedTasksAggregation": "LAST", "aggregation": "DISTINCT"}
+        "col5": {"name": "Price", "columnIndex": "4", "columnType": "METRIC", "isCaseScope": false, 
+        "groupedTasksAggregation": "SUM", "aggregation": "SUM", "unit": "円"},
+        "col6": {"name": "Forme", "columnIndex": "5", "columnType": "DIMENSION", "isCaseScope": false,
+         "groupedTasksAggregation": "LAST", "aggregation": "DISTINCT"}
         }'''
         column_mapping = ColumnMapping.from_json(column_dict)
         base_dir = Path(__file__).resolve().parent
@@ -188,7 +189,7 @@ class TestProject:
     @pytest.mark.dependency(depends=['project_contains_data'])
     def test_prediction_not_exists(self):
         """Test that the project has no prediction ready."""
-        assert pytest.project.is_ready_prediction_exists() == False
+        assert pytest.project.is_ready_prediction_exists() is False
 
     @pytest.mark.dependency(depends=['project_contains_data'])
     def test_prediction_launch_impossible(self):
@@ -293,7 +294,7 @@ class TestProject:
 
     def test_predictions_status_success(self, mocker):
         """Test, via mocking,
-        that the project predictions_status method correctly handle a expected JSON return from API call.
+        that the project predictions_status method correctly handle an expected JSON return from API call.
         """
 
         mock_response = mocker.Mock()
@@ -328,7 +329,7 @@ class TestProject:
     def test_predictions_status_success_no_end_date(self, mocker):
         """Test, via mocking,
         that the project predictions_status method correctly handle
-        a expected JSON with no end date return from API call.
+        an expected JSON with no end date return from API call.
         """
 
         mock_response = mocker.Mock()
@@ -345,7 +346,6 @@ class TestProject:
         mocker.patch.object(APIConnector, 'get_request', return_value=mock_response)
 
         result = pytest.project.predictions_status()
-        date_format = "%Y-%m-%dT%H:%M:%S.%fZ"
         expected_result = WorkflowStatusDto(
             uuid.UUID("3fa85f64-5717-4562-b3fc-2c963f66afa6"),
             uuid.UUID("3fa85f64-5717-4562-b3fc-2c963f66afa6"),
@@ -443,7 +443,7 @@ class TestProject:
 
         assert result == PredictionErrorStatusDto.PREDICTION_SERVICE_FAILURE
 
-    def test_predictions_status_unkown_failure(self, mocker):
+    def test_predictions_status_unknown_failure(self, mocker):
         """Test, via mocking, that the project predictions_status method correctly handle 500 response from API call."""
 
         mock_response = mocker.Mock()
@@ -490,7 +490,7 @@ class TestProject:
     def test_ready_prediction_exists_invalid_result(self, mocker):
         """Test, via mocking,
         that the project is_ready_prediction_exists method correctly handle
-        unexpected non boolean response from API call to INVALID_RESPONSE result.
+        unexpected non-boolean response from API call to INVALID_RESPONSE result.
         """
 
         mock_response = mocker.Mock()

@@ -54,13 +54,13 @@ poetry env use ~/.pyenv/pyenv-win/versions/your/version
 
 You must also make sure you add Poetry to your ``PATH``.
 
-Afterwards, you can install the dependencies in the `.venv` virtual environment.
+Afterward, you can install the dependencies in the `.venv` virtual environment.
 This command produces a [poetry.lock](https://github.com/igrafx/mining-python-sdk/blob/dev/poetry.lock) file that is not versioned to Git.
 ```sh
 poetry install
 ```
 
-The [pyproject.toml](https://github.com/igrafx/mining-python-sdk/blob/dev/pyproject.toml) contains the projects details and all of the necessary dependencies.
+The [pyproject.toml](https://github.com/igrafx/mining-python-sdk/blob/dev/pyproject.toml) contains the projects details and all the necessary dependencies.
 If you wish, you can see the versions of the packages used in it.
 
 ## Getting Started
@@ -231,7 +231,7 @@ column_mapping = ColumnMapping.from_json(column_dict)
 ```
 
 The Column Mapping can also be created from a JSON column list.
-The major difference between the list and the dictionary is that in the dictionary you have to enunciate the column number before giving the other informations. 
+The major difference between the list and the dictionary is that in the dictionary you have to enunciate the column number before giving the other information. 
 ```python
 column_list = '''[
 {"name": "case_id", "columnIndex": "0", "columnType": "CASE_ID"},
@@ -524,7 +524,7 @@ are not working anymore, simply regenerate the tokens.
 curl -X POST   <Your authentication URL>/protocol/openid-connect/token   --data "grant_type=client_credentials"   --data "client_id=<Your workgroup ID>"   --data "client_secret=<Your workgroup Key>" | jq
 ````
 
-Note that the `| jq ` is optional but it will be easier to read the result if you include it.
+Note that the `| jq ` is optional, but it will be easier to read the result if you include it.
 
 Then, we can use the `GET` HTTP method to access the list of available projects. Don't forget to use the token:
 ````commandline
@@ -667,7 +667,7 @@ To do this you must first install Sphinx by using the following command:
 ````shell
 pip install -U sphinx
 ````
-Afterwards, go to the `sphinx_docs` directory by doing:
+Afterward, go to the `sphinx_docs` directory by doing:
 ````shell
 cd sphinx_docs/
 ````
@@ -681,7 +681,7 @@ make clean
 ````
 
 The documentation has now been generated. To open it, go to the `build directory`, then into the `html` directory.
-Double click on the ``index.html`` to open it. Else, right click and click *open with* and pick a browser to open it with. 
+Double-click on the ``index.html`` to open it. Else, right click and click *open with* and pick a browser to open it with. 
 
 ## Further documentation
 

@@ -25,7 +25,7 @@ and give an overall better experience to all parties involved. We appreciate you
 - [Submitting a Pull Request](#submitting-a-pull-request)
 - [Your First Code Contribution](#your-first-code-contribution)
 - [Improving The Documentation](#improving-the-documentation)
-- [Styleguides](#styleguides)
+- [Styleguide](#styleguide)
 - [Git Commit Guidelines](#git-commit-guidelines)
 - [License](#license)
 
@@ -45,7 +45,7 @@ There are several ways you can contribute to the iGrafx P360 Live Mining SDK:
 When contributing code to the iGrafx P360 Live Mining SDK, please adhere to the following guidelines:
 
 1. **Fork** the repository and create your branch from the `dev` branch.
-2. Ensure that your code follows the project's **[coding style](#styleguides) and conventions**.
+2. Ensure that your code follows the project's **[coding style](#styleguide) and conventions**.
 3. Write **clear and concise** [commit messages](#git-commit-guidelines).
 4. **Test** your changes thoroughly.
 5. Make sure that your code is well-documented, including any new functions, classes, or modules you introduce.
@@ -55,10 +55,10 @@ For more details, please consult [this section](#your-first-code-contribution).
 
 ## I Have a Question
 
-> If you wish to ask a question, we will assume that you have already read the avalaible [documentation](https://github.com/igrafx/mining-python-sdk/blob/dev/howto.md),
+> If you wish to ask a question, we will assume that you have already read the available [documentation](https://github.com/igrafx/mining-python-sdk/blob/dev/howto.md),
 > including the [README.md](https://github.com/igrafx/mining-python-sdk/blob/dev/README.md).
 
-Before asking a question, please search for existing [Github Issues](https://github.com/igrafx/mining-python-sdk/issues) that might help you.
+Before asking a question, please search for existing [GitHub Issues](https://github.com/igrafx/mining-python-sdk/issues) that might help you.
 If you have found a suitable issue and still need clarification, you can write your question in this issue. 
 You can also search the internet for answers first.
 
@@ -85,9 +85,9 @@ You can follow the subsequent steps to help us fix any potential bug as fast as 
 - Make sure you are using the latest version of the SDK.
 - Investigate and determine if your bug is really a bug and not an error on your side (e.g. using wrong credentials). 
 - Check that there isn't already a bug report that exists for the one you are having. You can then see if other users have experienced (and potentially solved) the same issue you are having.
-- Search the internet (including Stack Overflow) to see if the issue has been discussed outside of Github.
+- Search the internet (including Stack Overflow) to see if the issue has been discussed outside GitHub.
 
-Afterwards, collect information about the bug:
+Afterward, collect information about the bug:
 
 - Stack trace
 - OS, Platform and Versions
@@ -100,7 +100,7 @@ Afterwards, collect information about the bug:
 > Never report security related issues, vulnerabilities or bugs that include sensitive information (such as credentials) to the issue tracker, or anywhere else in public. 
 > Instead, sensitive related issues should be sent to [contact@igrafx.com](mailto:contact@igrafx.com).
 
-Github Issues is used to track bugs and errors, so if you run into an issue with the SDK:
+GitHub Issues is used to track bugs and errors, so if you run into an issue with the SDK:
 
 - Open an [Issue](https://github.com/igrafx/mining-python-sdk/issues). Since we can't be sure it's a bug at this point, don't label the issue.
 - Explain the behaviour you expect and the actual behaviour that is observed.
@@ -133,7 +133,7 @@ Keep in mind that it's better to have features that will be useful to the majori
 
 ### How Do I Submit a Good Enhancement/Feature Suggestion?
 
->Enhancement suggestions are tracked as [Github issues](https://github.com/igrafx/mining-python-sdk/issues).
+>Enhancement suggestions are tracked as [GitHub issues](https://github.com/igrafx/mining-python-sdk/issues).
 
 To submit a good enhancement/feature suggestion, you can follow the subsequent steps:
 
@@ -208,9 +208,9 @@ Thank you for contributing!
 - Use clear and concise language. Write documentation that is easy to understand, providing clear explanations and examples where necessary.
 - Keep the documentation up to date. If you make changes to the code that affect the functionality or usage, ensure that the documentation reflects those changes.
 
-## Styleguides
+## Styleguide
 
-Please follow these styleguides when contributing to the iGrafx P360 Live Mining SDK:
+Please follow these styleguide when contributing to the iGrafx P360 Live Mining SDK:
 
 - Use consistent indentation. We follow the [Python Style Guide (PEP 8)](https://www.python.org/dev/peps/pep-0008/) for Python code.
 - Use meaningful variable and function names. Use descriptive names that accurately convey the purpose of the variables and functions.
