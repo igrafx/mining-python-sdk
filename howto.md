@@ -44,6 +44,7 @@ pip install igrafx_mining_sdk
 
 ## Requirements
 
+This package requires python 3.10 or above. Get the latest version of [Python](https://www.python.org/).
 
 The requirements of this SDK work with [Poetry](https://python-poetry.org/docs/).
 Please install it before proceeding further. Eventually, specify ``poetry env`` if you handle multiple python versions. The following commands could help you :
@@ -56,12 +57,32 @@ You must also make sure you add Poetry to your ``PATH``.
 
 Afterward, you can install the dependencies in the `.venv` virtual environment.
 This command produces a [poetry.lock](https://github.com/igrafx/mining-python-sdk/blob/dev/poetry.lock) file that is not versioned to Git.
+````sh
+poetry update
+poetry lock
+````
+The following command installs the dependencies:
 ```sh
 poetry install
 ```
 
 The [pyproject.toml](https://github.com/igrafx/mining-python-sdk/blob/dev/pyproject.toml) contains the projects details and all the necessary dependencies.
 If you wish, you can see the versions of the packages used in it.
+
+### Reinstall python and poetry procedure:
+
+If you are encountering issues, you may wish to reinstall both Python and Poetry from scratch.  
+Follow these steps in the project directory:
+1. Delete .venv file in your project
+2. Delete Python interpreter from your IDE Settings
+3. Delete poetry.lock file
+4. Run command `curl -sSL https://install.python-poetry.org | python3 - --uninstall`
+5. Run command `pyenv uninstall <version_number>`
+6. Run command `pyenv install --skip-existing $(cat .python-version)`
+7. Run command `curl -sSL https://install.python-poetry.org | python3 -`
+8. Run command `poetry lock`. You should end up with a new poetry.lock file and a new .venv directory.
+9. Create Python Poetry interpreter from your IDE Settings, pointing to the created .venv directory.
+10. Run command `poetry install`
 
 ## Getting Started
 

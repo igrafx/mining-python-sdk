@@ -28,5 +28,5 @@ setup(
     author=package_infos['__author__'],
     author_email=package_infos['__email__'],
     packages=find_packages(),
-    licence="Apache License 2.0"
+    licence="MIT"
 )
