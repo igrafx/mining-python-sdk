@@ -33,7 +33,7 @@ A detailed tutorial can be found in the [howto.md](https://github.com/igrafx/min
 
 ## Requirements
 
-This package requires python 3.6.8 or above. Get the latest version of [Python](https://www.python.org/).
+This package requires python 3.10 or above. Get the latest version of [Python](https://www.python.org/).
 
 The required packages should be installed via the ```pyproject.toml``` when running the  ```poetry install``` command. 
 
