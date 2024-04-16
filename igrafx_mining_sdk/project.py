@@ -1,6 +1,6 @@
 # MIT License, Copyright 2023 iGrafx
 # https://github.com/igrafx/mining-python-sdk/blob/dev/LICENSE
-
+import json
 import os
 import random
 from igrafx_mining_sdk.graph import Graph, GraphInstance
@@ -108,6 +108,7 @@ class Project:
         """Returns datasource of type '_simplifiedEdge'"""
         return self.__get_datasource_by_name('_simplifiedEdge')
 
+
     @property
     def cases_datasource(self):
         """Returns datasource of type 'cases'"""
@@ -206,6 +207,69 @@ class Project:
 
         response_mapping_infos = self.api_connector.get_request(f"/project/{self.id}/mappingInfos").json()
         return response_mapping_infos
+
+    def get_column_mapping(self):
+        """Returns the column mapping of the project"""
+
+        if self.column_mapping_exists:
+            response_column_mapping = self.api_connector.get_request(f"/project/{self.id}/column-mapping").json()
+            column_mapping = {}
+
+            # Handle other columns
+            for key, value in sorted(response_column_mapping.items(),
+                                     key=lambda x: x.get("columnIndex", float("inf")) if isinstance(x, dict) else float(
+                                             "inf")):  # Handle different structures
+                if key not in ["dimensions", "metrics"]:
+                    col_index = len(column_mapping) + 1
+
+                    # Check for 'groupedTasksColumns' in activity
+                    if key == "activity" and "groupedTasksColumns" in value:
+                        # Include 'groupedTasksColumns' in the response
+                        column_mapping[f"col{col_index}"] = {
+                            "name": key,  # Set a default name
+                            "columnIndex": str(value.get("columnIndex", -1)),
+                            "columnType": "TASK_NAME",
+                            "groupedTasksColumns": value["groupedTasksColumns"]
+                        }
+                    else:
+                        column_type = "CASE_ID" if col_index == 1 else "TASK_NAME" if col_index == 2 else "TIME" if key in [
+                            "dateColumn", "otherDateColumn"] else "METRIC"
+
+                        column_mapping[f"col{col_index}"] = {
+                            "name": key,
+                            "columnIndex": str(value.get("columnIndex", -1)),
+                            "columnType": column_type
+                        }
+                    if "format" in value:
+                        column_mapping[f"col{col_index}"]["format"] = value["format"]
+
+            # Handle dimensions
+            dimensions = response_column_mapping.get("dimensions", [])
+            for i, dim in enumerate(dimensions):
+                column_mapping[f"col{len(column_mapping) + 1}"] = {
+                    "name": dim["name"],
+                    "columnIndex": str(dim["columnIndex"]),
+                    "columnType": "DIMENSION",
+                    **{key: value for key, value in dim.items() if key in ["isCaseScope", "groupedTasksAggregation", "aggregation"]},  # Include specific optional properties (excluding unit)
+
+                }
+
+            # Handle metrics
+            metrics = response_column_mapping.get("metrics", [])
+            for i, metric in enumerate(metrics):
+                column_mapping[f"col{len(column_mapping) + 1}"] = {
+                    "name": metric["name"],
+                    "columnIndex": str(metric["columnIndex"]),
+                    "columnType": "METRIC",
+                    **{key: value for key, value in metric.items() if
+                       key in ["isCaseScope", "groupedTasksAggregation", "aggregation", "unit"]},
+                    # Include all optional properties
+                }
+
+        else:
+            raise ValueError("Column mapping does not exist for this project.")
+
+        return json.dumps(column_mapping)
 
     def reset(self):
         """Makes an API call to manually reset a project"""
@@ -373,15 +437,14 @@ class Project:
             print(f"Failed to delete predictions on project {self.id}. Response: {response}")
             return PredictionErrorStatusDto.UNKNOWN_ERROR
 
-    def _parse_workflow_status(self, item: Dict[str, str]) -> Union[WorkflowStatusDto, PredictionErrorStatusDto]:
+    def _parse_workflow_status(self, item: Dict[str, str]) ->  Union[WorkflowStatusDto, PredictionErrorStatusDto]:
         """Parses the prediction status object to a business class WorkflowStatusDto"""
 
         prediction_id = self._cast_string_to_uuid_or_none(item.get('workflowId'))
         project_id = self._cast_string_to_uuid_or_none(item.get('projectId'))
         status = self._get_enum_value_or_none(item.get('status'), PredictionStatusDto)
         start_time = item.get('startTime')
-        completed_tasks = [self._get_enum_value_or_none(task, PredictionTaskTypeDto)
-                           for task in item.get('completedTasks', [])]
+        completed_tasks = [self._get_enum_value_or_none(task, PredictionTaskTypeDto) for task in item.get('completedTasks', [])]
         end_time = item.get('endTime', None)
 
         if None in (prediction_id, project_id, status, completed_tasks):
@@ -399,17 +462,12 @@ class Project:
                 else:
                     end_datetime = None
 
-                return WorkflowStatusDto(prediction_id,
-                                         project_id,
-                                         status,
-                                         start_datetime,
-                                         end_datetime,
-                                         completed_tasks)
+                return WorkflowStatusDto(prediction_id, project_id, status, start_datetime, end_datetime, completed_tasks)
             except ValueError:
                 return PredictionErrorStatusDto.INVALID_RESPONSE
 
     def _get_enum_value_or_none(self, value_str: str, enum_type: Enum) -> Optional[Enum]:
-        """Parses the value_str string to the given enum_type or None if it does not match"""
+        """Parses the value_str string to the given enum_type or None if does not match"""
 
         try:
             return enum_type(value_str)
@@ -417,7 +475,7 @@ class Project:
             return None
 
     def _cast_string_to_uuid_or_none(self, string_value: str) -> Optional[uuid.UUID]:
-        """Parses the string_value string to a UUID class or None if it does not match to a UUID"""
+        """Parses the string_value string to a UUID class or None if does not match to a UUID"""
 
         try:
             if string_value is None:
