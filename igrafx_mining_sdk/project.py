@@ -108,7 +108,6 @@ class Project:
         """Returns datasource of type '_simplifiedEdge'"""
         return self.__get_datasource_by_name('_simplifiedEdge')
 
-
     @property
     def cases_datasource(self):
         """Returns datasource of type 'cases'"""
@@ -226,7 +225,7 @@ class Project:
                     if key == "activity" and "groupedTasksColumns" in value:
                         # Include 'groupedTasksColumns' in the response
                         column_mapping[f"col{col_index}"] = {
-                            "name": key,  # Set a default name
+                            "name": key,
                             "columnIndex": str(value.get("columnIndex", -1)),
                             "columnType": "TASK_NAME",
                             "groupedTasksColumns": value["groupedTasksColumns"]
@@ -251,7 +250,6 @@ class Project:
                     "columnIndex": str(dim["columnIndex"]),
                     "columnType": "DIMENSION",
                     **{key: value for key, value in dim.items() if key in ["isCaseScope", "groupedTasksAggregation", "aggregation"]},  # Include specific optional properties (excluding unit)
-
                 }
 
             # Handle metrics
