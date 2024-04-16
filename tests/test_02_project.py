@@ -176,6 +176,7 @@ class TestProject:
 
     @pytest.mark.dependency(name='project_contains_data', depends=['add_csv_file'])
     def test_project_contains_data(self):
+        """Test that the project contains data"""
         count = 0
         while pytest.project.nodes_datasource.__class__ != Datasource:
             time.sleep(3)
