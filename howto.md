@@ -143,7 +143,23 @@ You can check if the project ``exists``and get its ``name``:
 my_project.exists
 my_project.get_project_name()
 ````
-Furthermore, the `mapping infos` of the project can be retrieved:
+
+Furthermore, the `column mapping` of a project can be retrieved:
+````python
+my_project.get_column_mapping()
+````
+This method returns the entirety of the column mapping of a project in a **JSON format** (as shown directly below).
+This JSON can directly be used to add a column mapping, and thus to add a file.
+For more details on how to add a column mapping using a JSON, view the next section.
+````JSON
+{
+"col1": {"name": "case_id", "columnIndex": "0", "columnType": "CASE_ID"},
+"col2": {"name": "task_name", "columnIndex": "1", "columnType": "TASK_NAME"},
+"col3": {"name": "time", "columnIndex": "2", "columnType": "TIME", "format": "yyyy-MM-dd'T'HH:mm"}
+}
+````
+
+More precisely, the `mapping infos` of the project can be retrieved:
 ````python
 my_project.get_mapping_infos()
 ````
