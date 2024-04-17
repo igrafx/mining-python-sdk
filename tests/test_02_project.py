@@ -130,6 +130,12 @@ class TestProject:
         assert pytest.project.add_column_mapping(filestructure, column_mapping)
         assert pytest.project.add_file(str(file_path))
 
+    def test_get_column_mapping_not_exist(self):
+        """Test that if there is no column mapping, a ValueError is raised"""
+        pytest.project.reset()
+        with pytest.raises(ValueError):
+            pytest.project.get_column_mapping()
+
     @pytest.mark.dependency(name='add_csv_file', depends=['reset', 'add_column_mapping'], scope='session')
     def test_add_csv_file_from_json_column_mapping(self):
         """Test that a csv file can be added to a project. Using a json column mapping that contains grouped tasks"""
@@ -153,8 +159,24 @@ class TestProject:
         assert pytest.project.add_column_mapping(filestructure, column_mapping)
         assert pytest.project.add_file(str(file_path))
 
+    @pytest.mark.dependency(name='add_csv_file', depends=['reset', 'add_column_mapping'], scope='session')
+    def test_get_column_mapping_add_csv_groupedtasks(self):
+        """Test that the the column mapping that was recuperated can be used to add a csv file containing grouped_tasks"""
+        column_mapping_dict = pytest.project.get_column_mapping()
+        pytest.project.reset()
+        filestructure = FileStructure(
+            file_type=FileType.csv,
+        )
+        column_mapping = ColumnMapping.from_json(column_mapping_dict)
+        base_dir = Path(__file__).resolve().parent
+        file_path = base_dir / 'data' / 'tables' / 'testdata.csv'
+        assert pytest.project.add_column_mapping(filestructure, column_mapping)
+        assert pytest.project.add_file(str(file_path))
+        assert pytest.project.get_column_mapping()
+
     @pytest.mark.dependency(name='project_contains_data', depends=['add_csv_file'])
     def test_project_contains_data(self):
+        """Test that the project contains data"""
         count = 0
         while pytest.project.nodes_datasource.__class__ != Datasource:
             time.sleep(3)
@@ -162,6 +184,11 @@ class TestProject:
             if count > 100:
                 assert False, 'Timeout reached'
         assert True
+
+    @pytest.mark.dependency(depends=['project_contains_data'])
+    def test_get_column_mapping(self):
+        """Test that the correct column mapping can be returned"""
+        assert pytest.project.get_column_mapping()
 
     @pytest.mark.dependency(depends=['project_contains_data'])
     def test_datasources_types(self):
