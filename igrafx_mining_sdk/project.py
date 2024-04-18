@@ -1,6 +1,6 @@
 # MIT License, Copyright 2023 iGrafx
 # https://github.com/igrafx/mining-python-sdk/blob/dev/LICENSE
-
+import json
 import os
 import random
 from igrafx_mining_sdk.graph import Graph, GraphInstance
@@ -17,6 +17,7 @@ import uuid
 from enum import Enum
 from datetime import datetime
 from typing import List, Optional, Dict, Union
+from collections import OrderedDict
 
 
 class Project:
@@ -207,6 +208,40 @@ class Project:
         response_mapping_infos = self.api_connector.get_request(f"/project/{self.id}/mappingInfos").json()
         return response_mapping_infos
 
+    def get_column_mapping(self):
+
+        if self.column_mapping_exists:
+            response_column_mapping = self.api_connector.get_request(f"/project/{self.id}/column-mapping").json()
+
+            column_mapping = {}
+            for k, v in response_column_mapping.items():
+                if isinstance(v, dict):
+                    v['name'] = k
+                    if k == 'caseId':
+                        v['columnType'] = "CASE_ID"
+                    elif k == 'activity':
+                        v['columnType'] = "TASK_NAME"
+                    elif k in ["dateColumn", "otherDateColumn"]:
+                        v['columnType'] = "TIME"
+                    else:
+                        raise ValueError("Default columns should be of type 'caseId', 'activity', 'dateColumn' or 'otherDateColumn'")
+                    column_mapping['col' + str(v['columnIndex'])] = v
+                elif isinstance(v, list):
+                    for i, subdict in enumerate(v):
+                        if k == 'dimensions':
+                            subdict['columnType'] = "DIMENSION"
+                        elif k == 'metrics':
+                            subdict['columnType'] = "METRIC"
+                        else:
+                            raise ValueError("Nested lists should be of type 'dimensions' or 'metrics'")
+                        column_mapping['col' + str(subdict['columnIndex'])] = subdict
+
+            # Sort the column mapping by columnIndex value and cast to json
+            column_mapping = OrderedDict(sorted(column_mapping.items(), key=lambda x: x[1]["columnIndex"]))
+            return json.dumps(column_mapping)
+        else:
+            raise ValueError("Column mapping does not exist for this project.")
+
     def reset(self):
         """Makes an API call to manually reset a project"""
 
@@ -373,15 +408,14 @@ class Project:
             print(f"Failed to delete predictions on project {self.id}. Response: {response}")
             return PredictionErrorStatusDto.UNKNOWN_ERROR
 
-    def _parse_workflow_status(self, item: Dict[str, str]) -> Union[WorkflowStatusDto, PredictionErrorStatusDto]:
+    def _parse_workflow_status(self, item: Dict[str, str]) ->  Union[WorkflowStatusDto, PredictionErrorStatusDto]:
         """Parses the prediction status object to a business class WorkflowStatusDto"""
 
         prediction_id = self._cast_string_to_uuid_or_none(item.get('workflowId'))
         project_id = self._cast_string_to_uuid_or_none(item.get('projectId'))
         status = self._get_enum_value_or_none(item.get('status'), PredictionStatusDto)
         start_time = item.get('startTime')
-        completed_tasks = [self._get_enum_value_or_none(task, PredictionTaskTypeDto)
-                           for task in item.get('completedTasks', [])]
+        completed_tasks = [self._get_enum_value_or_none(task, PredictionTaskTypeDto) for task in item.get('completedTasks', [])]
         end_time = item.get('endTime', None)
 
         if None in (prediction_id, project_id, status, completed_tasks):
@@ -399,17 +433,12 @@ class Project:
                 else:
                     end_datetime = None
 
-                return WorkflowStatusDto(prediction_id,
-                                         project_id,
-                                         status,
-                                         start_datetime,
-                                         end_datetime,
-                                         completed_tasks)
+                return WorkflowStatusDto(prediction_id, project_id, status, start_datetime, end_datetime, completed_tasks)
             except ValueError:
                 return PredictionErrorStatusDto.INVALID_RESPONSE
 
     def _get_enum_value_or_none(self, value_str: str, enum_type: Enum) -> Optional[Enum]:
-        """Parses the value_str string to the given enum_type or None if it does not match"""
+        """Parses the value_str string to the given enum_type or None if does not match"""
 
         try:
             return enum_type(value_str)
@@ -417,7 +446,7 @@ class Project:
             return None
 
     def _cast_string_to_uuid_or_none(self, string_value: str) -> Optional[uuid.UUID]:
-        """Parses the string_value string to a UUID class or None if it does not match to a UUID"""
+        """Parses the string_value string to a UUID class or None if does not match to a UUID"""
 
         try:
             if string_value is None:
