@@ -17,6 +17,7 @@ import uuid
 from enum import Enum
 from datetime import datetime
 from typing import List, Optional, Dict, Union
+from collections import OrderedDict
 
 
 class Project:
@@ -208,66 +209,38 @@ class Project:
         return response_mapping_infos
 
     def get_column_mapping(self):
-        """Returns the column mapping of the project"""
 
         if self.column_mapping_exists:
             response_column_mapping = self.api_connector.get_request(f"/project/{self.id}/column-mapping").json()
+
             column_mapping = {}
-
-            # Handle other columns
-            for key, value in sorted(response_column_mapping.items(),
-                                     key=lambda x: x.get("columnIndex", float("inf")) if isinstance(x, dict) else float(
-                                             "inf")):  # Handle different structures
-                if key not in ["dimensions", "metrics"]:
-                    col_index = len(column_mapping) + 1
-
-                    # Check for 'groupedTasksColumns' in activity
-                    if key == "activity" and "groupedTasksColumns" in value:
-                        # Include 'groupedTasksColumns' in the response
-                        column_mapping[f"col{col_index}"] = {
-                            "name": key,
-                            "columnIndex": str(value.get("columnIndex", -1)),
-                            "columnType": "TASK_NAME",
-                            "groupedTasksColumns": value["groupedTasksColumns"]
-                        }
+            for k, v in response_column_mapping.items():
+                if isinstance(v, dict):
+                    v['name'] = k
+                    if k == 'caseId':
+                        v['columnType'] = "CASE_ID"
+                    elif k == 'activity':
+                        v['columnType'] = "TASK_NAME"
+                    elif k in ["dateColumn", "otherDateColumn"]:
+                        v['columnType'] = "TIME"
                     else:
-                        column_type = "CASE_ID" if col_index == 1 else "TASK_NAME" if col_index == 2 else "TIME" if key in [
-                            "dateColumn", "otherDateColumn"] else "METRIC"
+                        raise ValueError("Default columns should be of type 'caseId', 'activity', 'dateColumn' or 'otherDateColumn'")
+                    column_mapping['col' + str(v['columnIndex'])] = v
+                elif isinstance(v, list):
+                    for i, subdict in enumerate(v):
+                        if k == 'dimensions':
+                            subdict['columnType'] = "DIMENSION"
+                        elif k == 'metrics':
+                            subdict['columnType'] = "METRIC"
+                        else:
+                            raise ValueError("Nested lists should be of type 'dimensions' or 'metrics'")
+                        column_mapping['col' + str(subdict['columnIndex'])] = subdict
 
-                        column_mapping[f"col{col_index}"] = {
-                            "name": key,
-                            "columnIndex": str(value.get("columnIndex", -1)),
-                            "columnType": column_type
-                        }
-                    if "format" in value:
-                        column_mapping[f"col{col_index}"]["format"] = value["format"]
-
-            # Handle dimensions
-            dimensions = response_column_mapping.get("dimensions", [])
-            for i, dim in enumerate(dimensions):
-                column_mapping[f"col{len(column_mapping) + 1}"] = {
-                    "name": dim["name"],
-                    "columnIndex": str(dim["columnIndex"]),
-                    "columnType": "DIMENSION",
-                    **{key: value for key, value in dim.items() if key in ["isCaseScope", "groupedTasksAggregation", "aggregation"]},  # Include specific optional properties (excluding unit)
-                }
-
-            # Handle metrics
-            metrics = response_column_mapping.get("metrics", [])
-            for i, metric in enumerate(metrics):
-                column_mapping[f"col{len(column_mapping) + 1}"] = {
-                    "name": metric["name"],
-                    "columnIndex": str(metric["columnIndex"]),
-                    "columnType": "METRIC",
-                    **{key: value for key, value in metric.items() if
-                       key in ["isCaseScope", "groupedTasksAggregation", "aggregation", "unit"]},
-                    # Include all optional properties
-                }
-
+            # Sort the column mapping by columnIndex value and cast to json
+            column_mapping = OrderedDict(sorted(column_mapping.items(), key=lambda x: x[1]["columnIndex"]))
+            return json.dumps(column_mapping)
         else:
             raise ValueError("Column mapping does not exist for this project.")
-
-        return json.dumps(column_mapping)
 
     def reset(self):
         """Makes an API call to manually reset a project"""
