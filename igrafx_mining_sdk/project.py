@@ -209,6 +209,7 @@ class Project:
         return response_mapping_infos
 
     def get_column_mapping(self):
+        """Returns the column mapping of the project"""
 
         if self.column_mapping_exists:
             response_column_mapping = self.api_connector.get_request(f"/project/{self.id}/column-mapping").json()
