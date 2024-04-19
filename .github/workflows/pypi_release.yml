@@ -13,6 +13,11 @@ jobs:
   build-n-publish:
     name: Build and publish SDK to PyPI
     runs-on: ubuntu-latest
+    environment:
+      name: pypi_release
+      url: https://pypi.org/project/igrafx-mining-sdk/
+    permissions:
+      id-token: write
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python 3.10.11
@@ -49,8 +54,5 @@ jobs:
 
     - name: Publish distribution to PyPI
       uses: pypa/gh-action-pypi-publish@v1.8.14
-      with:
-        user: __token__
-        password: ${{ secrets.PYPI_API_TOKEN }}
 
 
