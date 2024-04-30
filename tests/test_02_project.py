@@ -6,12 +6,12 @@ from pathlib import Path
 from igrafx_mining_sdk.project import FileStructure
 from igrafx_mining_sdk.column_mapping import Column, ColumnType, ColumnMapping, FileType
 from igrafx_mining_sdk.datasource import Datasource
-from igrafx_mining_sdk.dtos.PredictionStatusDto import PredictionStatusDto
-from igrafx_mining_sdk.dtos.PredictionTaskTypeDto import PredictionTaskTypeDto
-from igrafx_mining_sdk.dtos.PredictionLaunchErrorStatusDto import PredictionLaunchErrorStatusDto
-from igrafx_mining_sdk.dtos.PredictionPossibilityDto import PredictionPossibilityDto
-from igrafx_mining_sdk.dtos.PredictionErrorStatusDto import PredictionErrorStatusDto
-from igrafx_mining_sdk.dtos.WorkflowStatusDto import WorkflowStatusDto
+from igrafx_mining_sdk.dtos import PredictionStatusDto
+from igrafx_mining_sdk.dtos import PredictionTaskTypeDto
+from igrafx_mining_sdk.dtos import PredictionLaunchErrorStatusDto
+from igrafx_mining_sdk.dtos import PredictionPossibilityDto
+from igrafx_mining_sdk.dtos import PredictionErrorStatusDto
+from igrafx_mining_sdk.dtos import WorkflowStatusDto
 from igrafx_mining_sdk.api_connector import APIConnector
 from unittest.mock import MagicMock
 import uuid

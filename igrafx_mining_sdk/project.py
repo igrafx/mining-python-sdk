@@ -7,12 +7,12 @@ from igrafx_mining_sdk.graph import Graph, GraphInstance
 from igrafx_mining_sdk.column_mapping import FileStructure, ColumnMapping
 from igrafx_mining_sdk.datasource import Datasource
 from igrafx_mining_sdk.api_connector import APIConnector
-from igrafx_mining_sdk.dtos.PredictionStatusDto import PredictionStatusDto
-from igrafx_mining_sdk.dtos.PredictionTaskTypeDto import PredictionTaskTypeDto
-from igrafx_mining_sdk.dtos.PredictionLaunchErrorStatusDto import PredictionLaunchErrorStatusDto
-from igrafx_mining_sdk.dtos.PredictionPossibilityDto import PredictionPossibilityDto
-from igrafx_mining_sdk.dtos.PredictionErrorStatusDto import PredictionErrorStatusDto
-from igrafx_mining_sdk.dtos.WorkflowStatusDto import WorkflowStatusDto
+from igrafx_mining_sdk.dtos import PredictionStatusDto
+from igrafx_mining_sdk.dtos import PredictionTaskTypeDto
+from igrafx_mining_sdk.dtos import PredictionLaunchErrorStatusDto
+from igrafx_mining_sdk.dtos import PredictionPossibilityDto
+from igrafx_mining_sdk.dtos import PredictionErrorStatusDto
+from igrafx_mining_sdk.dtos import WorkflowStatusDto
 import uuid
 from enum import Enum
 from datetime import datetime
