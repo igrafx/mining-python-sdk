@@ -107,7 +107,7 @@ class Project:
     @property
     def edges_datasource(self):
         """Returns datasource of type '_simplifiedEdge'"""
-        return self.__get_datasource_by_name('_simplifiedEdge')
+        return self.__get_datasource_by_name('_edge')
 
     @property
     def cases_datasource(self):
@@ -125,8 +125,8 @@ class Project:
         if self._ds_response.status_code == 200:
             json_response = self._ds_response.json()
             for item in json_response:
-                if "_simplifiedEdge" in item["name"]:
-                    item["type"] = "_simplifiedEdge"
+                if "_edge" in item["name"]:
+                    item["type"] = "_edge"
                 elif "_vertex" in item["name"]:
                     item["type"] = "_vertex"
                 else:
@@ -141,6 +141,19 @@ class Project:
                 self.api_connector)
         else:
             return None
+
+    def get_project_lookups(self):
+        """Returns available list of lookups for the project"""
+
+        response_lookups = self.api_connector.get_request(f"/lookups/{self.id}").json()
+        print(response_lookups)
+
+        return response_lookups
+
+        # if response_lookups.status_code == 200:
+        #     return response_lookups.json()
+        # else:
+        #     raise ValueError(f"Failed to get lookups. Status code: {response_lookups.status_code}")
 
     def get_project_variants(self, page_index: int, limit: int, search: str = None):
         """Returns the project variants

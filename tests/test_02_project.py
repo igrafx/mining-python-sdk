@@ -185,6 +185,11 @@ class TestProject:
                 assert False, 'Timeout reached'
         assert True
 
+    @pytest.mark.dependency(depends=['project'], scope='session')
+    def test_get_project_lookups(self):
+        """Test that the project lookups list can be returned"""
+        assert pytest.project.get_project_lookups()
+
     @pytest.mark.dependency(depends=['project_contains_data'])
     def test_get_column_mapping(self):
         """Test that the correct column mapping can be returned"""

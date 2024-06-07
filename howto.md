@@ -164,6 +164,23 @@ More precisely, the `mapping infos` of the project can be retrieved:
 my_project.get_mapping_infos()
 ````
 
+The list of available **lookups** for the project can also be retrieved:
+````python
+my_project.get_project_lookups()
+````
+An example of what will be returned is the following:
+````JSON
+[
+  {
+    "name": "be755cbe-1c70-46b7-ac60-f09478a122e6_excluded_cases",
+    "description": "string",
+    "usage": "SELECT LOOKUP(graphkey, 'be755cbe-1c70-46b7-ac60-f09478a122e6_variants') from \"be755cbe-1c70-46b7-ac60-f09478a122e6\""
+  }
+]
+````
+
+You may then use the **lookups** as you desire.
+
 The project can also be ``deleted``:
 ````python
 my_project.delete_project()
