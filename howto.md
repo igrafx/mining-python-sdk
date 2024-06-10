@@ -11,6 +11,8 @@ With this SDK, you will be able to create and manipulate workgroups, projects, d
 Please note that you must have an iGrafx account in order to be able to use the SDK properly. 
 Please contact us to create an account.
 
+You may find the github of the iGrafx Mining SDK [here](https://github.com/igrafx/mining-python-sdk).
+
 ***
 ## Table of Contents
 
