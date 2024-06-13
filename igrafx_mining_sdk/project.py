@@ -150,11 +150,6 @@ class Project:
 
         return response_lookups
 
-        # if response_lookups.status_code == 200:
-        #     return response_lookups.json()
-        # else:
-        #     raise ValueError(f"Failed to get lookups. Status code: {response_lookups.status_code}")
-
     def get_project_variants(self, page_index: int, limit: int, search: str = None):
         """Returns the project variants
 
