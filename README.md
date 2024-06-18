@@ -30,6 +30,9 @@ The iGrafx P360 Live Mining SDK uses Python.
 
 A detailed tutorial can be found in the [howto.md](https://github.com/igrafx/mining-python-sdk/blob/dev/howto.md) file.
 
+You may find the github of the iGrafx Mining SDK [here](https://github.com/igrafx/mining-python-sdk).
+
+
 
 ## Requirements
 
