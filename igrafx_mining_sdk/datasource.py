@@ -34,7 +34,7 @@ class Datasource:
         """
         sqlreq = f'SELECT * FROM "{self.name}"'
         if load_limit is not None:
-            sqlreq += f'LIMIT {load_limit}'
+            sqlreq += f' LIMIT {load_limit}'
         return self.request(sqlreq)
 
     def request(self, sqlreq):

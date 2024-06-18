@@ -187,6 +187,11 @@ If you feel as though your test doesn't fit in any of those test files, you may 
     ```bash
    git push origin my-contribution
    ```
+    Make sure you have run the following poetry commands before pushing **if the version number has changed**.
+    ```bash
+    poetry lock
+    poetry install
+    ```
 8. **Create a pull request:** Go to the original repository on GitHub and create a [pull request](#submitting-a-pull-request). 
 Provide a clear and concise description of your changes in the pull request.
 9. **Review and collaborate:** Your pull request will be reviewed by the project maintainers. They may provide feedback or ask for further changes. 
