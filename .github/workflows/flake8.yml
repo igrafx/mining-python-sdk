@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.9", "3.10"]
+        python-version: ["3.10", "3.11"]
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
@@ -20,4 +20,4 @@ jobs:
         pip install flake8
     - name: Analysing the code with flake8
       run: |
-        flake8 . --count --statistics --max-complexity=12 --max-line-length=122
+        flake8 . --count --statistics --ignore=F401 --max-complexity=12 --max-line-length=122

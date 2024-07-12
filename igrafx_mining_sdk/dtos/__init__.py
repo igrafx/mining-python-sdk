@@ -5,5 +5,3 @@ from .WorkflowStatusDto import WorkflowStatusDto
 from .PredictionTaskTypeDto import PredictionTaskTypeDto
 from .PredictionLaunchErrorStatusDto import PredictionLaunchErrorStatusDto
 # Import other DTO classes here if needed
-
-
