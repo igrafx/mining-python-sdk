@@ -89,7 +89,7 @@ class APIConnector:
             if response.status_code == 401:  # Only possible if the token has expired
                 if nblasttries < maxtries:
                     self.token_header = self.__login()
-                    self.get_request(route, params=params, nblasttries=nblasttries+1, maxtries=maxtries)
+                    self.get_request(route, params=params, nblasttries=nblasttries + 1, maxtries=maxtries)
                 else:
                     raise InvalidRouteError()
             response.raise_for_status()
@@ -127,7 +127,7 @@ class APIConnector:
                                       json=json,
                                       files=files,
                                       headers=headers,
-                                      nblasttries=nblasttries+1,
+                                      nblasttries=nblasttries + 1,
                                       maxtries=maxtries)
                 else:
                     raise InvalidRouteError()
@@ -155,7 +155,7 @@ class APIConnector:
             if response.status_code == 401:  # Only possible if the token has expired
                 if nblasttries < maxtries:
                     self.token_header = self.__login()
-                    self.delete_request(route, nblasttries=nblasttries+1, maxtries=maxtries)
+                    self.delete_request(route, nblasttries=nblasttries + 1, maxtries=maxtries)
                 else:
                     raise InvalidRouteError()
             response.raise_for_status()
