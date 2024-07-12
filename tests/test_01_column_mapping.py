@@ -227,7 +227,7 @@ class TestColumnMapping:
         "col2": {"name": "Activity", "columnIndex": "1", "columnType": "TASK_NAME", "groupedTasksColumns": [1, 2, 3]},
         "col3": {"name": "Start Date", "columnIndex": "2", "columnType": "TIME", "format": "dd/MM/yyyy HH:mm"},
         "col4": {"name": "End Date", "columnIndex": "3", "columnType": "TIME", "format": "dd/MM/yyyy HH:mm"},
-        "col5": {"name": "Price", "columnIndex": "4", "columnType": "METRIC", "isCaseScope": false, 
+        "col5": {"name": "Price", "columnIndex": "4", "columnType": "METRIC", "isCaseScope": false,
         "groupedTasksAggregation": "SUM", "aggregation": "SUM", "unit": "円"},
         "col6": {"name": "Forme", "columnIndex": "5", "columnType": "DIMENSION", "isCaseScope": false,
         "groupedTasksAggregation": "LAST", "aggregation": "DISTINCT"}

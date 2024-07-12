@@ -41,7 +41,7 @@ igrafx_mining_sdk
 
 Description
 -----------
-igrafx_mining_sdk is a Python package created by iGrafx. 
+igrafx_mining_sdk is a Python package created by iGrafx.
 The iGrafx P360 Live Mining SDK is an open source application that can be used to manage your mining projects.
 This information will show up when using the help function.
 """
