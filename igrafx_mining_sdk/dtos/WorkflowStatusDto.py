@@ -36,10 +36,10 @@ class WorkflowStatusDto:
             return False
 
         return (
-                self.prediction_id == other.prediction_id and
-                self.project_id == other.project_id and
-                self.status == other.status and
-                self.start_time == other.start_time and
-                self.end_time == other.end_time and
-                self.completed_tasks == other.completed_tasks
+            self.prediction_id == other.prediction_id and
+            self.project_id == other.project_id and
+            self.status == other.status and
+            self.start_time == other.start_time and
+            self.end_time == other.end_time and
+            self.completed_tasks == other.completed_tasks
         )
