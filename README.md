@@ -32,6 +32,9 @@ A detailed tutorial can be found in the [howto.md](https://github.com/igrafx/min
 
 You may find the github of the iGrafx Mining SDK [here](https://github.com/igrafx/mining-python-sdk).
 
+You may also find the github of the iGrafx KNIME Mining Extension [here](https://github.com/igrafx/KNIME-Mining-connector) 
+which is based on the iGrafx Mining SDK.
+
 
 
 ## Requirements
