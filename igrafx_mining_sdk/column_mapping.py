@@ -14,6 +14,7 @@ class FileType(str, Enum):
 
 class FileStructure:
     """ A FileStructure used to create a column mapping"""
+
     def __init__(self, file_type: FileType, charset: str = "UTF-8", delimiter: str = ",", quote_char: str = '"',
                  escape_char: str = '\\',
                  eol_char: str = "\\r\\n", comment_char: str = "#", sheet_name: str = None,
@@ -129,8 +130,8 @@ class ColumnType(Enum):
 
 
 class Column:
-
     """A Column used in the column mapping"""
+
     def __init__(self, name: str, index: int, column_type: ColumnType, *, is_case_scope: bool = False,
                  aggregation: Union[MetricAggregation, DimensionAggregation] = None, grouped_tasks_columns: [] = None,
                  grouped_tasks_aggregation: Union[GroupedTasksDimensionAggregation, MetricAggregation] = None,
@@ -281,6 +282,7 @@ class Column:
 
 class ColumnMapping:
     """Description of the columnMapping before sending a file"""
+
     def __init__(self, column_list: List[Column]):
         """ Creates a ColumnMapping
 

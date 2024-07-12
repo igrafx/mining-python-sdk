@@ -40,7 +40,7 @@ class Workgroup:
         if description is not None:
             params["description"] = description
 
-        route = f"/project"
+        route = "/project"
         response_project_creation = self.api_connector.post_request(route, params=params)
 
         if response_project_creation.status_code == 201:

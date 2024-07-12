@@ -233,7 +233,8 @@ class Project:
                     elif k in ["dateColumn", "otherDateColumn"]:
                         v['columnType'] = "TIME"
                     else:
-                        raise ValueError("Default columns should be of type 'caseId', 'activity', 'dateColumn' or 'otherDateColumn'")
+                        raise ValueError("Default columns should be of type 'caseId', 'activity', 'dateColumn' or "
+                                         "'otherDateColumn'")
                     column_mapping['col' + str(v['columnIndex'])] = v
                 elif isinstance(v, list):
                     for i, subdict in enumerate(v):
@@ -424,7 +425,8 @@ class Project:
         project_id = self._cast_string_to_uuid_or_none(item.get('projectId'))
         status = self._get_enum_value_or_none(item.get('status'), PredictionStatusDto)
         start_time = item.get('startTime')
-        completed_tasks = [self._get_enum_value_or_none(task, PredictionTaskTypeDto) for task in item.get('completedTasks', [])]
+        completed_tasks = [self._get_enum_value_or_none(task, PredictionTaskTypeDto)
+                           for task in item.get('completedTasks', [])]
         end_time = item.get('endTime', None)
 
         if None in (prediction_id, project_id, status, completed_tasks):
