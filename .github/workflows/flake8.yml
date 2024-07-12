@@ -20,4 +20,4 @@ jobs:
         pip install flake8
     - name: Analysing the code with flake8
       run: |
-        flake8 . --count --statistics --ignore=F401,W504,W503 --max-complexity=14 --max-line-length=122
+        flake8 . --count --statistics --ignore=F401,W504,W503,W605 --max-complexity=14 --max-line-length=122

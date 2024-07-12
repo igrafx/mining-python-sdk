@@ -418,7 +418,7 @@ class Project:
             print(f"Failed to delete predictions on project {self.id}. Response: {response}")
             return PredictionErrorStatusDto.UNKNOWN_ERROR
 
-    def _parse_workflow_status(self, item: Dict[str, str]) ->  Union[WorkflowStatusDto, PredictionErrorStatusDto]:
+    def _parse_workflow_status(self, item: Dict[str, str]) ->Union[WorkflowStatusDto, PredictionErrorStatusDto]:
         """Parses the prediction status object to a business class WorkflowStatusDto"""
 
         prediction_id = self._cast_string_to_uuid_or_none(item.get('workflowId'))
