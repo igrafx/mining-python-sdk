@@ -337,6 +337,10 @@ p.add_column_mapping(filestructure, column_mapping)
 p.add_file("ExcelExample.xlsx")
 ````
 
+Note that a **zip** file can also be sent. To do so, in the file structure,
+the declared file type should be the final format of the file within the zip (e.g., .csv, .xlsx, .xls).
+And when giving the file path in the ``add_file`` method, give the zip name.
+
 Furthermore, grouped tasks can also be declared if needed.
 If a grouped task is created in a column, there must be grouped tasks declared in other columns as well as they cannot function individually:
 ```` python
