@@ -130,6 +130,24 @@ class TestProject:
         assert pytest.project.add_column_mapping(filestructure, column_mapping)
         assert pytest.project.add_file(str(file_path))
 
+    def test_add_zip_csv_file(self):
+        """Test that a zip file can be added to a project."""
+        pytest.project.reset()
+        filestructure = FileStructure(
+            file_type=FileType.csv,
+        )
+        column_list = [
+            Column('Case ID', 0, ColumnType.CASE_ID),
+            Column('Activity', 1, ColumnType.TASK_NAME),
+            Column('Start Date', 2, ColumnType.TIME, time_format='dd/MM/yyyy HH:mm'),
+            Column('End Date', 3, ColumnType.TIME, time_format='dd/MM/yyyy HH:mm'),
+        ]
+        column_mapping = ColumnMapping(column_list)
+        base_dir = Path(__file__).resolve().parent
+        file_path = base_dir / 'data' / 'tables' / 'testdata_zip.zip'
+        assert pytest.project.add_column_mapping(filestructure, column_mapping)
+        assert pytest.project.add_file(str(file_path))
+
     def test_get_column_mapping_not_exist(self):
         """Test that if there is no column mapping, a ValueError is raised"""
         pytest.project.reset()

@@ -259,7 +259,9 @@ class Project:
         return response_reset.status_code == 204
 
     def add_file(self, path):
-        """Adds a file to the project
+        """Adds a file to the project.
+        A zip file can also be added. In the file structure,
+        the declared file type should be the final format of the file within the zip (e.g., .csv, .xlsx, .xls).
 
         :param path: The path to the file to add
         """
@@ -271,6 +273,10 @@ class Project:
             mime_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         elif file_extension == ".xls":
             mime_type = "application/vnd.ms-excel"
+        elif file_extension == ".zip":
+            # When a zip is added, the mime type is a zip file.
+            # The file type is automatically detected through the file structure
+            mime_type = "application/zip"
         else:
             raise ValueError(f"File extension {file_extension} is not supported")
 
@@ -280,6 +286,7 @@ class Project:
             response_add_file = self.api_connector.post_request(route, files=files, headers=headers)
 
         print(response_add_file)
+        # print(response_add_file.json()) to get the json response
         return response_add_file.status_code == 201
 
     def prediction_possibility(self) -> PredictionPossibilityDto:
