@@ -289,6 +289,26 @@ class Project:
         # print(response_add_file.json()) to get the json response
         return response_add_file.status_code == 201
 
+    def get_project_file_ingestion_status(self, page_index: int, limit: int, sort_order: str = "ASC"):
+        """Makes an API call to get the ingestion status of all files in a project
+
+        :param page_index: The page index for pagination
+        :param limit: The maximum number of items to return per page
+        :param sort_order: The sort order (ASC or DESC)
+        """
+        params = {"pageIndex": page_index, "limit": limit, "sortOrder": sort_order}
+        response_status = self.api_connector.get_request(f"/projects/{self.id}/files", params=params)
+        return response_status.json()
+
+    def get_fileid_ingestion_status(self, file_id: str):
+        """Makes an API call to get the ingestion status of a specific file from a file id in a project
+
+        :param file_id: The ID of the file
+        """
+
+        response_status_file_id = self.api_connector.get_request(f"/projects/{self.id}/files/{file_id}")
+        return response_status_file_id.json().get('status')
+
     def prediction_possibility(self) -> PredictionPossibilityDto:
         """Makes an API call to get information on possibility to launch prediction on a project,
         or on why it can not be launched on the project"""
