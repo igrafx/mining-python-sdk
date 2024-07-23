@@ -196,10 +196,10 @@ class TestProject:
         """Test that the project file ingestion status can be returned"""
         assert pytest.project.get_project_file_ingestion_status(1, 3)
 
-    def test_get_fileid_ingestion_status(self):
+    def test_get_specific_file_ingestion_status(self):
         """Test that the file ingestion status can be returned"""
         file_id = pytest.project.get_project_file_ingestion_status(1, 3)['files'][0]['id']
-        assert pytest.project.get_fileid_ingestion_status(file_id)
+        assert pytest.project.get_specific_file_ingestion_status(file_id)
 
     @pytest.mark.dependency(name='project_contains_data', depends=['add_csv_file'])
     def test_project_contains_data(self):

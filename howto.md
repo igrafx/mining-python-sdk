@@ -364,8 +364,9 @@ Here is what this method returns:
 ```
 
 The status of a specific file ID can also be checked by using the following method:
+
 ```python
-p.get_fileid_ingestion_status(file_id)
+p.get_specific_file_ingestion_status(file_id)
 ```
 Furthermore, grouped tasks can also be declared if needed.
 If a grouped task is created in a column, there must be grouped tasks declared in other columns as well as they cannot function individually:

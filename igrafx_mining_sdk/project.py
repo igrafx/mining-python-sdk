@@ -300,7 +300,7 @@ class Project:
         response_status = self.api_connector.get_request(f"/projects/{self.id}/files", params=params)
         return response_status.json()
 
-    def get_fileid_ingestion_status(self, file_id: str):
+    def get_specific_file_ingestion_status(self, file_id: str):
         """Makes an API call to get the ingestion status of a specific file from a file id in a project
 
         :param file_id: The ID of the file
