@@ -314,10 +314,7 @@ class Project:
         :param file_id: The ID of the file
         """
 
-        # response_status_file_id = self.api_connector.get_request(f"/projects/{self.id}/files/{file_id}")
         return self.get_file_metadata(file_id).get('status')
-
-
 
     def prediction_possibility(self) -> PredictionPossibilityDto:
         """Makes an API call to get information on possibility to launch prediction on a project,
