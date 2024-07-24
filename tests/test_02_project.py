@@ -192,14 +192,19 @@ class TestProject:
         assert pytest.project.add_file(str(file_path))
         assert pytest.project.get_column_mapping()
 
-    def test_get_project_file_ingestion_status(self):
+    def test_get_project_files_metadata(self):
         """Test that the project file ingestion status can be returned"""
-        assert pytest.project.get_project_file_ingestion_status(1, 3)
+        assert pytest.project.get_project_files_metadata(1, 3)
+
+    def test_get_file_metadata(self):
+        """Test that the file metadata can be returned"""
+        file_id = pytest.project.get_project_files_metadata(1, 3)['files'][0]['id']
+        assert pytest.project.get_file_metadata(file_id)
 
     def test_get_specific_file_ingestion_status(self):
         """Test that the file ingestion status can be returned"""
-        file_id = pytest.project.get_project_file_ingestion_status(1, 3)['files'][0]['id']
-        assert pytest.project.get_specific_file_ingestion_status(file_id)
+        file_id = pytest.project.get_project_files_metadata(1, 3)['files'][0]['id']
+        assert pytest.project.get_file_ingestion_status(file_id)
 
     @pytest.mark.dependency(name='project_contains_data', depends=['add_csv_file'])
     def test_project_contains_data(self):
