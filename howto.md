@@ -341,6 +341,41 @@ Note that a **zip** file can also be sent. To do so, in the file structure,
 the declared file type should be the final format of the file within the zip (e.g., .csv, .xlsx, .xls).
 And when giving the file path in the ``add_file`` method, give the zip name.
 
+Additionally, the status of the added file(s) can be checked by using the following method:
+
+````python
+p.get_project_files_metadata( < Page
+Index >, < Limit >, < Sort
+Order >)
+````
+Note that the `Sort Order` is set to `ASC` by default. You can also set it to `DESC`.
+
+Here is what this method returns:
+```json
+{
+  "totalItems": 1,
+  "files": [
+    {
+      "id": "d93812db-648d-41ef-bf59-732570e89388",
+      "name": "testdata.csv",
+      "status": "PROCESSING",
+      "creationDate": "2024-07-23T14:00:34.462Z",
+      "ingestionStatus": "STARTED"
+    }
+  ]
+}
+```
+
+You can also check the metadata of a specific file by doing this:
+```python
+p.get_file_metadata(file_id)
+```
+
+The status of a specific file ID can also be checked by using the following method:
+
+```python
+p.get_file_ingestion_status(file_id)
+```
 Furthermore, grouped tasks can also be declared if needed.
 If a grouped task is created in a column, there must be grouped tasks declared in other columns as well as they cannot function individually:
 ```` python
