@@ -336,6 +336,19 @@ column_mapping = ColumnMapping(column_list)
 p.add_column_mapping(filestructure, column_mapping)
 p.add_file("ExcelExample.xlsx")
 ````
+The ``add_file`` method returns information about the added file in JSON format such as the file ID,
+the file name and the status.
+````json
+{
+  "creationDate": "2024-08-05T09:52:00.761Z",
+  "id": "b8d5324b-c812-4ba3-ac9d-187cff04337a",
+  "name": "p2pShortExcel.xlsx",
+  "status": {
+    "progress": 0,
+    "status": "PROCESSING"
+  }
+}
+````
 
 Note that a **zip** file can also be sent. To do so, in the file structure,
 the declared file type should be the final format of the file within the zip (e.g., .csv, .xlsx, .xls).
@@ -370,6 +383,7 @@ You can also check the metadata of a specific file by doing this:
 ```python
 p.get_file_metadata(file_id)
 ```
+You can get the file_id by using the ``add_file`` method.
 
 The status of a specific file ID can also be checked by using the following method:
 
