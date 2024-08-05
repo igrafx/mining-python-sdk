@@ -289,6 +289,8 @@ class Project:
         # print(response_add_file.status_code) to get the status response
         if response_add_file.status_code == 201:
             return response_add_file.json()
+        else:
+            raise Exception(f"Error adding file. Status code: {response_add_file.status_code}")
 
     def get_project_files_metadata(self, page_index: int, limit: int, sort_order: str = "ASC"):
         """Makes an API call to get the ingestion status of all files in a project
