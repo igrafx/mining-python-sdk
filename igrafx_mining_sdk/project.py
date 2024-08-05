@@ -262,6 +262,7 @@ class Project:
         """Adds a file to the project.
         A zip file can also be added. In the file structure,
         the declared file type should be the final format of the file within the zip (e.g., .csv, .xlsx, .xls).
+        It returns the information of the added file such as the file ID, the name and status of the file.
 
         :param path: The path to the file to add
         """
@@ -285,9 +286,11 @@ class Project:
             headers = {"accept": "application/json, text/plain, */*"}
             response_add_file = self.api_connector.post_request(route, files=files, headers=headers)
 
-        print(response_add_file)
-        # print(response_add_file.json()) to get the json response
-        return response_add_file.status_code == 201
+        # print(response_add_file.status_code) to get the status response
+        if response_add_file.status_code == 201:
+            return response_add_file.json()
+        else:
+            raise Exception(f"Error adding file. Status code: {response_add_file.status_code}")
 
     def get_project_files_metadata(self, page_index: int, limit: int, sort_order: str = "ASC"):
         """Makes an API call to get the ingestion status of all files in a project
