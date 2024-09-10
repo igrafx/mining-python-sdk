@@ -50,3 +50,15 @@ class TestWorkgroup:
     def test_project_from_id(self):
         """Test that the project ID can be retrieved."""
         assert pytest.workgroup.project_from_id(pytest.project.id)
+
+    @pytest.mark.dependency(depends=['workgroup'])
+    def test_get_workgroup_metadata(self):
+        """Test that the workgroup metadata can be retrieved."""
+        assert pytest.workgroup.get_workgroup_metadata
+        assert pytest.workgroup.get_workgroup_metadata.get("name")
+        assert pytest.workgroup.get_workgroup_metadata.get("creationDate")
+
+    @pytest.mark.dependency(depends=['workgroup'])
+    def test_get_workgroup_data_version(self):
+        """Test that the workgroup data version can be retrieved."""
+        assert pytest.workgroup.get_workgroup_data_version
