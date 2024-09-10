@@ -50,6 +50,21 @@ class Workgroup:
             raise ValueError(f"Failed to create project. Status code: {response_project_creation.status_code}")
 
     @property
+    def get_workgroup_metadata(self):
+        """
+        Returns the metadata of the workgroup
+        """
+        response_workgroup_metadata = self.api_connector.get_request(f"/workgroups/{self.w_id}")
+        return response_workgroup_metadata.json()
+
+    @property
+    def get_workgroup_data_version(self):
+        """
+        Returns the data version of the workgroup
+        """
+        return self.get_workgroup_metadata.get("dataVersion")
+
+    @property
     def datasources(self):
         """Requests and returns the list of datasources associated with the workgroup"""
         try:
