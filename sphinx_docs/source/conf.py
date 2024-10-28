@@ -11,7 +11,7 @@ import sys
 project = 'iGrafx P360 Live Mining SDK'
 copyright = '2024, iGrafx'
 author = 'iGrafx'
-release = '2.33.2'
+release = '2.34.0'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
