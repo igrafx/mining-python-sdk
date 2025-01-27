@@ -132,6 +132,7 @@ class Project:
                 else:
                     item["type"] = "cases"
 
+            # Set the datasource NAME, TYPE, HOST and PORT
             response_filtered = [d for d in json_response if d['type'] == ds_type][0]
             return Datasource(
                 response_filtered["name"],
