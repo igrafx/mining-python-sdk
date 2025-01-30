@@ -239,9 +239,10 @@ To be able to add data, you must create a
 A column mapping is a list of columns describing a document(.CSV, .XLSX, .XLS).
 
 To add a column mapping, you must first define the file structure:
+
 ````python
 filestructure = FileStructure(
-    file_type=FileType.xlsx,
+    file_type=FileType.XLSX,
     charset="UTF-8",
     delimiter=",",
     quote_char='"',
@@ -816,9 +817,9 @@ In this section, documentation can be found for further reading.
 Support is available at the following address: [support@igrafx.com](mailto:support@igrafx.com)
 
 
-* [iGrafx Help](https://fr.help.logpickr.com/)
+* [iGrafx Help](https://doc.igrafxcloud.com/mining/en/index.html)
 * [Druid SQL API](https://druid.apache.org/docs/latest/querying/sql-api.html)
-* [iGrafx P360 Live Mining API](https://public-api.logpickr.com/#/)
+* [iGrafx P360 Live Mining API](https://doc.igrafxcloud.com/mining/api/index.html)
 
 
 

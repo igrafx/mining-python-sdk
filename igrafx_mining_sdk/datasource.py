@@ -59,7 +59,8 @@ class Datasource:
 
     @property
     def connection(self):
-        """Returns the Pydruid connection to the datasource, after initializing it, if need be"""
+        """Returns the Pydruid connection to the datasource, after initializing it, if need be.
+        The host and port are retrieved from the __datasource_request method."""
         if self._connection is None:
             self._connection = db.connect(self.host, self.port, path="/druid/v2/sql",
                                           user=self.api_connector.wg_id,

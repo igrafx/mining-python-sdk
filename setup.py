@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
-import toml
 import re
+import toml
 
 # Parse pyproject.toml file
 with open('./pyproject.toml', 'r') as f:

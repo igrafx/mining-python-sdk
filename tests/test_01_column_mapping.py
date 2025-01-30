@@ -7,6 +7,7 @@ from igrafx_mining_sdk.column_mapping import ColumnType, Column, ColumnMapping, 
 
 
 class TestColumnMapping:
+    """Test class for ColumnMapping"""
     @pytest.mark.dependency(name='case_id_column', scope='session')
     def test_create_case_id_column(self):
         """ Test to create a case id column"""
