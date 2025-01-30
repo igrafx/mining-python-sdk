@@ -7,9 +7,9 @@ from typing import List, Union
 
 class FileType(str, Enum):
     """Type of the file that can be added."""
-    csv = "csv"
-    xls = "xls"
-    xlsx = "xlsx"
+    CSV = "csv"
+    XLS = "xls"
+    XLSX = "xlsx"
 
 
 class FileStructure:

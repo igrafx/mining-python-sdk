@@ -1,8 +1,8 @@
 # MIT License, Copyright 2023 iGrafx
 # https://github.com/igrafx/mining-python-sdk/blob/dev/LICENSE
+import os
 import pytest
 from igrafx_mining_sdk.datasource import Datasource
-import os
 
 
 NAME = os.environ.get('NAME')
@@ -25,18 +25,26 @@ class TestDatasource:
     def test_columns(self):
         """Test the columns of a Datasource"""
         ds = pytest.project.edges_datasource
+
+        # This method uses the columns method and is also based on the connection to druid which need the correct
+        # host and port.
         assert ds.columns != []
 
     @pytest.mark.dependency(depends=['project_contains_data'], scope='session')
     def test_non_empty_ds(self):
         """Test that the datasource is not empty"""
         ds = pytest.project.nodes_datasource
+
+        # This method uses the load_dataframe method and is also based on the connection to druid which need the
+        # correct host and port.
         assert 0 < len(ds.load_dataframe(load_limit=10)) <= 10
 
     @pytest.mark.dependency(depends=['project_contains_data'], scope='session')
     def test_read_only(self):
         """Test that the datasource is read only"""
         ds = pytest.project.edges_datasource
+        # This method uses the process_keys method and is also based on the connection to druid which need the
+        # correct host and port.
         pk = pytest.project.process_keys[0]
         # Test that all of those requests will fail
         with pytest.raises(Exception):

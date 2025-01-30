@@ -9,5 +9,6 @@ load_dotenv(dotenv_path)
 
 
 def pytest_configure():
+    """Configure workgroup and project as pytest fixtures."""
     pytest.workgroup = None
     pytest.project = None

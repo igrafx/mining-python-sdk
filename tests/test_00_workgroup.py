@@ -1,9 +1,9 @@
 # MIT License, Copyright 2023 iGrafx
 # https://github.com/igrafx/mining-python-sdk/blob/dev/LICENSE
+import os
 import pytest
 from igrafx_mining_sdk import Project
 from igrafx_mining_sdk.workgroup import Workgroup
-import os
 
 
 class TestWorkgroup:
