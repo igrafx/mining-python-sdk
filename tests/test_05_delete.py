@@ -8,4 +8,5 @@ class TestDelete:
 
     @pytest.mark.dependency(depends=['project'], scope='session')
     def test_delete_project(self):
+        """Test the deletion of a project."""
         pytest.project.delete_project()

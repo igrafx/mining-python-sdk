@@ -239,9 +239,10 @@ To be able to add data, you must create a
 A column mapping is a list of columns describing a document(.CSV, .XLSX, .XLS).
 
 To add a column mapping, you must first define the file structure:
+
 ````python
 filestructure = FileStructure(
-    file_type=FileType.xlsx,
+    file_type=FileType.XLSX,
     charset="UTF-8",
     delimiter=",",
     quote_char='"',

@@ -3,6 +3,11 @@
 import json
 import os
 import random
+import uuid
+from enum import Enum
+from datetime import datetime
+from typing import List, Optional, Dict, Union
+from collections import OrderedDict
 from igrafx_mining_sdk.graph import Graph, GraphInstance
 from igrafx_mining_sdk.column_mapping import FileStructure, ColumnMapping
 from igrafx_mining_sdk.datasource import Datasource
@@ -13,11 +18,6 @@ from igrafx_mining_sdk.dtos import PredictionLaunchErrorStatusDto
 from igrafx_mining_sdk.dtos import PredictionPossibilityDto
 from igrafx_mining_sdk.dtos import PredictionErrorStatusDto
 from igrafx_mining_sdk.dtos import WorkflowStatusDto
-import uuid
-from enum import Enum
-from datetime import datetime
-from typing import List, Optional, Dict, Union
-from collections import OrderedDict
 
 
 class Project:
@@ -94,7 +94,7 @@ class Project:
         return graph_instance
 
     def __datasource_request(self):
-        """Request datasources associated with the project"""
+        """Request datasources associated with the project. It returns a name, type, host and port per datasource."""
 
         response_datasource = self.api_connector.get_request(f"/datasources/{self.id}")
         return response_datasource
@@ -137,8 +137,8 @@ class Project:
             return Datasource(
                 response_filtered["name"],
                 response_filtered["type"],
-                response_filtered["host"],
-                response_filtered["port"],
+                "mining-data.staging.igrafxcloud.com",
+                443,
                 self.api_connector)
         else:
             return None
