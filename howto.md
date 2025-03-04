@@ -536,11 +536,12 @@ datasources_list = wg.datasources
 ````
 
 If there are open connections, they can be closed if necessary:
+
 ```python
 wg = Workgroup(w_id, w_key, api_url, auth_url)
 p = Project("<Your Project ID>", wg.api_connector)
 ds = Datasource("<Your Datasource Name>", "<Your Datasource Type>", "<Your Host>", "<Your Port>", p)
-ds.close()
+ds.close_ds_connection()
 ```
 
 ## Using Pandas methods

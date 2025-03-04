@@ -2,6 +2,7 @@
 # https://github.com/igrafx/mining-python-sdk/blob/dev/LICENSE
 
 import requests as req
+from pathlib import Path
 
 
 class InvalidRouteError(Exception):
@@ -14,13 +15,14 @@ class InvalidRouteError(Exception):
 class APIConnector:
     """Class to connect to the API. It allows us to log into the Mining Public API and retrieve a token.
     It also allows us to do HTTP GET, POST and DELETE requests."""
-    def __init__(self, wg_id: str, wg_key: str, apiurl: str, authurl: str, ssl_verify: bool):
+    def __init__(self, wg_id: str, wg_key: str, apiurl: str, authurl: str, jdbc_url: str, ssl_verify: bool):
         """Initializes the APIConnector class.
 
         :param wg_id: The ID of the workgroup
         :param wg_key: The secret key of the workgroup
         :param apiurl: The URL of the API
         :param authurl: The URL of the authentication
+        :param jdbc_url: The URL of the JDBC connection
         :param ssl_verify: Verify SSL certificates
         """
 
@@ -28,6 +30,9 @@ class APIConnector:
         self.wg_key = wg_key
         self.apiurl = self.__process_apiurl(self.__remove_slash(apiurl))
         self._authurl = self.__remove_slash(authurl)
+        self.jdbc_url = jdbc_url
+        self.jdbc_driver_class = "org.apache.calcite.avatica.remote.Driver"
+        self.jdbc_driver_path = str(Path(__file__).parent.parent / "jars" / "avatica-1.26.0.jar")
         self.ssl_verify = ssl_verify
         self.token_header = self.__login()
 
