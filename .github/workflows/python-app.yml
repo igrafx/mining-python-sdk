@@ -88,6 +88,12 @@ jobs:
         java -version
         echo "JAVA_HOME: $JAVA_HOME"
         which java
+        
+
+    - name: Debug JAR Files
+      run: |
+        ls -l /home/runner/work/mining-python-sdk/mining-python-sdk/jars/
+
 
     - name: Lint with flake8
       run: |
