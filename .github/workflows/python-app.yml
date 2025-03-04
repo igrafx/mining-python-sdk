@@ -121,6 +121,15 @@ jobs:
     - name: Check GitHub Runner IP
       run: curl ifconfig.me
 
+    - name: Check Connection to JDBC Server
+      run: nc -vz mining-data.staging.igrafxcloud.com 443
+
+    - name: Test JDBC Connection
+      run: |
+        java -cp "/home/runner/work/mining-python-sdk/mining-python-sdk/jars/avatica-1.26.0.jar" \
+        org.apache.calcite.avatica.remote.Driver "jdbc:avatica:remote:url=https://mining-data.staging.igrafxcloud.com/druid/v2/sql/avatica/;transparent_reconnection=true"
+
+
     - name: Check JDBC JAR Version
       run: jar tf /home/runner/work/mining-python-sdk/mining-python-sdk/jars/avatica-1.26.0.jar | grep META-INF
 
