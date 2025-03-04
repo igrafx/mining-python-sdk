@@ -118,6 +118,11 @@ jobs:
       run: |
         ls -al ./igrafx_mining_sdk
 
+    - name: Check GitHub Runner IP
+      run: curl ifconfig.me
+
+    - name: Check JDBC JAR Version
+      run: jar tf /home/runner/work/mining-python-sdk/mining-python-sdk/jars/avatica-1.26.0.jar | grep META-INF
 
     - name: Set Environment Variables and Test with pytest
       env:
