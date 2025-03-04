@@ -79,10 +79,15 @@ jobs:
         echo "NAME=${{ secrets.NAME }}" >> $GITHUB_ENV
         echo "TYPE=${{ secrets.TYPE }}" >> $GITHUB_ENV
 
-
     - name: Print environment variables
       run: |
         cat $GITHUB_ENV
+
+    - name: Debug Java Installation
+      run: |
+        java -version
+        echo "JAVA_HOME: $JAVA_HOME"
+        which java
 
     - name: Lint with flake8
       run: |
