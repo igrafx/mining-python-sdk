@@ -79,9 +79,18 @@ jobs:
         echo "NAME=${{ secrets.NAME }}" >> $GITHUB_ENV
         echo "TYPE=${{ secrets.TYPE }}" >> $GITHUB_ENV
 
-    - name: Print environment variables
+    - name: Debug JDBC Credentials
       run: |
-        cat $GITHUB_ENV
+        echo "JDBC URL: $WG_JDBC"
+        echo "WG_ID: ${WG_ID:+set}"
+        echo "WG_KEY: ${WG_KEY:+set}"
+        echo "WG_AUTH: ${WG_AUTH:+set}"
+      env:
+        WG_JDBC: ${{ secrets.WG_JDBC }}
+        WG_ID: ${{ secrets.WG_ID }}
+        WG_KEY: ${{ secrets.WG_KEY }}
+        WG_AUTH: ${{ secrets.WG_AUTH }}
+
 
     - name: Debug Java Installation
       run: |
