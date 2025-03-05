@@ -98,11 +98,15 @@ jobs:
         echo "JAVA_HOME: $JAVA_HOME"
         which java
 
-    - name: Force Java 17
-      run: |
-        export JAVA_HOME=/usr/lib/jvm/temurin-17-jdk-amd64
-        export PATH=$JAVA_HOME/bin:$PATH
-        java -version
+    - name: Set up JDK 8
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'adopt'
+        java-version: '8'
+
+    - name: Check Java Version
+      run: java -version
+
         
 
     - name: Debug JAR Files
