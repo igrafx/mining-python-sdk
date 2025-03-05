@@ -134,9 +134,6 @@ jobs:
     - name: Check Connection to JDBC Server
       run: nc -vz mining-data.staging.igrafxcloud.com 443
 
-    - name: Test JDBC Connection
-      run: curl -v $WG_JDBC
-
     - name: Check JDBC JAR Version
       run: jar tf /home/runner/work/mining-python-sdk/mining-python-sdk/jars/avatica-1.26.0.jar | grep META-INF
 
