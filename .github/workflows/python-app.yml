@@ -97,6 +97,12 @@ jobs:
         java -version
         echo "JAVA_HOME: $JAVA_HOME"
         which java
+
+    - name: Force Java 17
+      run: |
+        export JAVA_HOME=/usr/lib/jvm/temurin-17-jdk-amd64
+        export PATH=$JAVA_HOME/bin:$PATH
+        java -version
         
 
     - name: Debug JAR Files
