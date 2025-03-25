@@ -21,8 +21,6 @@ on:
 permissions:
   contents: read
 
-env:
-  env_var: ${{ vars.JDBC_CONTEXT }}
 
 jobs:
   build:
@@ -43,9 +41,8 @@ jobs:
         echo "WG_ID: ${WG_ID}"
         echo "WG_KEY: ${WG_KEY}"
         echo "WG_AUTH: ${WG_AUTH}"
-        echo "variable from shell environment : $env_var"
       env:
-        JDBC: ${{ vars.JDBC }}
+        JDBC: "${{ vars.JDBC }}"
         WG_ID: ${{ secrets.WG_ID }}
         WG_KEY: ${{ secrets.WG_KEY }}
         WG_AUTH: ${{ secrets.WG_AUTH }}
