@@ -17,6 +17,7 @@ on:
   schedule:
   - cron: "0 2 * * 1-5"
 
+
 permissions:
   contents: read
 
@@ -75,7 +76,7 @@ jobs:
         echo "WG_KEY: ${WG_KEY:+set}"
         echo "WG_AUTH: ${WG_AUTH:+set}"
       env:
-        env_var: ${{ vars.WG_JDBC }}
+        WG_JDBC: ${{ vars.WG_JDBC }}
         WG_ID: ${{ secrets.WG_ID }}
         WG_KEY: ${{ secrets.WG_KEY }}
         WG_AUTH: ${{ secrets.WG_AUTH }}
@@ -130,7 +131,7 @@ jobs:
         WG_KEY: ${{ secrets.WG_KEY }}
         WG_AUTH: ${{ secrets.WG_AUTH }}
         WG_URL: ${{ secrets.WG_URL }}
-        env_var: ${{ vars.WG_JDBC }}
+        WG_JDBC: ${{ vars.WG_JDBC }}
         PROJECT_ID: ${{ secrets.PROJECT_ID }}
         NAME: ${{ secrets.NAME }}
         TYPE: ${{ secrets.TYPE }}
