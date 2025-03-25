@@ -72,8 +72,6 @@ jobs:
         poetry run pip install pytest-mock
 
 
-
-
     - name: Debug Java Installation
       run: |
         java -version
