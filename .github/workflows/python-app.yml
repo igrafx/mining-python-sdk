@@ -71,7 +71,6 @@ jobs:
       run: |
         poetry run pip install pytest-mock
 
-
     - name: Debug Java Installation
       run: |
         java -version
@@ -87,11 +86,6 @@ jobs:
     - name: Check Java Version
       run: java -version
 
-    - name: Debug JAR Files
-      run: |
-        ls -l /home/runner/work/mining-python-sdk/mining-python-sdk/jars/
-
-
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
@@ -102,18 +96,11 @@ jobs:
     - name: Debug Contents
       run: ls -R
 
-    - name: Debug Mining-Python-SDK Directory
-      run: |
-        ls -al ./igrafx_mining_sdk
-
     - name: Check GitHub Runner IP
       run: curl ifconfig.me
 
     - name: Check Connection to JDBC Server
       run: nc -vz mining-data.staging.igrafxcloud.com 443
-
-    - name: Check JDBC JAR Version
-      run: jar tf /home/runner/work/mining-python-sdk/mining-python-sdk/jars/avatica-1.26.0.jar | grep META-INF
 
     - name: Set Environment Variables and Test with pytest
       env:
