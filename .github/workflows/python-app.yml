@@ -25,10 +25,10 @@ env:
   WG_KEY: ${{ secrets.WG_KEY }}
   WG_AUTH: ${{ secrets.WG_AUTH }}
   WG_URL: ${{ secrets.WG_URL }}
-  WG_JDBC: ${{ env.WG_JDBC.WG_JDBC }}
   PROJECT_ID: ${{ secrets.PROJECT_ID }}
   NAME: ${{ secrets.NAME }}
   TYPE: ${{ secrets.TYPE }}
+  env_var: ${{ vars.WG_JDBC }}
 
 jobs:
   build:
@@ -68,17 +68,6 @@ jobs:
       run: |
         poetry run pip install pytest-mock
 
-    - name: Set environment variables
-      run: |
-        echo "WG_ID=${{ secrets.WG_ID }}" >> $GITHUB_ENV
-        echo "WG_KEY=${{ secrets.WG_KEY }}" >> $GITHUB_ENV
-        echo "WG_AUTH=${{ secrets.WG_AUTH }}" >> $GITHUB_ENV
-        echo "WG_URL=${{ secrets.WG_URL }}" >> $GITHUB_ENV
-        echo "WG_JDBC=${{ env.WG_JDBC.WG_JDBC }}" >> $GITHUB_ENV
-        echo "PROJECT_ID=${{ secrets.PROJECT_ID }}" >> $GITHUB_ENV
-        echo "NAME=${{ secrets.NAME }}" >> $GITHUB_ENV
-        echo "TYPE=${{ secrets.TYPE }}" >> $GITHUB_ENV
-
     - name: Debug JDBC Credentials
       run: |
         echo "JDBC URL: $WG_JDBC"
@@ -86,7 +75,7 @@ jobs:
         echo "WG_KEY: ${WG_KEY:+set}"
         echo "WG_AUTH: ${WG_AUTH:+set}"
       env:
-        WG_JDBC: ${{ env.WG_JDBC.WG_JDBC }}
+        env_var: ${{ vars.WG_JDBC }}
         WG_ID: ${{ secrets.WG_ID }}
         WG_KEY: ${{ secrets.WG_KEY }}
         WG_AUTH: ${{ secrets.WG_AUTH }}
@@ -141,7 +130,7 @@ jobs:
         WG_KEY: ${{ secrets.WG_KEY }}
         WG_AUTH: ${{ secrets.WG_AUTH }}
         WG_URL: ${{ secrets.WG_URL }}
-        WG_JDBC: ${{ env.WG_JDBC.WG_JDBC }}
+        env_var: ${{ vars.WG_JDBC }}
         PROJECT_ID: ${{ secrets.PROJECT_ID }}
         NAME: ${{ secrets.NAME }}
         TYPE: ${{ secrets.TYPE }}
