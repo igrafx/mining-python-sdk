@@ -21,7 +21,6 @@ on:
 permissions:
   contents: read
 
-
 jobs:
   build:
 
@@ -37,12 +36,12 @@ jobs:
 
     - name: Debug JDBC Credentials
       run: |
-        echo "JDBC URL: $JDBC"
+        echo "JDBC URL: $WG_JDBC"
         echo "WG_ID: ${WG_ID}"
         echo "WG_KEY: ${WG_KEY}"
         echo "WG_AUTH: ${WG_AUTH}"
       env:
-        JDBC: "${{ vars.JDBC }}"
+        WG_JDBC: "${{ secrets.WG_JDBC }}"
         WG_ID: ${{ secrets.WG_ID }}
         WG_KEY: ${{ secrets.WG_KEY }}
         WG_AUTH: ${{ secrets.WG_AUTH }}
@@ -124,7 +123,7 @@ jobs:
         WG_KEY: ${{ secrets.WG_KEY }}
         WG_AUTH: ${{ secrets.WG_AUTH }}
         WG_URL: ${{ secrets.WG_URL }}
-        JDBC: ${{ vars.JDBC }}
+        WG_JDBC: "${{ secrets.WG_JDBC }}"
         PROJECT_ID: ${{ secrets.PROJECT_ID }}
         NAME: ${{ secrets.NAME }}
         TYPE: ${{ secrets.TYPE }}
