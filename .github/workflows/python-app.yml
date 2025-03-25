@@ -17,7 +17,6 @@ on:
   schedule:
   - cron: "0 2 * * 1-5"
 
-
 permissions:
   contents: read
 
@@ -71,20 +70,11 @@ jobs:
       run: |
         poetry run pip install pytest-mock
 
-    - name: Debug Java Installation
-      run: |
-        java -version
-        echo "JAVA_HOME: $JAVA_HOME"
-        which java
-
     - name: Set up JDK 8
       uses: actions/setup-java@v4
       with:
         java-version: '8'
         distribution: 'zulu'
-
-    - name: Check Java Version
-      run: java -version
 
     - name: Lint with flake8
       run: |
@@ -92,15 +82,6 @@ jobs:
         poetry run flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --ignore=F401,W504,W503,W605
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         poetry run flake8 . --count --exit-zero --max-complexity=14 --max-line-length=122 --statistics --ignore=F401,W504,W503,W605
-
-    - name: Debug Contents
-      run: ls -R
-
-    - name: Check GitHub Runner IP
-      run: curl ifconfig.me
-
-    - name: Check Connection to JDBC Server
-      run: nc -vz mining-data.staging.igrafxcloud.com 443
 
     - name: Set Environment Variables and Test with pytest
       env:
