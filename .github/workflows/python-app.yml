@@ -72,9 +72,10 @@ jobs:
     - name: Debug JDBC Credentials
       run: |
         echo "JDBC URL: $WG_JDBC"
-        echo "WG_ID: ${WG_ID:+set}"
-        echo "WG_KEY: ${WG_KEY:+set}"
-        echo "WG_AUTH: ${WG_AUTH:+set}"
+        echo "WG_ID: ${WG_ID}"
+        echo "WG_KEY: ${WG_KEY}"
+        echo "WG_AUTH: ${WG_AUTH}"
+        echo "variable from shell environment : $env_var"
       env:
         WG_JDBC: ${{ vars.WG_JDBC }}
         WG_ID: ${{ secrets.WG_ID }}
