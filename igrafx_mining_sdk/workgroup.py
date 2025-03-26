@@ -9,7 +9,7 @@ from igrafx_mining_sdk.api_connector import APIConnector
 class Workgroup:
     """A iGrafx P360 Live Mining workgroup, which is used to log in and access projects"""
 
-    def __init__(self, w_id: str, w_key: str, apiurl: str, authurl: str, jdbc_url: str, ssl_verify=True):
+    def __init__(self, w_id: str, w_key: str, apiurl: str, authurl: str, jdbc_url: str = None, ssl_verify=True):
         """ Creates a iGrafx P360 Live Mining Workgroup and automatically logs into the iMining Public API using
         the provided client id and secret key
 
