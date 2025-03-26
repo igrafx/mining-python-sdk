@@ -25,13 +25,12 @@ You may find the github of the iGrafx Mining SDK [here](https://github.com/igraf
 7. [Graph Instances](#graph-instances)
 8. [Datasources](#datasources)
 9. [Using Pandas methods](#using-pandas-methods)
-10. [Using SQL Queries](#using-sql-queries)
+10. [Using Druid SQL Queries](#using-druid-sql-queries)
 11. [Using the public API](#using-the-public-api)
-12. [Predictions](#predictions)
-13. [Access Druid database via JDBC](#access-druid-database-via-jdbc)
-14. [Access database via Druid Rest SQL queries](#access-database-via-druid-rest-sql-queries)
-15. [Generating the Documentation with SphinxDocs](#generating-the-documentation-with-sphinxdocs)
-16. [Further Documentation](#further-documentation)
+12. [Access database via Druid Rest SQL queries](#access-database-via-druid-rest-sql-queries)
+13. [Predictions](#predictions)
+14. [Generating the Documentation with SphinxDocs](#generating-the-documentation-with-sphinxdocs)
+15. [Further Documentation](#further-documentation)
 
 
 ## Installing
@@ -71,6 +70,33 @@ poetry install
 The [pyproject.toml](https://github.com/igrafx/mining-python-sdk/blob/dev/pyproject.toml) contains the projects details and all the necessary dependencies.
 If you wish, you can see the versions of the packages used in it.
 
+Furthermore, make sure you have `JAVA` installed on your machine.
+If it is not installed, you can download and install it from [Oracle's Java](https://www.oracle.com/java/technologies/downloads/#java11?er=221886) website or [AdoptOpenJDK](https://adoptium.net/).
+
+After having installed Java, you need to set the `JAVA_HOME` environment variable to point to the directory where it is installed.
+
+If you're using **Windows**:
+
+1. Go to `Control Panel -> System and Security -> System -> Advanced system settings`.
+2. Click on `Environment Variables`.
+3. Under `System Variables`, click `New` and add the following:
+   - Variable name: `JAVA_HOME`
+   - Variable value: The path to your Java installation, for example: `C:\Program Files\Java\jdk-11.0.11` or `C:\Program Files\OpenJDK\jdk-8.0.332.09-hotspot`
+
+4. After that, update the `Path variable` to include **the Java bin directory**:
+   - Find the `Path variable ` in the System Variables section and click `Edit`.
+   - Add a new entry: `%JAVA_HOME%\bin`.
+
+Now that the `JAVA_HOME` variable is set, you can verify the JAVA installation:
+ - Open a new **command prompt** (important, as it needs to pick up the updated `JAVA_HOME` variable).
+ - Run the following command to check if Java is correctly installed:
+````shell
+java -version
+````
+This command should print the version of Java you have installed.
+
+You will need Java to be able to get and query datasources.
+
 ### Reinstall python and poetry procedure:
 
 If you are encountering issues, you may wish to reinstall both Python and Poetry from scratch.  
@@ -89,9 +115,11 @@ Follow these steps in the project directory:
 ## Getting Started
 
 First, open up **Process Explorer 360**, and go to your 
-[workgroup](https://github.com/igrafx/mining-python-sdk/wiki/4.-Workgroups-and-Projects) settings. 
-In the settings page, go to the **Public API** tab. There, you should see your **workgroup's ID** and **secret key**. 
-These are the values that will be used by the SDK to log in to the iGrafx P360 Live Mining API.
+[Workgroup](https://github.com/igrafx/mining-python-sdk/wiki/4.-Workgroups-and-Projects) settings. 
+In the settings page, go to the **Public API** tab. There, you should see your **Workgroup's ID**, **Workgroup secret key**,
+**Mining Platform API URL**, **Mining Platform Auth URL** and **JDBC URL**. 
+
+These are the credentials that will be used by the SDK to log in to the **iGrafx P360 Live Mining API**.
 
 ![settings](https://github.com/igrafx/mining-python-sdk/blob/dev/imgs/settings.PNG)
 
@@ -110,8 +138,11 @@ w_id = "<Your Workgroup ID>"
 w_key = "<Your Workgroup KEY>"
 api_url = "<Your Mining Platform API URL>"
 auth_url = "<Your Mining Platform Auth URL>"
-wg = igx.Workgroup(w_id, w_key, api_url, auth_url)
+jdbc_url = "<Your JDBC URL>"
+wg = igx.Workgroup(w_id, w_key, api_url, auth_url, jdbc_url)
 ```
+The **JDBC URL** is used to connect to the database and do queries and operations on datasources.
+
 Once the workgroup is created, you can access the list of 
 [projects](https://github.com/igrafx/mining-python-sdk/wiki/4.-Workgroups-and-Projects) associated 
 with the workgroup through the ``get_project_list()`` method:
@@ -130,7 +161,7 @@ project_id_list[0]
 
 The project ID can also be found in the URL:
 ```URL
-https://<Mining Platform URL>>/workgroups/<Workgroup ID>/projects/<Project ID>/data
+https://<Mining Platform URL>/workgroups/<Workgroup ID>/projects/<Project ID>/data
 ```
 
 On top of that, if you already know the ID of the project you want to work with you can use:
@@ -221,7 +252,7 @@ my_project.reset
 ````
 Alternatively, if you wish to create your own project, you can do so as follows:
 ````python
-w = Workgroup(w_id, w_key, api_url, auth_url)
+w = Workgroup(w_id, w_key, api_url, auth_url, jdbc_url)
 project_name = "<Your Project name>"
 project_description = "<Your Project description>"
 created_project = w.create_project(project_name, project_description)
@@ -336,7 +367,7 @@ my_project.add_column_mapping(filestructure, column_mapping)
 
 Finally, you can add CSV, XLSX or XLS files:
 ```` python
-wg = Workgroup(w_id, w_key, api_url, auth_url)
+wg = Workgroup(w_id, w_key, api_url, auth_url, jdbc_url)
 p = Project("<Your Project ID>", wg.api_connector)
 
 filestructure = FileStructure(
@@ -511,6 +542,8 @@ gi = my_project.graph_instance_from_key(pk)
 
 
 Each project is linked to **datasources**. Those datasources have 3 types: `vertex`, `simplifiedEdge` and `cases`. 
+The datasources will be accessed using the **JDBC URL** that was given when creating a workgroup.
+
 To access those we can do:
 ```python
 db1 = my_project.nodes_datasource # For vertex
@@ -527,7 +560,21 @@ This method returns a **Pandas
 [Dataframe](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html)** object.
 ````python
 df = db1.load_dataframe(load_limit=10) # load 10 rows of nodes_datasource
+
 ````
+
+You can also retrieve the columns of the datasource:
+```python
+cols = db2.columns
+```
+
+Moreover , it is possible to de a specific query on the datasource. By doing this you may access the database via Druid SQL queries.
+This uses the JDBC connection.
+```python
+simple_sql = f'SELECT * FROM "{ds.name}" LIMIT 1'
+df = db3.request(simple_sql)
+```
+You may find more details using queries in the section [Using Druid SQL Queries](#using-druid-sql-queries).
 
 You can also return a list of all datasources associated with the workgroup.
 Note that in that case, all types of datasources are returned in the same list:
@@ -538,9 +585,8 @@ datasources_list = wg.datasources
 If there are open connections, they can be closed if necessary:
 
 ```python
-wg = Workgroup(w_id, w_key, api_url, auth_url)
-p = Project("<Your Project ID>", wg.api_connector)
-ds = Datasource("<Your Datasource Name>", "<Your Datasource Type>", "<Your Host>", "<Your Port>", p)
+wg = Workgroup(w_id, w_key, api_url, auth_url, jdbc_url)
+ds = Datasource("<Your Datasource Name>", "<Your Datasource Type>")
 ds.close_ds_connection()
 ```
 
@@ -599,7 +645,7 @@ ds.connection
 ds.cursor
 ```
 
-## Using SQL Queries
+## Using Druid SQL Queries
 
 
 In the last section, it was shown how to load the entire dataframe and do operations with **Pandas**. 
@@ -697,6 +743,36 @@ For instance, we can use that method to **stop** the train task for a project:
 curl -X DELETE "https://<Your API URL>/pub/train/<Your Project ID>" -H "accept: */*" -H "Authorization: Bearer <Your generated Token>"
 ````
 
+## Access database via Druid Rest SQL queries
+
+### Sending a query:
+The database can be accessed with Druid Rest SQL queries.
+
+To do so, first of all, using a ``POST`` method, send your query to the Router.
+`Curl` can be used to send SQL queries from the command-line:
+````commandline
+curl  -X POST -H "Content-Type: application/json" -u <Your Workgroup ID>:<Your Workgroup KEY> https://<Your Mining Platform URL>/druid/v2/sql/ --data-raw '{"query": "SELECT * FROM <ds.name> "}'
+````
+The query must be specified after ``"query"``, in `--data-raw`.
+
+Alternatively, SQL queries can also be sent as follows:
+````commandline
+ cat query.json
+{"query": "SELECT * FROM <ds.name> "}
+````
+
+````commandline
+curl  -X POST -H "Content-Type: application/json" -u <Your Workgroup ID>:<Your Workgroup KEY> https://<Your Mining Platform URL>/druid/v2/sql/ --data-raw @query.json
+````
+### Responses:
+The result format of the query can be specified with ```"resultFormat"```:
+````json
+{
+  "query": "SELECT * FROM <ds.name>",
+  "resultFormat": "array"
+}
+```` 
+More information can be found in the section [Further documentation](https://github.com/igrafx/mining-python-sdk/blob/dev/howto.md#further-documentation).
 
 ## Predictions
 
@@ -727,65 +803,6 @@ False
 case_list = ["<Case ID 1>", "<Case ID 2>", "<Case ID 3>"]
 prediction_data = my_project.prediction(case_list)
 ```
-## Access Druid database via JDBC
-
-The [Druid](https://druid.apache.org/blog/2014/04/15/intro-to-pydruid.html) database can be accessed via 
-[JDBC](https://www.javatpoint.com/java-jdbc). To do so, it is recommended to use 
-[Avatica JDBC driver](https://calcite.apache.org/avatica/downloads/).
-We then use the connect string ``jdbc:avatica:remote:url=https://<Mining Platform Data URL>/druid/v2/sql/avatica/``.
-
-Please note that **JDBC uses Java**.
-Thus, we can use the subsequent code to connect to Druid:
-```java
-// Connect to /druid/v2/sql/avatica/ on your Broker.
-String url = "jdbc:avatica:remote:url=https://<Mining Platform Data URL>/druid/v2/sql/avatica/";
-
-// Set any connection context parameters you need here
-// Or leave empty for default behavior.
-Properties connectionProperties = new Properties();
-
-try (Connection connection = DriverManager.getConnection(url, connectionProperties)) {
-  try (
-      final Statement statement = connection.createStatement();
-      final ResultSet resultSet = statement.executeQuery(query)
-  ) {
-    while (resultSet.next()) {
-      // process result set
-    }
-  }
-}
-```
-
-## Access database via Druid Rest SQL queries
-
-### Sending a query:
-The database can also be accessed with Druid Rest SQL queries.
-
-To do so, first of all, using a ``POST`` method, send your query to the Router.
-`Curl` can be used to send SQL queries from the command-line:
-````commandline
-curl  -X POST -H "Content-Type: application/json" -u <Your Workgroup ID>:<Your Workgroup KEY> https://<Your Mining Platform URL>/druid/v2/sql/ --data-raw '{"query": "SELECT * FROM <ds.name> "}'
-````
-The query must be specified after ``"query"``, in `--data-raw`.
-
-Alternatively, SQL queries can also be sent as follows:
-````commandline
- cat query.json
-{"query": "SELECT * FROM <ds.name> "}
-````
-
-````commandline
-curl  -X POST -H "Content-Type: application/json" -u <Your Workgroup ID>:<Your Workgroup KEY> https://<Your Mining Platform URL>/druid/v2/sql/ --data-raw @query.json
-````
-### Responses:
-The result format of the query can be specified with ```"resultFormat"```:
-````json
-{
-  "query": "SELECT * FROM <ds.name>",
-  "resultFormat": "array"
-}
-```` 
-More information can be found in the section [Further documentation](https://github.com/igrafx/mining-python-sdk/blob/dev/howto.md#further-documentation).
 
 ## Generating the Documentation with SphinxDocs
 
