@@ -20,17 +20,6 @@ on:
 permissions:
   contents: read
 
-env:
-  WG_ID: ${{ secrets.WG_ID }}
-  WG_KEY: ${{ secrets.WG_KEY }}
-  WG_AUTH: ${{ secrets.WG_AUTH }}
-  WG_URL: ${{ secrets.WG_URL }}
-  PROJECT_ID: ${{ secrets.PROJECT_ID }}
-  NAME: ${{ secrets.NAME }}
-  TYPE: ${{ secrets.TYPE }}
-  HOST: ${{ secrets.HOST }}
-  PORT: ${{ secrets.PORT }}
-
 jobs:
   build:
 
@@ -69,21 +58,11 @@ jobs:
       run: |
         poetry run pip install pytest-mock
 
-    - name: Set environment variables
-      run: |
-        echo "WG_ID=${{ secrets.WG_ID }}" >> $GITHUB_ENV
-        echo "WG_KEY=${{ secrets.WG_KEY }}" >> $GITHUB_ENV
-        echo "WG_AUTH=${{ secrets.WG_AUTH }}" >> $GITHUB_ENV
-        echo "WG_URL=${{ secrets.WG_URL }}" >> $GITHUB_ENV
-        echo "PROJECT_ID=${{ secrets.PROJECT_ID }}" >> $GITHUB_ENV
-        echo "NAME=${{ secrets.NAME }}" >> $GITHUB_ENV
-        echo "TYPE=${{ secrets.TYPE }}" >> $GITHUB_ENV
-        echo "HOST=${{ secrets.HOST }}" >> $GITHUB_ENV
-        echo "PORT=${{ secrets.PORT }}" >> $GITHUB_ENV
-
-    - name: Print environment variables
-      run: |
-        cat $GITHUB_ENV
+    - name: Set up JDK 8
+      uses: actions/setup-java@v4
+      with:
+        java-version: '8'
+        distribution: 'zulu'
 
     - name: Lint with flake8
       run: |
@@ -92,24 +71,15 @@ jobs:
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         poetry run flake8 . --count --exit-zero --max-complexity=14 --max-line-length=122 --statistics --ignore=F401,W504,W503,W605
 
-    - name: Debug Contents
-      run: ls -R
-
-    - name: Debug Mining-Python-SDK Directory
-      run: |
-        ls -al ./igrafx_mining_sdk
-
-
     - name: Set Environment Variables and Test with pytest
       env:
         WG_ID: ${{ secrets.WG_ID }}
         WG_KEY: ${{ secrets.WG_KEY }}
         WG_AUTH: ${{ secrets.WG_AUTH }}
         WG_URL: ${{ secrets.WG_URL }}
+        WG_JDBC: "${{ secrets.WG_JDBC }}"
         PROJECT_ID: ${{ secrets.PROJECT_ID }}
         NAME: ${{ secrets.NAME }}
         TYPE: ${{ secrets.TYPE }}
-        HOST: ${{ secrets.HOST }}
-        PORT: ${{ secrets.PORT }}
       run: |
         python -m pytest

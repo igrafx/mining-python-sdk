@@ -132,13 +132,11 @@ class Project:
                 else:
                     item["type"] = "cases"
 
-            # Set the datasource NAME, TYPE, HOST and PORT
+            # Set the datasource NAME and TYPE
             response_filtered = [d for d in json_response if d['type'] == ds_type][0]
             return Datasource(
                 response_filtered["name"],
                 response_filtered["type"],
-                "mining-data.staging.igrafxcloud.com",
-                443,
                 self.api_connector)
         else:
             return None
