@@ -18,9 +18,10 @@ class TestWorkgroup:
         workgroup_key = os.environ.get('WG_KEY')
         api_url = os.environ.get('WG_URL')
         auth_url = os.environ.get('WG_AUTH')
+        jdbc_url = os.environ.get('WG_JDBC')
 
         # Create the workgroup instance
-        wg = Workgroup(workgroup_id, workgroup_key, api_url, auth_url)
+        wg = Workgroup(workgroup_id, workgroup_key, api_url, auth_url, jdbc_url)
 
         pytest.workgroup = wg
         assert isinstance(wg, Workgroup)
@@ -28,7 +29,7 @@ class TestWorkgroup:
     def test_wrong_login(self):
         """Test the login with wrong credentials."""
         with pytest.raises(Exception):
-            assert Workgroup("a", "b", "c", "d")
+            assert Workgroup("a", "b", "c", "d", "e")
 
     @pytest.mark.dependency(name='project', depends=['workgroup'], scope='session')
     def test_create_project(self):

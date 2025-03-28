@@ -19,8 +19,7 @@ class TestGraph:
     def test_graph_instance(self):
         """Test the creation of a Graph object."""
 
-        # This method uses the process_keys method and is also based on the connection to druid which need the
-        # correct host and port.
+        # This method uses the process_keys method and is also based on the connection with jdbc
         list1 = pytest.project.get_graph_instances(limit=10, shuffle=False)
         list2 = pytest.project.get_graph_instances(limit=10, shuffle=True)
         assert len(list1) == len(list2)
