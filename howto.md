@@ -27,10 +27,9 @@ You may find the github of the iGrafx Mining SDK [here](https://github.com/igraf
 9. [Using Pandas methods](#using-pandas-methods)
 10. [Using Druid SQL Queries](#using-druid-sql-queries)
 11. [Using the public API](#using-the-public-api)
-12. [Access database via Druid Rest SQL queries](#access-database-via-druid-rest-sql-queries)
-13. [Predictions](#predictions)
-14. [Generating the Documentation with SphinxDocs](#generating-the-documentation-with-sphinxdocs)
-15. [Further Documentation](#further-documentation)
+12. [Predictions](#predictions)
+13. [Generating the Documentation with SphinxDocs](#generating-the-documentation-with-sphinxdocs)
+14. [Further Documentation](#further-documentation)
 
 
 ## Installing
@@ -742,37 +741,6 @@ For instance, we can use that method to **stop** the train task for a project:
 ````commandline
 curl -X DELETE "https://<Your API URL>/pub/train/<Your Project ID>" -H "accept: */*" -H "Authorization: Bearer <Your generated Token>"
 ````
-
-## Access database via Druid Rest SQL queries
-
-### Sending a query:
-The database can be accessed with Druid Rest SQL queries.
-
-To do so, first of all, using a ``POST`` method, send your query to the Router.
-`Curl` can be used to send SQL queries from the command-line:
-````commandline
-curl  -X POST -H "Content-Type: application/json" -u <Your Workgroup ID>:<Your Workgroup KEY> https://<Your Mining Platform URL>/druid/v2/sql/ --data-raw '{"query": "SELECT * FROM <ds.name> "}'
-````
-The query must be specified after ``"query"``, in `--data-raw`.
-
-Alternatively, SQL queries can also be sent as follows:
-````commandline
- cat query.json
-{"query": "SELECT * FROM <ds.name> "}
-````
-
-````commandline
-curl  -X POST -H "Content-Type: application/json" -u <Your Workgroup ID>:<Your Workgroup KEY> https://<Your Mining Platform URL>/druid/v2/sql/ --data-raw @query.json
-````
-### Responses:
-The result format of the query can be specified with ```"resultFormat"```:
-````json
-{
-  "query": "SELECT * FROM <ds.name>",
-  "resultFormat": "array"
-}
-```` 
-More information can be found in the section [Further documentation](https://github.com/igrafx/mining-python-sdk/blob/dev/howto.md#further-documentation).
 
 ## Predictions
 
