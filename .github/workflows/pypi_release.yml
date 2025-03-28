@@ -53,9 +53,13 @@ jobs:
       run: |
         poetry install --no-root
 
-    - name: Build a tar.gz package
-      run: >-
-        python setup.py sdist --format=gztar
+    - name: Update version in pyproject.toml
+      run: |
+        poetry version ${{ github.ref_name }}  # Use the tag as the version
+
+    - name: Build the distribution
+      run: |
+        poetry build  # This generates the .tar.gz and .whl files
 
     - name: Publish distribution to PyPI
       uses: pypa/gh-action-pypi-publish@v1.8.14
