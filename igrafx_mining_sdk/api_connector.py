@@ -2,7 +2,7 @@
 # https://github.com/igrafx/mining-python-sdk/blob/dev/LICENSE
 
 import requests as req
-from pathlib import Path
+import importlib.resources
 
 
 class InvalidRouteError(Exception):
@@ -32,7 +32,7 @@ class APIConnector:
         self._authurl = self.__remove_slash(authurl)
         self.jdbc_url = jdbc_url
         self.jdbc_driver_class = "org.apache.calcite.avatica.remote.Driver"
-        self.jdbc_driver_path = str(Path(__file__).parent.parent / "jars" / "avatica-1.26.0.jar")
+        self.jdbc_driver_path = str(importlib.resources.files("igrafx_mining_sdk") / "jars" / "avatica-1.26.0.jar")
         self.ssl_verify = ssl_verify
         self.token_header = self.__login()
 
