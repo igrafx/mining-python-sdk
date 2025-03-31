@@ -12,6 +12,7 @@ packages = [{ include = "igrafx_mining_sdk" }]
 include = ["igrafx_mining_sdk/jars/*",
            "LICENSE",
            "LICENSES/Apache-2.0.txt",
+           "tests",
 ]
 
 [tool.poetry.dependencies]
