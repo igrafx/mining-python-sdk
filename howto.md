@@ -96,6 +96,12 @@ This command should print the version of Java you have installed.
 
 You will need Java to be able to get and query datasources.
 
+This project includes jar from Apache Calcite Avatica
+(https://mvnrepository.com/artifact/org.apache.calcite.avatica/avatica),
+which is licensed under the Apache License, Version 2.0.
+
+The original Apache License can be found in LICENSES/Apache-2.0.txt.
+
 ### Reinstall python and poetry procedure:
 
 If you are encountering issues, you may wish to reinstall both Python and Poetry from scratch.  
