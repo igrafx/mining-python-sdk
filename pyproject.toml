@@ -9,7 +9,10 @@ homepage = "https://www.igrafx.com/"
 repository = "https://github.com/igrafx/mining-python-sdk"
 keywords = ["process mining"]
 packages = [{ include = "igrafx_mining_sdk" }]
-include = ["igrafx_mining_sdk/jars/*"]
+include = ["igrafx_mining_sdk/jars/*",
+           "LICENSE",
+           "LICENSES/Apache-2.0.txt",
+]
 
 [tool.poetry.dependencies]
 python = "^3.10.0,<3.12.1"

@@ -43,6 +43,13 @@ This package requires python 3.10 or above. Get the latest version of [Python](h
 
 The required packages should be installed via the ```pyproject.toml``` when running the  ```poetry install``` command. 
 
+This project includes a jar from Apache Calcite Avatica
+(https://mvnrepository.com/artifact/org.apache.calcite.avatica/avatica),
+which is licensed under the Apache License, Version 2.0.
+
+The original Apache License can be found in LICENSES/Apache-2.0.txt.
+
+
 ## Installing
 
 ### With pip:
@@ -82,3 +89,6 @@ Your feedback and contributions are important to us. Don't hesitate to contribut
 ## License
 
 This SDK is licensed under the MIT License. See the ````LICENSE```` file for more details.
+
+It also includes dependencies that are licensed under **Apache License 2.0**.
+See `LICENSES/Apache-2.0.txt` and `NOTICE` for details.
