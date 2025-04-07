@@ -53,7 +53,7 @@ class Workgroup:
     @property
     def get_workgroup_metadata(self):
         """
-        Returns the metadata of the workgroup
+        Returns the metadata of the workgroup such as creation date, name, start validity date, isDemoWorkgroup
         """
         response_workgroup_metadata = self.api_connector.get_request(f"/workgroups/{self.w_id}")
         return response_workgroup_metadata.json()
