@@ -45,7 +45,8 @@ class TestWorkgroup:
     @pytest.mark.dependency(depends=['workgroup'])
     def test_projects(self):
         """Test that there are projects in the workgroup."""
-        assert len(pytest.workgroup.get_project_list()) > 0  # There should be at least one project in the workgroup
+        # There should be at least one project in the workgroup
+        assert len(pytest.workgroup.get_project_list()) > 0
 
     @pytest.mark.dependency(depends=['workgroup'])
     def test_project_from_id(self):
@@ -58,6 +59,8 @@ class TestWorkgroup:
         assert pytest.workgroup.get_workgroup_metadata
         assert pytest.workgroup.get_workgroup_metadata.get("name")
         assert pytest.workgroup.get_workgroup_metadata.get("creationDate")
+        assert pytest.workgroup.get_workgroup_metadata.get("startValidityDate")
+        assert pytest.workgroup.get_workgroup_metadata.get("isDemoWorkgroup")
 
     @pytest.mark.dependency(depends=['workgroup'])
     def test_get_workgroup_data_version(self):
