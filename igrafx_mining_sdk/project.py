@@ -47,7 +47,7 @@ class Project:
 
     def get_project_name(self):
         """Returns the name of the project"""
-        response_project_name = self.api_connector.get_request(f"/project/{self.id}/name").json()
+        response_project_name = self.api_connector.get_request(f"/projects/{self.id}").json()
         return response_project_name["name"]
 
     def graph(self, gateways=False):
