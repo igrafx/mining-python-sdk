@@ -234,4 +234,3 @@ class TestProject:
         """Test that the project variants can be returned"""
         time.sleep(3)
         assert pytest.project.get_project_variants(1, 3)
-
