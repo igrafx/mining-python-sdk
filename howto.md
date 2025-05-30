@@ -27,9 +27,8 @@ You may find the github of the iGrafx Mining SDK [here](https://github.com/igraf
 9. [Using Pandas methods](#using-pandas-methods)
 10. [Using Druid SQL Queries](#using-druid-sql-queries)
 11. [Using the public API](#using-the-public-api)
-12. [Predictions](#predictions)
-13. [Generating the Documentation with SphinxDocs](#generating-the-documentation-with-sphinxdocs)
-14. [Further Documentation](#further-documentation)
+12. [Generating the Documentation with SphinxDocs](#generating-the-documentation-with-sphinxdocs)
+13. [Further Documentation](#further-documentation)
 
 
 ## Installing
@@ -747,36 +746,6 @@ For instance, we can use that method to **stop** the train task for a project:
 ````commandline
 curl -X DELETE "https://<Your API URL>/pub/train/<Your Project ID>" -H "accept: */*" -H "Authorization: Bearer <Your generated Token>"
 ````
-
-## Predictions
-
-
-Once you have your project, you can train it and run predictions on it. 
-For the [training](https://fr.help.logpickr.com/prediction/p2p/introduction/), the project has the `.launch_train()` 
-and `.stop_train()` methods, as well as the `.train_status property`, which can be used like so:
-```python
-my_project = wg.project_from_id("<Your Project ID>")
-
-my_project.train_status
-False
-
-my_project.lauch_train()
-my_project.train_status
-True
-
-my_project.stop_train()
-my_project.train_status
-False
-```
-Once the train is complete, you can run predictions on the case IDs you want in your project:
-```python
-my_project = wg.project_from_id("<Your Project ID>")
-my_project.train_status # we can make sure the training is finished
-False
-
-case_list = ["<Case ID 1>", "<Case ID 2>", "<Case ID 3>"]
-prediction_data = my_project.prediction(case_list)
-```
 
 ## Generating the Documentation with SphinxDocs
 
