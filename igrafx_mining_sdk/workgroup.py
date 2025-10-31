@@ -30,6 +30,10 @@ class Workgroup:
         response_project_list = self.api_connector.get_request("/projects").json()
         return response_project_list
 
+    def get_app_version(self):
+        """Returns the version of the app"""
+        return self.api_connector.get_request("/version").json()
+
     def create_project(self, project_name: str, description: str = None):
         """Creates a project within the workgroup
 
