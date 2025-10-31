@@ -17,6 +17,7 @@ include = ["igrafx_mining_sdk/jars/*",
 
 [tool.poetry.dependencies]
 python = "^3.10.0,<3.12.1"
+setuptools = "80.9.0"
 requests = "2.32.5"
 pydruid = "0.6.9"
 pandas = "^2.0.0,<=2.2.1"
