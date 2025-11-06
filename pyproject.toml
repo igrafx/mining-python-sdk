@@ -17,22 +17,23 @@ include = ["igrafx_mining_sdk/jars/*",
 
 [tool.poetry.dependencies]
 python = "^3.10.0,<3.12.1"
-requests = "2.31.0"
-pydruid = "0.6.6"
+setuptools = "80.9.0"
+requests = "2.32.5"
+pydruid = "0.6.9"
 pandas = "^2.0.0,<=2.2.1"
-SQLAlchemy = "2.0.29"
+SQLAlchemy = "2.0.44"
 networkx = "^3.0.0,<3.3.0"
 numpy = "^1.25.0"
 toml = "0.10.2"
-python-dotenv = "1.0.1"
-urllib3 = "2.2.1"
-pip = "24.0.0"
+python-dotenv = "1.2.1"
+urllib3 = "2.5.0"
+pip = "25.3.0"
 jaydebeapi = "^1.2.3"
 
 [tool.poetry.group.test.dependencies]
-pytest = "8.1.1"
+pytest = "8.4.2"
 pytest-dependency = "0.6.0"
-pytest-mock = "3.14.0"
+pytest-mock = "3.15.1"
 
 
 [tool.pytest.ini_options]

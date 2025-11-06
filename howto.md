@@ -173,6 +173,11 @@ On top of that, if you already know the ID of the project you want to work with 
 my_project = wg.project_from_id("<Your Project ID>")
 ```
 
+It is also possible to **unarchive** a project. A project is automatically archived after 2 weeks of inactivity.
+```python
+my_project.unarchive()
+```
+
 Please note that for a given **Workgroup** it is possible to retrieve its metadata which includes its name, its creation date and expiration date and finally its data version.
 To retrieve the metadata of a Workgroup, you can use the following method:
 ````python
@@ -188,6 +193,11 @@ wg_metadata = wg.get_workgroup_metadata.get("expirationDate")
 Moreover, to retrieve the data version of the Workgroup, you may do as follows:
 ````python
 wg_data_version = wg.get_workgroup_data_version
+````
+
+It is also possible to retrieve the app version:
+````python
+wg_app_version = wg.get_app_version()
 ````
 
 Once you have the project you want to use, several actions can be taken.

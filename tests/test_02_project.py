@@ -29,6 +29,11 @@ class TestProject:
         assert project_exists is True
 
     @pytest.mark.dependency(depends=['project'], scope='session')
+    def test_unarchive(self):
+        """Test that a project can be unarchived."""
+        assert pytest.project.unarchive()
+
+    @pytest.mark.dependency(depends=['project'], scope='session')
     def test_get_project_name(self):
         """ Test that the project name is returned and correct."""
         project_name = pytest.project.get_project_name()
@@ -125,6 +130,7 @@ class TestProject:
         assert pytest.project.add_column_mapping(filestructure, column_mapping)
         assert pytest.project.add_file(str(file_path))
 
+    @pytest.mark.dependency(name='add_csv_file', depends=['reset', 'add_column_mapping'], scope='session')
     def test_add_zip_csv_file(self):
         """Test that a zip file can be added to a project."""
         pytest.project.reset()

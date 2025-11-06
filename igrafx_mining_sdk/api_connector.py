@@ -1,8 +1,8 @@
 # MIT License, Copyright 2023 iGrafx
 # https://github.com/igrafx/mining-python-sdk/blob/dev/LICENSE
 
-import requests as req
 import importlib.resources
+import requests as req
 
 
 class InvalidRouteError(Exception):
@@ -51,9 +51,11 @@ class APIConnector:
         return url.strip().rstrip('/')
 
     def __login(self):
-        """Logs into the Mining Public API with the Workgroups credentials and retrieves a token for later requests"""
+        """Logs into the Mining Public API with the Workgroups credentials and retrieves a token for later requests.
+        Handles the authentication ``/protocol/openid-connect/token`` suffix.
+        """
 
-        login_url = f"{self._authurl}/protocol/openid-connect/token"
+        login_url = f"{self._authurl}"
         login_data = {
             "grant_type": "client_credentials",
             "client_id": self.wg_id,
@@ -143,7 +145,7 @@ class APIConnector:
                 print(response.text)
         return response
 
-    def delete_request(self, route, nblasttries=0, maxtries=3):
+    def delete_request(self, route, *, nblasttries=0, maxtries=3):
         """Does an HTTP DELETE request to the Mining Public API by simply taking the route
 
         :param route: The route of the request
@@ -161,6 +163,34 @@ class APIConnector:
                 if nblasttries < maxtries:
                     self.token_header = self.__login()
                     self.delete_request(route, nblasttries=nblasttries + 1, maxtries=maxtries)
+                else:
+                    raise InvalidRouteError()
+            response.raise_for_status()
+        except (req.HTTPError, InvalidRouteError) as error:
+            print(f"Http error occurred: {error}")
+            print(response.text)
+        return response
+
+    def put_request(self, route, *, params=None, nblasttries=0, maxtries=3):
+        """Does an HTTP PUT request to the Mining Public API by simply taking the route
+
+        :param route: The route of the request
+        :param params: The parameters of the request
+        :param nblasttries: The number of try of this route
+        :param maxtries: The maximum number of tries
+        """
+
+        response = None
+        _route = self.apiurl + (route if route.startswith('/') else '/' + route)
+        try:
+            response = req.put(_route,
+                               params=params,
+                               headers=self.token_header,
+                               verify=self.ssl_verify)
+            if response.status_code == 401:  # Only possible if the token has expired
+                if nblasttries < maxtries:
+                    self.token_header = self.__login()
+                    self.put_request(route, params=params, nblasttries=nblasttries + 1, maxtries=maxtries)
                 else:
                     raise InvalidRouteError()
             response.raise_for_status()

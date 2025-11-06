@@ -251,6 +251,12 @@ class Project:
         response_reset = self.api_connector.post_request(f"/project/{self.id}/reset")
         return response_reset.status_code == 204
 
+    def unarchive(self):
+        """Makes an API call to manually unarchive a project"""
+
+        response_unarchive = self.api_connector.put_request(f"/projects/{self.id}/unarchive")
+        return response_unarchive.status_code == 204
+
     def add_file(self, path):
         """Adds a file to the project.
         A zip file can also be added. In the file structure,
