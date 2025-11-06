@@ -31,6 +31,10 @@ class TestWorkgroup:
         with pytest.raises(Exception):
             assert Workgroup("a", "b", "c", "d", "e")
 
+    def test_get_app_version(self):
+        """Test the get_app_version method."""
+        assert pytest.workgroup.get_app_version()
+
     @pytest.mark.dependency(name='project', depends=['workgroup'], scope='session')
     def test_create_project(self):
         """Test initialization of a project."""
