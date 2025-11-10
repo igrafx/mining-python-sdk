@@ -16,7 +16,7 @@ include = ["igrafx_mining_sdk/jars/*",
 ]
 
 [tool.poetry.dependencies]
-python = "^3.10.0,<3.12.1"
+python = "^3.10.0,<3.13"
 setuptools = "80.9.0"
 requests = "2.32.5"
 pydruid = "0.6.9"
@@ -29,6 +29,7 @@ python-dotenv = "1.2.1"
 urllib3 = "2.5.0"
 pip = "25.3.0"
 jaydebeapi = "^1.2.3"
+jpype1 = "1.5.0"
 
 [tool.poetry.group.test.dependencies]
 pytest = "8.4.2"
