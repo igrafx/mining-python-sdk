@@ -265,25 +265,21 @@ class Project:
 
         :param path: The path to the file to add
         """
-        route = f"/project/{self.id}/file?teamId={self.api_connector.wg_id}"
         file_extension = os.path.splitext(path)[-1].lower()
-        if file_extension == ".csv":
-            mime_type = "text/csv"
-        elif file_extension == ".xlsx":
-            mime_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        elif file_extension == ".xls":
-            mime_type = "application/vnd.ms-excel"
-        elif file_extension == ".zip":
-            # When a zip is added, the mime type is a zip file.
-            # The file type is automatically detected through the file structure
-            mime_type = "application/zip"
-        else:
+        if file_extension not in (".csv", ".xlsx", ".xls", ".zip"):
             raise ValueError(f"File extension {file_extension} is not supported")
 
+        route = f"/workgroups/{self.api_connector.wg_id}/projects/{self.id}/files"
+
+        filename = os.path.basename(path)
+        headers = {
+            "accept": "application/json, text/plain, */*",
+            "Content-Type": "application/octet-stream",
+            "Content-Disposition": f'attachment; filename="{filename}"',
+        }
+
         with open(path, 'rb') as file:
-            files = {'file': (os.path.basename(path), file, mime_type)}
-            headers = {"accept": "application/json, text/plain, */*"}
-            response_add_file = self.api_connector.post_request(route, files=files, headers=headers)
+            response_add_file = self.api_connector.post_request(route, data=file, headers=headers)
 
         # print(response_add_file.status_code) to get the status response
         if response_add_file.status_code == 201:

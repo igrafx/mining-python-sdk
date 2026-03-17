@@ -105,7 +105,7 @@ class APIConnector:
             print(response.text)
         return response
 
-    def post_request(self, route, *, params=None, json=None, files=None, headers={}, nblasttries=0, maxtries=3):
+    def post_request(self, route, *, params=None, json=None, files=None, data=None, headers={}, nblasttries=0, maxtries=3):
         """Does an HTTP POST request to the Mining Public API by simply taking the route, an eventual JSON,
         files and headers
 
@@ -113,6 +113,7 @@ class APIConnector:
         :param params: The parameters of the request
         :param json: A given JSON object
         :param files: Eventual files
+        :param data: Raw binary data for application/octet-stream requests
         :param headers: Additional headers
         :param nblasttries: The number of try of this route
         :param maxtries: The maximum number of tries
@@ -125,6 +126,7 @@ class APIConnector:
                                 params=params,
                                 json=json,
                                 files=files,
+                                data=data,
                                 headers={**self.token_header, **headers},
                                 verify=self.ssl_verify)
             if response.status_code == 401:  # Only possible if the token has expired
@@ -133,6 +135,7 @@ class APIConnector:
                     self.post_request(route,
                                       json=json,
                                       files=files,
+                                      data=data,
                                       headers=headers,
                                       nblasttries=nblasttries + 1,
                                       maxtries=maxtries)
