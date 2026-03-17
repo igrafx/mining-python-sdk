@@ -122,7 +122,7 @@ class APIConnector:
         :param params: The parameters of the request
         :param json: A given JSON object
         :param files: Eventual files
-        :param data: Raw binary data for application/octet-stream requests
+        :param data: Raw binary data for application/octet-stream requests, if needed
         :param headers: Additional headers
         :param nblasttries: The number of try of this route
         :param maxtries: The maximum number of tries
