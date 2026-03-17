@@ -105,7 +105,17 @@ class APIConnector:
             print(response.text)
         return response
 
-    def post_request(self, route, *, params=None, json=None, files=None, data=None, headers={}, nblasttries=0, maxtries=3):
+
+    def post_request(self,
+                     route,
+                     *,
+                     params=None,
+                     json=None,
+                     files=None,
+                     data=None,
+                     headers={},
+                     nblasttries=0,
+                     maxtries=3):
         """Does an HTTP POST request to the Mining Public API by simply taking the route, an eventual JSON,
         files and headers
 

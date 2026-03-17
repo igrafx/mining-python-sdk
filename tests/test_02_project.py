@@ -69,7 +69,6 @@ class TestProject:
         """Test that a project can be reset."""
         assert pytest.project.reset()
 
-
     def test_add_wrong_extension_file(self):
         """Test that adding a file with wrong extension raises ValueError"""
         base_dir = Path(__file__).resolve().parent
