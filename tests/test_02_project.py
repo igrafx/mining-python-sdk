@@ -1,5 +1,6 @@
 # MIT License, Copyright 2023 iGrafx
 # https://github.com/igrafx/mining-python-sdk/blob/dev/LICENSE
+import tempfile
 import time
 from unittest.mock import MagicMock
 from pathlib import Path
@@ -69,18 +70,19 @@ class TestProject:
         """Test that a project can be reset."""
         assert pytest.project.reset()
 
+    @pytest.mark.dependency(depends=['project'], scope='session')
     def test_add_wrong_extension_file(self):
         """Test that adding a file with wrong extension raises ValueError"""
-        base_dir = Path(__file__).resolve().parent
-        # Create a temporary file with unsupported extension
-        temp_file = base_dir / 'data' / 'tables' / 'temp_file.txt'
-        temp_file.write_text("test content")
 
-        with pytest.raises(ValueError, match="File extension .txt is not supported"):
-            pytest.project.add_file(str(temp_file))
+        with tempfile.NamedTemporaryFile(suffix='.txt', delete=False) as temp_file:
+            temp_file.write(b"test content")  # Use write() with bytes for tempfile
+            temp_file_path = temp_file.name
 
-        # Clean up the temporary file
-        temp_file.unlink()
+        try:
+            with pytest.raises(ValueError, match="File extension .txt is not supported"):
+                pytest.project.add_file(temp_file_path)
+        finally:
+            Path(temp_file_path).unlink(missing_ok=True)
 
     @pytest.mark.dependency(depends=['reset', 'add_column_mapping'])
     def test_add_xlsx_file(self):
