@@ -22,13 +22,10 @@ _original_lineno_fget = _pytest_code.TracebackEntry.lineno.fget
 def _safe_lineno(self):
     """
     Safe lineno property that handles None tb_lineno values.
-    
     This function fixes the TypeError: unsupported operand type(s) for -: 'NoneType' and 'int'
     that occurs when pytest-dependency 0.6.1 interacts with pytest 8.x and pluggy 1.6.0.
-    
     Args:
         self: The TracebackEntry instance
-        
     Returns:
         int: The line number (0 if tb_lineno is None, otherwise the actual line number)
     """
