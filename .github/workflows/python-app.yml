@@ -28,7 +28,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Set up Python 3.10.11
+    - name: Set up Python 3.12.8
       uses: actions/setup-python@v5
       with:
         python-version: "3.12.8"
@@ -38,25 +38,13 @@ jobs:
         python -m pip install --upgrade pip
         pip install poetry
 
-    - name: Setup project
-      run: |
-        poetry config virtualenvs.create false
-
     - name: Install project dependencies
       run: |
-        poetry install --no-root
+        poetry install
 
     - name: Install Flake8
       run: |
-        poetry run pip install flake8
-
-    - name: Install pytest
-      run: |
-        poetry run pip install pytest
-
-    - name: Install pytest-mock
-      run: |
-        poetry run pip install pytest-mock
+        poetry add --group dev flake8
 
     - name: Set up JDK 8
       uses: actions/setup-java@v4
@@ -82,4 +70,4 @@ jobs:
         NAME: ${{ secrets.NAME }}
         TYPE: ${{ secrets.TYPE }}
       run: |
-        python -m pytest
+        poetry run pytest
