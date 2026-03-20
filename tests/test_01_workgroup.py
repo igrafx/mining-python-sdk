@@ -40,8 +40,15 @@ class TestWorkgroup:
     @pytest.mark.dependency(name='project', depends=['workgroup'], scope='session')
     def test_create_project(self):
         """Test initialization of a project."""
-        project_name = "Test Project"
+        project_name = "Mining SDK Test Project"
         description = "This is a test project."
+
+        # Clean up any leftover test project from a previous interrupted run
+        # (e.g. debug mode stopped, crash before reaching deletion test)
+        for pid in pytest.workgroup.get_project_list():
+            existing = pytest.workgroup.project_from_id(pid)
+            if existing is not None and existing.get_project_name() == project_name:
+                existing.delete_project()
 
         # Create the project
         project = pytest.workgroup.create_project(project_name, description)
