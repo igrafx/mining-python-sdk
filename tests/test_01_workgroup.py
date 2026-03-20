@@ -2,6 +2,8 @@
 # https://github.com/igrafx/mining-python-sdk/blob/dev/LICENSE
 import os
 import pytest
+import requests as req
+from unittest.mock import MagicMock, patch, PropertyMock
 from igrafx_mining_sdk import Project
 from igrafx_mining_sdk.workgroup import Workgroup
 
@@ -70,3 +72,61 @@ class TestWorkgroup:
     def test_get_workgroup_data_version(self):
         """Test that the workgroup data version can be retrieved."""
         assert pytest.workgroup.get_workgroup_data_version
+
+    #replaces Workgroup.__init__ with a no-op function during the test.
+    # This lets you create a Workgroup instance without it actually trying to log in to the API
+    # (which the real __init__ does on line 26 via APIConnector).
+    @patch.object(Workgroup, '__init__', lambda self, *args, **kwargs: None)
+    def test_create_project_error(self):
+        """Test that create_project raises ValueError when status code is not 201"""
+        wg = Workgroup.__new__(Workgroup)
+        wg.w_id = "test_wg"
+        wg.api_connector = MagicMock()
+        wg.api_connector.post_request.return_value.status_code = 500
+        with pytest.raises(ValueError, match="Failed to create project"):
+            wg.create_project("test_project")
+
+    @patch.object(Workgroup, '__init__', lambda self, *args, **kwargs: None)
+    def test_datasources(self):
+        """Test that datasources property returns datasources from all projects"""
+        wg = Workgroup.__new__(Workgroup)
+        wg._datasources = []
+        wg.api_connector = MagicMock()
+
+        mock_project = MagicMock()
+        mock_project.nodes_datasource = "nodes"
+        mock_project.edges_datasource = "edges"
+        mock_project.cases_datasource = "cases"
+
+        wg.get_project_list = MagicMock(return_value=["project_1"])
+        wg.project_from_id = MagicMock(return_value=mock_project)
+
+        result = wg.datasources
+        assert len(result) == 3
+        assert "nodes" in result
+        assert "edges" in result
+        assert "cases" in result
+
+    @patch.object(Workgroup, '__init__', lambda self, *args, **kwargs: None)
+    def test_datasources_http_error(self):
+        """Test that datasources property handles HTTPError gracefully"""
+        wg = Workgroup.__new__(Workgroup)
+        wg._datasources = []
+        wg.api_connector = MagicMock()
+
+        wg.get_project_list = MagicMock(side_effect=req.HTTPError("HTTP Error"))
+
+        result = wg.datasources
+        assert result == []
+
+    @patch.object(Workgroup, '__init__', lambda self, *args, **kwargs: None)
+    def test_datasources_empty(self):
+        """Test that datasources property returns empty list when no projects exist"""
+        wg = Workgroup.__new__(Workgroup)
+        wg._datasources = []
+        wg.api_connector = MagicMock()
+
+        wg.get_project_list = MagicMock(return_value=[])
+
+        result = wg.datasources
+        assert result == []

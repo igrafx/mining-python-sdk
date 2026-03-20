@@ -2,7 +2,7 @@
 # https://github.com/igrafx/mining-python-sdk/blob/dev/LICENSE
 from pathlib import Path
 import pytest
-from igrafx_mining_sdk.graph import Graph
+from igrafx_mining_sdk.graph import Graph, GraphInstance
 
 
 class TestGraph:
@@ -40,3 +40,30 @@ class TestGraph:
         file_path = base_dir / 'data' / 'graphs' / 'graph.json'
         g = Graph.from_json(0, str(file_path))
         assert len(g) > 0
+
+    def test_getattr_delegation(self):
+        """Test that attribute access is delegated to the underlying NetworkX graph which triggers the __getattr__ method."""
+        base_dir = Path(__file__).resolve().parent
+        file_path = base_dir / 'data' / 'graphs' / 'graph.json'
+        g = Graph.from_json(0, str(file_path))
+        # Accessing .nodes triggers __getattr__ delegation to the NetworkX DiGraph
+        assert len(g.nodes) > 0
+
+    def test_graph_property(self):
+        """Test that the graph property returns the graph attributes dictionary, covering the graph property."""
+        base_dir = Path(__file__).resolve().parent
+        file_path = base_dir / 'data' / 'graphs' / 'graph.json'
+        g = Graph.from_json(0, str(file_path))
+        assert 'project_id' in g.graph
+        assert g.graph['project_id'] == 0
+
+    def test_graph_instance_from_json(self):
+        """ Calls GraphInstance.from_json() with the existing test data file, covering lines 89-91.
+        Asserts the returned object has correct rework_total (4) and concurrency_rate (~0.0357)"""
+        base_dir = Path(__file__).resolve().parent
+        file_path = base_dir / 'data' / 'graphs' / 'graph_with_invalid_edges.json'
+        gi = GraphInstance.from_json("test_project", str(file_path))
+        assert isinstance(gi, GraphInstance)
+        assert gi.rework_total == 4
+        assert gi.concurrency_rate == pytest.approx(0.0357, abs=0.001)
+        assert len(gi) > 0

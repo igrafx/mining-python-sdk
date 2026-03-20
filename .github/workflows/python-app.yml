@@ -18,7 +18,8 @@ on:
   - cron: "0 2 * * 1-5"
 
 permissions:
-  contents: read
+  contents: write
+  pull-requests: write
 
 jobs:
   build:
@@ -72,4 +73,26 @@ jobs:
         NAME: ${{ secrets.NAME }}
         TYPE: ${{ secrets.TYPE }}
       run: |
-        poetry run pytest
+        poetry run pytest --cov=igrafx_mining_sdk --cov-fail-under=100 --cov-report=term-missing --cov-report=xml:coverage.xml --junitxml=pytest.xml | tee coverage.txt
+
+    - name: Pytest Coverage Comment
+      if: github.event_name == 'pull_request'
+      uses: MishaKav/pytest-coverage-comment@main
+      with:
+        pytest-coverage-path: coverage.txt
+        junitxml-path: pytest.xml
+        badge-title: Coverage
+        hide-comment: false
+        create-new-comment: false
+        hide-report: true
+
+    - name: Update Coverage Badge
+      if: github.event_name == 'push' && github.ref == 'refs/heads/dev'
+      uses: MishaKav/pytest-coverage-comment@main
+      with:
+        pytest-coverage-path: coverage.txt
+        badge-title: Coverage
+        coverage-path-prefix: igrafx_mining_sdk/
+        readme-path: README.md
+        default-branch: dev
+

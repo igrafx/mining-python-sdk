@@ -1,6 +1,7 @@
 # MIT License, Copyright 2023 iGrafx
 # https://github.com/igrafx/mining-python-sdk/blob/dev/LICENSE
 import os
+from unittest.mock import MagicMock
 import pytest
 import pandas as pd
 from igrafx_mining_sdk.datasource import Datasource
@@ -92,3 +93,42 @@ class TestDatasource:
         ds.close_ds_connection()
         assert ds._cursor is None
         assert ds._connection is None
+
+    def test_connection_returns_none_when_closed(self):
+        """Test that the connection property returns None when the datasource is closed"""
+        ds = Datasource("test_table", "druid", MagicMock())
+        ds._closed = True
+        assert ds.connection is None
+
+    def test_cursor_returns_none_when_closed(self):
+        """Test that the cursor property returns None when the datasource is closed"""
+        ds = Datasource("test_table", "druid", MagicMock())
+        ds._closed = True
+        assert ds.cursor is None
+
+    def test_request_raises_when_closed(self):
+        """Test that request raises an Exception when the datasource is closed"""
+        ds = Datasource("test_table", "druid", MagicMock())
+        ds._closed = True
+        with pytest.raises(Exception, match="cursor is not initialized"):
+            ds.request("SELECT 1")
+
+    def test_close_cursor_error_handling(self):
+        """Test that close_ds_connection handles cursor close errors gracefully"""
+        ds = Datasource("test_table", "druid", MagicMock())
+        mock_cursor = MagicMock()
+        mock_cursor.close.side_effect = Exception("Cursor close failed")
+        ds._cursor = mock_cursor
+        ds.close_ds_connection()
+        assert ds._cursor is None
+        assert ds._closed is True
+
+    def test_close_connection_error_handling(self):
+        """Test that close_ds_connection handles connection close errors gracefully"""
+        ds = Datasource("test_table", "druid", MagicMock())
+        mock_connection = MagicMock()
+        mock_connection.close.side_effect = Exception("Connection close failed")
+        ds._connection = mock_connection
+        ds.close_ds_connection()
+        assert ds._connection is None
+        assert ds._closed is True

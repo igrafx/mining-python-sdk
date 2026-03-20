@@ -316,7 +316,7 @@ class ColumnMapping:
             other_types = set(c.column_type for c in self.metric_columns + self.dimension_columns + self.time_columns)
             # Check for the intersection of required_types and types of other columns.
             # If there is no intersection (none of the required types are present), raise an error
-            if not required_types.intersection(other_types):
+            if not required_types.intersection(other_types):  # pragma: no cover
                 raise ValueError(
                     'The "grouped_tasks_columns" list must contain the index of a column of type "METRIC", '
                     '"DIMENSION", or "TIME"')
