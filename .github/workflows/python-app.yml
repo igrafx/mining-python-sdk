@@ -77,7 +77,7 @@ jobs:
         poetry run pytest --cov=igrafx_mining_sdk --cov-fail-under=100 --cov-report=term-missing --cov-report=xml:coverage.xml --junitxml=pytest.xml | tee coverage.txt
 
     - name: Pytest Coverage Comment
-      if: github.event_name == 'pull_request'
+      if: always() && github.event_name == 'pull_request'
       uses: MishaKav/pytest-coverage-comment@main
       with:
         pytest-coverage-path: coverage.txt
