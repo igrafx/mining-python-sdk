@@ -73,7 +73,7 @@ class TestWorkgroup:
         """Test that the workgroup data version can be retrieved."""
         assert pytest.workgroup.get_workgroup_data_version
 
-    #replaces Workgroup.__init__ with a no-op function during the test.
+    # replaces Workgroup.__init__ with a no-op function during the test.
     # This lets you create a Workgroup instance without it actually trying to log in to the API
     # (which the real __init__ does on line 26 via APIConnector).
     @patch.object(Workgroup, '__init__', lambda self, *args, **kwargs: None)

@@ -87,7 +87,7 @@ jobs:
         hide-report: true
 
     - name: Update Coverage Badge
-      if: github.event_name == 'push' && github.ref == 'refs/heads/dev'
+      if: github.event_name == 'push' && (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master')
       uses: MishaKav/pytest-coverage-comment@main
       with:
         pytest-coverage-path: coverage.txt

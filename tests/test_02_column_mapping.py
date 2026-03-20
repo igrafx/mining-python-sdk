@@ -3,7 +3,7 @@
 import json
 import pytest
 from igrafx_mining_sdk.column_mapping import (ColumnType, Column, ColumnMapping, GroupedTasksDimensionAggregation,
-                                               MetricAggregation, DimensionAggregation, FileStructure, FileType)
+                                              MetricAggregation, DimensionAggregation, FileStructure, FileType)
 
 
 class TestColumnMapping:
@@ -348,4 +348,3 @@ class TestColumnMapping:
         json_str = '{"name": "test", "columnIndex": "0", "columnType": "METRIC", "groupedTasksAggregation": "INVALID"}'
         with pytest.raises(ValueError, match="Invalid groupedTasksAggregation"):
             Column.from_json(json_str)
-

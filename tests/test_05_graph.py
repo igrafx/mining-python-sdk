@@ -42,7 +42,7 @@ class TestGraph:
         assert len(g) > 0
 
     def test_getattr_delegation(self):
-        """Test that attribute access is delegated to the underlying NetworkX graph which triggers the __getattr__ method."""
+        """Test that attribute access delegates to the NetworkX graph, triggering __getattr__."""
         base_dir = Path(__file__).resolve().parent
         file_path = base_dir / 'data' / 'graphs' / 'graph.json'
         g = Graph.from_json(0, str(file_path))
