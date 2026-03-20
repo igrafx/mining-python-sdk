@@ -73,6 +73,7 @@ jobs:
         NAME: ${{ secrets.NAME }}
         TYPE: ${{ secrets.TYPE }}
       run: |
+        set -o pipefail
         poetry run pytest --cov=igrafx_mining_sdk --cov-fail-under=100 --cov-report=term-missing --cov-report=xml:coverage.xml --junitxml=pytest.xml | tee coverage.txt
 
     - name: Pytest Coverage Comment
