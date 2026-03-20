@@ -39,7 +39,7 @@ class TestProject:
     def test_get_project_name(self):
         """ Test that the project name is returned and correct."""
         project_name = pytest.project.get_project_name()
-        assert project_name == "Test Project"
+        assert project_name == "Mining SDK Test Project"
 
     @pytest.mark.dependency(depends=['project', 'column_mapping'], scope='session')
     def test_column_mapping_dont_exists(self):
