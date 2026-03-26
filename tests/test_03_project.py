@@ -2,7 +2,7 @@
 # https://github.com/igrafx/mining-python-sdk/blob/dev/LICENSE
 import tempfile
 import time
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch, PropertyMock
 from pathlib import Path
 from datetime import datetime
 import uuid
@@ -11,6 +11,7 @@ from igrafx_mining_sdk.project import FileStructure
 from igrafx_mining_sdk.column_mapping import Column, ColumnType, ColumnMapping, FileType
 from igrafx_mining_sdk.datasource import Datasource
 from igrafx_mining_sdk.api_connector import APIConnector
+from igrafx_mining_sdk.project import Project
 
 
 class TestProject:
@@ -38,7 +39,7 @@ class TestProject:
     def test_get_project_name(self):
         """ Test that the project name is returned and correct."""
         project_name = pytest.project.get_project_name()
-        assert project_name == "Test Project"
+        assert project_name == "Mining SDK Test Project"
 
     @pytest.mark.dependency(depends=['project', 'column_mapping'], scope='session')
     def test_column_mapping_dont_exists(self):
@@ -254,3 +255,69 @@ class TestProject:
         """Test that the project variants can be returned"""
         time.sleep(3)
         assert pytest.project.get_project_variants(1, 3)
+
+    def test_graph_instance_from_key_error(self, api_connector):
+        """Test that graph_instance_from_key returns None when parsing fails"""
+        api_connector.get_request.return_value.json.side_effect = Exception("parse error")
+        project = Project("test_id", api_connector)
+        result = project.graph_instance_from_key("some_key")
+        assert result is None
+
+    def test_get_project_variants_with_search(self, api_connector):
+        """Test that get_project_variants passes the search param when provided"""
+        api_connector.get_request.return_value.json.return_value = {"variants": []}
+        project = Project("test_id", api_connector)
+        project.get_project_variants(1, 3, search="test")
+        api_connector.get_request.assert_called_once()
+        call_kwargs = api_connector.get_request.call_args
+        assert call_kwargs[1]["params"]["search"] == "test"
+
+    def test_get_project_completed_cases(self, api_connector):
+        """Test that get_project_completed_cases returns results"""
+        api_connector.get_request.return_value.json.return_value = {"cases": []}
+        project = Project("test_id", api_connector)
+        result = project.get_project_completed_cases(1, 3)
+        assert result == {"cases": []}
+
+    def test_get_project_completed_cases_with_search(self, api_connector):
+        """Test that get_project_completed_cases passes searchCaseId when provided"""
+        api_connector.get_request.return_value.json.return_value = {"cases": []}
+        project = Project("test_id", api_connector)
+        project.get_project_completed_cases(1, 3, search_case_id="ABC")
+        call_kwargs = api_connector.get_request.call_args
+        assert call_kwargs[1]["params"]["searchCaseId"] == "ABC"
+
+    def test_get_column_mapping_invalid_default_column(self, api_connector):
+        """Test that get_column_mapping raises ValueError for unknown default column types"""
+        api_connector.get_request.return_value.json.return_value = {
+            "unknownCol": {"columnIndex": 0}
+        }
+        project = Project("test_id", api_connector)
+        with patch.object(Project, 'column_mapping_exists', new_callable=PropertyMock, return_value=True):
+            with pytest.raises(ValueError, match="Default columns should be of type"):
+                project.get_column_mapping()
+
+    def test_get_column_mapping_invalid_nested_list(self, api_connector):
+        """Test that get_column_mapping raises ValueError for unknown nested list types"""
+        api_connector.get_request.return_value.json.return_value = {
+            "caseId": {"columnIndex": 0},
+            "unknownList": [{"columnIndex": 1}]
+        }
+        project = Project("test_id", api_connector)
+        with patch.object(Project, 'column_mapping_exists', new_callable=PropertyMock, return_value=True):
+            with pytest.raises(ValueError, match="Nested lists should be of type"):
+                project.get_column_mapping()
+
+    def test_add_file_error_status(self, api_connector):
+        """Test that add_file raises Exception when status code is not 201"""
+        api_connector.post_request.return_value.status_code = 500
+        api_connector.wg_id = "test_wg"
+        project = Project("test_id", api_connector)
+        with tempfile.NamedTemporaryFile(suffix='.csv', delete=False) as f:
+            f.write(b"test")
+            temp_path = f.name
+        try:
+            with pytest.raises(Exception, match="Error adding file"):
+                project.add_file(temp_path)
+        finally:
+            Path(temp_path).unlink(missing_ok=True)

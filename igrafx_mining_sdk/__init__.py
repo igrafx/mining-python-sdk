@@ -24,7 +24,7 @@ def extract_metadata():
             metadata['author'] = pyproject_data['tool']['poetry']['authors'][0]
             metadata['email'] = "contact@igrafx.com"
             metadata['version'] = pyproject_data['tool']['poetry']['version']
-    except (FileNotFoundError, StopIteration):
+    except (FileNotFoundError, StopIteration):  # pragma: no cover
         metadata['author'] = importlib.metadata.metadata('igrafx_mining_sdk')['Author']
         metadata['email'] = importlib.metadata.metadata('igrafx_mining_sdk')['Author-email']
         metadata['version'] = importlib.metadata.metadata('igrafx_mining_sdk')['Version']

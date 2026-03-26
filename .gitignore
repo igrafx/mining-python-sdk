@@ -27,3 +27,7 @@ dist/
 sphinx_docs/build/*
 sphinx_docs/doctrees/*
 sphinx_docs/html/*
+htmlcov/
+.coverage
+coverage.xml
+

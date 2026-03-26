@@ -44,3 +44,17 @@ def pytest_configure():
     """Configure workgroup and project as pytest fixtures."""
     pytest.workgroup = None
     pytest.project = None
+
+
+def pytest_sessionfinish(session, exitstatus):
+    """Cleanup: always delete the test project when the session ends.
+
+    This ensures the project is removed from the platform even if tests crash,
+    are interrupted (e.g. stopping debug mode), or fail before reaching the
+    deletion test.
+    """
+    if pytest.project is not None:
+        try:
+            pytest.project.delete_project()
+        except Exception:
+            pass

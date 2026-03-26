@@ -2,8 +2,8 @@
 # https://github.com/igrafx/mining-python-sdk/blob/dev/LICENSE
 import json
 import pytest
-from igrafx_mining_sdk.column_mapping import ColumnType, Column, ColumnMapping, GroupedTasksDimensionAggregation, \
-    MetricAggregation
+from igrafx_mining_sdk.column_mapping import (ColumnType, Column, ColumnMapping, GroupedTasksDimensionAggregation,
+                                              MetricAggregation, DimensionAggregation, FileStructure, FileType)
 
 
 class TestColumnMapping:
@@ -259,3 +259,92 @@ class TestColumnMapping:
         json_str = json.dumps(column_mapping.to_dict())
         column_mapping = ColumnMapping.from_json(json_str)
         assert isinstance(column_mapping, ColumnMapping)
+
+    # --- FileStructure.from_json() tests ---
+
+    def test_file_structure_from_json_valid(self):
+        """Test FileStructure.from_json with valid CSV JSON containing all fields"""
+        json_str = json.dumps({
+            "fileType": "CSV",
+            "charset": "UTF-8",
+            "delimiter": ";",
+            "quoteChar": "\"",
+            "escapeChar": "\\",
+            "eolChar": "\\r\\n",
+            "commentChar": "#",
+            "header": True
+        })
+        fs = FileStructure.from_json(json_str)
+        assert fs.file_type == FileType.CSV
+        assert fs.delimiter == ";"
+
+    def test_file_structure_from_json_minimal(self):
+        """Test FileStructure.from_json with only fileType, verify defaults"""
+        json_str = '{"fileType": "XLSX", "sheetName": "Sheet1"}'
+        fs = FileStructure.from_json(json_str)
+        assert fs.file_type == FileType.XLSX
+        assert fs.charset == "UTF-8"
+        assert fs.sheet_name == "Sheet1"
+
+    def test_file_structure_from_json_missing_file_type(self):
+        """Test FileStructure.from_json raises KeyError when fileType is missing"""
+        json_str = '{"charset": "UTF-8"}'
+        with pytest.raises(KeyError, match="fileType"):
+            FileStructure.from_json(json_str)
+
+    def test_file_structure_from_json_invalid_file_type(self):
+        """Test FileStructure.from_json raises KeyError for invalid fileType"""
+        json_str = '{"fileType": "INVALID"}'
+        with pytest.raises(KeyError, match="Invalid fileType"):
+            FileStructure.from_json(json_str)
+
+    # --- Column.__init__() validation tests ---
+
+    def test_case_id_column_with_aggregation(self):
+        """Test that CASE_ID column with aggregation raises ValueError"""
+        with pytest.raises(ValueError, match="not allowed for"):
+            Column('cid', 0, ColumnType.CASE_ID, aggregation=MetricAggregation.SUM)
+
+    def test_metric_column_with_dimension_aggregation(self):
+        """Test that METRIC column with DimensionAggregation raises ValueError"""
+        with pytest.raises(ValueError, match="MetricAggregation"):
+            Column('metric', 0, ColumnType.METRIC, aggregation=DimensionAggregation.DISTINCT)
+
+    def test_dimension_column_with_metric_aggregation(self):
+        """Test that DIMENSION column with MetricAggregation raises ValueError"""
+        with pytest.raises(ValueError, match="DimensionAggregation"):
+            Column('dim', 0, ColumnType.DIMENSION, aggregation=MetricAggregation.SUM)
+
+    # --- Column.from_json() missing field tests ---
+
+    def test_column_from_json_missing_name(self):
+        """Test Column.from_json raises KeyError when name is missing"""
+        json_str = '{"columnIndex": "0", "columnType": "CASE_ID"}'
+        with pytest.raises(KeyError, match="name"):
+            Column.from_json(json_str)
+
+    def test_column_from_json_missing_column_index(self):
+        """Test Column.from_json raises KeyError when columnIndex is missing"""
+        json_str = '{"name": "test", "columnType": "CASE_ID"}'
+        with pytest.raises(KeyError, match="columnIndex"):
+            Column.from_json(json_str)
+
+    def test_column_from_json_missing_column_type(self):
+        """Test Column.from_json raises KeyError when columnType is missing"""
+        json_str = '{"name": "test", "columnIndex": "0"}'
+        with pytest.raises(KeyError, match="columnType"):
+            Column.from_json(json_str)
+
+    # --- Column.from_json() grouped tasks validation tests ---
+
+    def test_column_from_json_grouped_tasks_agg_on_case_id(self):
+        """Test that groupedTasksAggregation on CASE_ID column raises ValueError"""
+        json_str = '{"name": "test", "columnIndex": "0", "columnType": "CASE_ID", "groupedTasksAggregation": "FIRST"}'
+        with pytest.raises(ValueError, match="metric or dimension"):
+            Column.from_json(json_str)
+
+    def test_column_from_json_invalid_grouped_tasks_agg(self):
+        """Test that invalid groupedTasksAggregation value raises ValueError"""
+        json_str = '{"name": "test", "columnIndex": "0", "columnType": "METRIC", "groupedTasksAggregation": "INVALID"}'
+        with pytest.raises(ValueError, match="Invalid groupedTasksAggregation"):
+            Column.from_json(json_str)
