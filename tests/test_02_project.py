@@ -1,5 +1,6 @@
 # MIT License, Copyright 2023 iGrafx
 # https://github.com/igrafx/mining-python-sdk/blob/dev/LICENSE
+import tempfile
 import time
 from unittest.mock import MagicMock
 from pathlib import Path
@@ -9,7 +10,6 @@ import pytest
 from igrafx_mining_sdk.project import FileStructure
 from igrafx_mining_sdk.column_mapping import Column, ColumnType, ColumnMapping, FileType
 from igrafx_mining_sdk.datasource import Datasource
-import tempfile
 from igrafx_mining_sdk.api_connector import APIConnector
 
 
