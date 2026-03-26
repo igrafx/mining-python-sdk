@@ -77,7 +77,6 @@ class TestProject:
         with tempfile.NamedTemporaryFile(suffix='.txt', delete=False) as temp_file:
             temp_file.write(b"test content")  # Use write() with bytes for tempfile
             temp_file_path = temp_file.name
-
         try:
             with pytest.raises(ValueError, match="File extension .txt is not supported"):
                 pytest.project.add_file(temp_file_path)
