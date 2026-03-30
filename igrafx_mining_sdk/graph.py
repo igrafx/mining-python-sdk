@@ -5,7 +5,7 @@ import json
 import networkx as nx
 
 
-class Graph(nx.DiGraph):
+class Graph:
     """A graph from a iGrafx P360 Live Mining project, created with the parent Project's ID,
     a list of nodes and a list of edges"""
     def __init__(self, project_id: str, nodes_list: list, edges_list: list):
@@ -15,11 +15,26 @@ class Graph(nx.DiGraph):
         :param nodes_list: the list of nodes
         :param edges_list: the list of edges
         """
-        super().__init__()
+        self._graph = nx.DiGraph()
         self.project_id = project_id
-        self.graph['project_id'] = project_id
-        self.add_nodes_from(nodes_list)
-        self.add_edges_from(edges_list)
+        self._graph.graph['project_id'] = project_id
+        if nodes_list:
+            self._graph.add_nodes_from(nodes_list)
+        if edges_list:
+            self._graph.add_edges_from(edges_list)
+
+    def __getattr__(self, name):
+        """Delegate attribute access to the underlying NetworkX graph"""
+        return getattr(self._graph, name)
+
+    def __len__(self):
+        """Return the number of nodes in the graph"""
+        return len(self._graph)
+
+    @property
+    def graph(self):
+        """Access to graph attributes"""
+        return self._graph.graph
 
     @staticmethod
     def from_dict(project_id, jgraph):

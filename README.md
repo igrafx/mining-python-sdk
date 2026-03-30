@@ -13,6 +13,7 @@
 ![GitHub repo file count (file type)](https://img.shields.io/github/directory-file-count/igrafx/mining-python-sdk?color=pink)
 [![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
 [![Open Source Love svg2](https://badges.frapsoft.com/os/v2/open-source.svg?v=103)](https://github.com/ellerbrock/open-source-badges/)
+![Coverage](https://img.shields.io/badge/Coverage-100%25-brightgreen?logo=pytest)
 
 ***
 

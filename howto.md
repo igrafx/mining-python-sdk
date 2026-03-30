@@ -417,6 +417,9 @@ Note that a **zip** file can also be sent. To do so, in the file structure,
 the declared file type should be the final format of the file within the zip (e.g., .csv, .xlsx, .xls).
 And when giving the file path in the ``add_file`` method, give the zip name.
 
+Furthermore, a large file (>1GB) can also be sent by using the ``add_file`` method.
+If you send a file with an unsupported format, the file will not be processed and you will get an error.
+
 Additionally, the status of the added file(s) can be checked by using the following method:
 
 ````python

@@ -18,7 +18,8 @@ on:
   - cron: "0 2 * * 1-5"
 
 permissions:
-  contents: read
+  contents: write
+  pull-requests: write
 
 jobs:
   build:
@@ -26,40 +27,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
 
-    - name: Set up Python 3.10.11
-      uses: actions/setup-python@v5
+    - name: Set up Python 3.11.9
+      uses: actions/setup-python@v6
       with:
-        python-version: "3.10.11"
+        python-version: "3.11.9"
 
     - name: Install Poetry
       run: |
         python -m pip install --upgrade pip
         pip install poetry
-
-    - name: Setup project
-      run: |
-        poetry config virtualenvs.create false
+        poetry cache clear . --all -q
+        poetry install
 
     - name: Install project dependencies
       run: |
-        poetry install --no-root
+        poetry install
 
     - name: Install Flake8
       run: |
-        poetry run pip install flake8
-
-    - name: Install pytest
-      run: |
-        poetry run pip install pytest
-
-    - name: Install pytest-mock
-      run: |
-        poetry run pip install pytest-mock
+        poetry add --group dev flake8
 
     - name: Set up JDK 8
-      uses: actions/setup-java@v4
+      uses: actions/setup-java@v5
       with:
         java-version: '8'
         distribution: 'zulu'
@@ -82,4 +73,27 @@ jobs:
         NAME: ${{ secrets.NAME }}
         TYPE: ${{ secrets.TYPE }}
       run: |
-        python -m pytest
+        set -o pipefail
+        poetry run pytest --cov=igrafx_mining_sdk --cov-fail-under=100 --cov-report=term-missing --cov-report=xml:coverage.xml --junitxml=pytest.xml | tee coverage.txt
+
+    - name: Pytest Coverage Comment
+      if: always() && github.event_name == 'pull_request'
+      uses: MishaKav/pytest-coverage-comment@main
+      with:
+        pytest-coverage-path: coverage.txt
+        junitxml-path: pytest.xml
+        badge-title: Coverage
+        hide-comment: false
+        create-new-comment: false
+        hide-report: true
+
+    - name: Update Coverage Badge
+      if: github.event_name == 'push' && (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master')
+      uses: MishaKav/pytest-coverage-comment@main
+      with:
+        pytest-coverage-path: coverage.txt
+        badge-title: Coverage
+        coverage-path-prefix: igrafx_mining_sdk/
+        readme-path: README.md
+        default-branch: dev
+
