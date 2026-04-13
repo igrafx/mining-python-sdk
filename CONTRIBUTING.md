@@ -27,6 +27,7 @@ and give an overall better experience to all parties involved. We appreciate you
 - [Improving The Documentation](#improving-the-documentation)
 - [Styleguide](#styleguide)
 - [Git Commit Guidelines](#git-commit-guidelines)
+- [Updating Dependencies](#updating-dependencies)
 - [License](#license)
 
 ## How Can I Contribute?
@@ -234,6 +235,39 @@ Please keep them in mind when making contributions to this project.
 - You can install a [plugin for JetBrains](https://plugins.jetbrains.com/plugin/14046-commitlint-conventional-commit) to
   help to write commit messages.
 - BREAKING CHANGE is only used from public API.
+
+## Updating Dependencies
+
+This project includes a Claude Code skill to update SDK dependencies while ensuring compatibility with the [KNIME Mining connector](https://github.com/igrafx/KNIME-Mining-connector).
+
+### Prerequisites
+
+- [Claude Code](https://claude.com/claude-code) installed and available in your terminal
+- Poetry installed for dependency management
+
+### Usage
+
+1. Open a terminal in the SDK repository root.
+2. Launch Claude Code:
+   ```bash
+   claude
+   ```
+3. Run the skill:
+   ```
+   /update-dependencies
+   ```
+
+The skill will:
+
+1. Read the current `pyproject.toml` dependencies.
+2. Fetch the KNIME connector's `pixi.toml` from the `dev` branch on GitHub.
+3. Check PyPI for the latest version of each dependency.
+4. Cross-check that each latest version is compatible with the KNIME connector's constraints (conda pins from `knime-python-base`, pypi ranges, etc.).
+5. Present a comparison table showing current, latest, and proposed versions with any conflicts flagged.
+6. After your confirmation, apply the updates to `pyproject.toml`.
+7. Run `poetry lock`, `poetry install`, and `pytest` to validate the changes.
+
+> **Note:** The skill does not modify the KNIME connector's `pixi.toml`. After updating the SDK, you should separately update the connector's dependencies to match.
 
 ## License
 
