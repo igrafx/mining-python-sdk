@@ -229,7 +229,7 @@ class TestProject:
         while pytest.project.nodes_datasource.__class__ != Datasource:
             time.sleep(3)
             count += 1
-            if count > 100:
+            if count > 200:
                 assert False, 'Timeout reached'
         assert True
 

@@ -113,8 +113,11 @@ class Project:
 
         :param ds_type: The type of datasource. Can be 'cases', '_simplifiedEdge' or '_vertex'
         """
-        if self._ds_response is None or self._ds_response.status_code == 404:
-            self._ds_response = self.__datasource_request()
+        # Always re-fetch from the API instead of using a cached response.
+        # Previously, the response was cached after the first successful call,
+        # which prevented polling loops (e.g. test_project_contains_data) from
+        # detecting newly uploaded data.
+        self._ds_response = self.__datasource_request()
 
         if self._ds_response.status_code == 200:
             json_response = self._ds_response.json()
@@ -126,14 +129,16 @@ class Project:
                 else:
                     item["type"] = "cases"
 
-            # Set the datasource NAME and TYPE
-            response_filtered = [d for d in json_response if d['type'] == ds_type][0]
-            return Datasource(
-                response_filtered["name"],
-                response_filtered["type"],
-                self.api_connector)
-        else:
-            return None
+            # Filter by the requested datasource type and return it if found.
+            # Uses a safe check instead of direct indexing to avoid IndexError
+            # when the datasource hasn't been created yet.
+            response_filtered = [d for d in json_response if d['type'] == ds_type]
+            if response_filtered:
+                return Datasource(
+                    response_filtered[0]["name"],
+                    response_filtered[0]["type"],
+                    self.api_connector)
+        return None
 
     def get_project_lookups(self):
         """Returns available list of lookups for the project"""
